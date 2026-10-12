@@ -63,7 +63,7 @@ h3.plain{margin-bottom:6px}
 .tabs button{flex:1;border:0;border-radius:0;background:transparent;color:var(--dimmer);padding:12px 4px;font-weight:600}
 .tabs button.on{color:var(--up);box-shadow:inset 0 2px 0 var(--up)}
 .tag.g{background:rgba(232,179,79,.16);color:var(--gold)}
-.tabs button{font-size:.86rem;padding:12px 2px!important}
+.tabs button{font-size:.78rem;padding:12px 1px!important}
 .chip{display:inline-block;margin:3px;padding:3px 10px;border-radius:99px;background:var(--s2);border:1px solid var(--bd);cursor:pointer;font-size:.82rem}
 textarea{width:100%;font:inherit;direction:ltr;color:var(--fg);background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:9px;min-height:70px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
@@ -149,8 +149,18 @@ textarea{width:100%;font:inherit;direction:ltr;color:var(--fg);background:var(--
     <div class="c"><h3 class="plain">القائمة <span class="sm2" id="hcnt"></span></h3><div id="hlist"></div></div>
     <div class="c closed" id="chb"><h3 class="fold" data-f="chb"><span>نسخ احتياطي ونقل</span><span class="chev">›</span></h3><div class="fb"><div class="sub" style="margin:0 0 6px">انسخ النص هنا والصقه في الجهاز الآخر ثم «استيراد».</div><textarea id="hjs"></textarea><div style="display:flex;gap:8px;margin-top:8px"><button id="hexp">تصدير</button><button id="himp">استيراد</button></div></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 12</div>
-<nav class="tabs" id="tabs" hidden><div><button data-tab="home">الحساب</button><button data-tab="risk">المخاطر</button><button data-tab="calc">الحاسبة</button><button data-tab="lad">السلّم</button><button data-tab="hal">الشرعية</button></div></nav>
+  <div id="jr" hidden>
+    <div class="c"><h3 class="plain">سجل الصفقات</h3>
+      <div class="seg"><button data-jrg="7">7 أيام</button><button data-jrg="30" class="on">30 يوماً</button><button data-jrg="0">الكل</button></div>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:10px"><button class="go" id="jload">تحميل من بايننس</button><span class="sub" style="margin:0" id="jinfo"></span></div>
+      <div class="note" style="margin-top:6px">الربح محسوب بمتوسط التكلفة قبل الرسوم.</div>
+    </div>
+    <div id="jsum"></div>
+    <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
+    <div class="c"><h3 class="plain">عمليات البيع <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
+  </div>
+<div class="note" style="text-align:center" id="foot">النسخة 13</div>
+<nav class="tabs" id="tabs" hidden><div><button data-tab="home">الحساب</button><button data-tab="risk">المخاطر</button><button data-tab="calc">الحاسبة</button><button data-tab="lad">السلّم</button><button data-tab="hal">الشرعية</button><button data-tab="jr">السجل</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
 <script>
@@ -306,7 +316,7 @@ function avgFor(sym,held){
 }
 
 /* --- state / render --- */
-var RUN=0,VER="12",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
+var RUN=0,VER="13",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
 function render(){
   if(!snap)return;
   var as=snap.assets.map(function(a){a.avg=AVG[a.sym]?AVG[a.sym].a:0;return a}).sort(function(a,b){return b.val-a.val});
@@ -370,11 +380,11 @@ function show(){
   var has=!!(creds().k&&creds().s);
   var ok=has&&!forceCfg;
   $("setup").hidden=ok;$("tabs").hidden=!ok;$("rf").hidden=!has;
-  $("main").hidden=!(ok&&snap&&TAB==="home");$("risk").hidden=!(ok&&snap&&TAB==="risk");$("calc").hidden=!(ok&&TAB==="calc");$("lad").hidden=!(ok&&TAB==="lad");$("hal").hidden=!(ok&&TAB==="hal");
+  $("main").hidden=!(ok&&snap&&TAB==="home");$("risk").hidden=!(ok&&snap&&TAB==="risk");$("calc").hidden=!(ok&&TAB==="calc");$("lad").hidden=!(ok&&TAB==="lad");$("hal").hidden=!(ok&&TAB==="hal");$("jr").hidden=!(ok&&TAB==="jr");
   var tb=document.querySelectorAll("#tabs button");for(var i=0;i<tb.length;i++)tb[i].classList.toggle("on",tb[i].getAttribute("data-tab")===TAB);
 }
-var TAB=LS.g("tab")||"home";if(["home","risk","calc","lad","hal"].indexOf(TAB)<0)TAB="home";
-function setTab(t){TAB=t;LS.s("tab",t);forceCfg=false;show();render();if(t==="hal")renderHal();if(t==="lad")ladHint();try{window.scrollTo(0,0)}catch(e){}}
+var TAB=LS.g("tab")||"home";if(["home","risk","calc","lad","hal","jr"].indexOf(TAB)<0)TAB="home";
+function setTab(t){TAB=t;LS.s("tab",t);forceCfg=false;show();render();if(t==="hal")renderHal();if(t==="lad")ladHint();if(t==="jr")renderJournal();try{window.scrollTo(0,0)}catch(e){}}
 var forceCfg=false;
 
 function refresh(){
@@ -561,6 +571,56 @@ function ladSend(){
   });
 }
 
+/* --- journal --- */
+var JEV=(function(){try{return JSON.parse(LS.g("jev")||"null")}catch(e){return null}})(),JN=(function(){try{return JSON.parse(LS.g("jnotes")||"{}")}catch(e){return{}}})(),JRG=30,openJ={};
+function dayKey(t){var d=new Date(t);return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
+function jCompute(all){
+  var by={};all.forEach(function(t){(by[t.sym]=by[t.sym]||[]).push(t)});
+  var ev={};
+  Object.keys(by).forEach(function(sym){
+    var tr=by[sym].sort(function(a,b){return a.time-b.time}),q=0,cost=0;
+    tr.forEach(function(t){
+      var qq=+t.qty,pp=+t.price;
+      if(t.isBuyer){q+=qq;cost+=qq*pp;return}
+      var known=q>1e-9,a=known?cost/q:0,k=sym+"|"+dayKey(t.time),e=ev[k]||(ev[k]={k:k,sym:sym,day:dayKey(t.time),t:t.time,q:0,rev:0,cost:0,pnl:0,n:0,unk:0});
+      e.q+=qq;e.rev+=qq*pp;e.n++;if(t.time>e.t)e.t=t.time;
+      if(known){var uq=Math.min(qq,q);e.cost+=uq*a;e.pnl+=uq*(pp-a);e.cs=(e.cs||0)+uq}else e.unk+=qq;
+      q-=qq;cost-=qq*a;if(q<=1e-9){q=0;cost=0}
+    });
+  });
+  return Object.keys(ev).map(function(k){var e=ev[k];e.pct=e.cost>0?e.pnl/e.cost*100:null;return e}).sort(function(a,b){return b.t-a.t});
+}
+function renderJournal(){
+  var b=document.querySelectorAll("[data-jrg]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",+b[i].getAttribute("data-jrg")===JRG);
+  if(!JEV){$("jsum").innerHTML="";$("jcoin").innerHTML='<div class="sub">اضغط «تحميل من بايننس»</div>';$("jlist").innerHTML="";return}
+  var from=JRG?Date.now()-JRG*864e5:0,ev=JEV.ev.filter(function(e){return e.t>=from});
+  $("jinfo").textContent="آخر تحميل "+hm(JEV.t)+" · "+dayKey(JEV.t);
+  var known=ev.filter(function(e){return e.cost>0}),tot=known.reduce(function(t,e){return t+e.pnl},0),win=known.filter(function(e){return e.pnl>0}).length;
+  var best=known.slice().sort(function(a,b){return b.pnl-a.pnl})[0],worst=known.slice().sort(function(a,b){return a.pnl-b.pnl})[0];
+  $("jsum").innerHTML='<div class="c"><h3>الربح المحقّق</h3><div class="big"><span class="n '+cl(tot)+'">'+sg(tot)+'</span></div><div class="sub">'+known.length+' عملية بيع · نجاح '+(known.length?Math.round(win/known.length*100):0)+'%'+(best?' · الأفضل <span class="n up">'+sg(best.pnl)+'</span> '+esc(best.sym):'')+(worst&&worst.pnl<0?' · الأسوأ <span class="n down">'+sg(worst.pnl)+'</span> '+esc(worst.sym):'')+'</div></div>';
+  var cg={};known.forEach(function(e){var c=cg[e.sym]||(cg[e.sym]={s:e.sym,p:0,n:0,w:0,c:0});c.p+=e.pnl;c.n++;c.c+=e.cost;if(e.pnl>0)c.w++});
+  var cs=Object.keys(cg).map(function(k){return cg[k]}).sort(function(a,b){return b.p-a.p});
+  $("jcoin").innerHTML=cs.length?cs.map(function(c){return '<div class="row"><div class="l"><b>'+esc(c.s)+'</b><small>'+c.n+' عمليات · نجاح '+Math.round(c.w/c.n*100)+'%</small></div><div class="r"><b class="n '+cl(c.p)+'">'+sg(c.p)+'</b><br><small class="flat n">'+(c.c>0?pc(c.p/c.c*100):"")+'</small></div></div>'}).join(""):'<div class="sub">لا عمليات بيع في هذه الفترة</div>';
+  $("jlist").innerHTML=ev.length?ev.slice(0,60).map(function(e){
+    var nt=JN[e.k]||"",op=openJ[e.k];
+    return '<div class="row" data-jk="'+esc(e.k)+'" style="cursor:pointer"><div class="l"><b>'+esc(e.sym)+'<span class="tag s">بيع</span></b><small><span class="n">'+e.day+'</span> · <span class="n">'+qt(e.q)+' @ '+px(e.rev/e.q)+'</span>'+(e.cost>0?' · تكلفة <span class="n">'+px(e.cost/e.cs)+'</span>':' · تكلفة غير معروفة')+(nt?' · 📝':'')+'</small></div><div class="r">'+(e.cost>0?'<b class="n '+cl(e.pnl)+'">'+sg(e.pnl)+'</b><br><small class="flat n">'+pc(e.pct)+'</small>':'<span class="flat">—</span>')+'</div></div>'+
+      (op?'<div class="sub2"><textarea data-jt="'+esc(e.k)+'" placeholder="ملاحظة: سبب الدخول، ما تعلمته…" style="direction:rtl;min-height:60px">'+esc(nt)+'</textarea></div>':'');
+  }).join(""):'<div class="sub">لا شيء</div>';
+}
+function jLoad(){
+  var b=$("jload");if(!snap||b.disabled)return;b.disabled=true;b.textContent="…";
+  var seen={};try{seen=JSON.parse(LS.g("tsyms")||"{}")}catch(e){}
+  snap.assets.forEach(function(a){if(a.price>0&&!STABLE[a.sym])seen[a.sym]=1});snap.orders.forEach(function(o){seen[o.symbol.replace(/USDT$/,"")]=1});
+  LS.s("tsyms",JSON.stringify(seen));
+  var list=Object.keys(seen),all=[],i=0,fails=0,done=0;
+  function next(){if(i>=list.length)return;var s=list[i++];
+    return call("/api/v3/myTrades",{symbol:s+"USDT",limit:1000},true).then(function(tr){tr.forEach(function(t){t.sym=s;all.push(t)})},function(){fails++}).then(function(){done++;b.textContent="… "+done+"/"+list.length;return next()})}
+  Promise.all([next(),next(),next()]).then(function(){
+    JEV={t:Date.now(),ev:jCompute(all)};LS.s("jev",JSON.stringify(JEV));
+    b.disabled=false;b.textContent="تحميل من بايننس";if(fails)err("تعذّر تحميل "+fails+" عملات");renderJournal();
+  });
+}
+
 /* --- permissions / trading --- */
 function checkPerm(){PERM={};CAN=true;var b=$("perm");b.hidden=false;b.className="badge";b.textContent="التداول حسب صلاحية المفتاح";show();render()}
 function capVal(){var v=parseFloat(LS.g("cap"));return v>0?v:300}
@@ -650,6 +710,10 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-hdel]"))){delete HAL[el.getAttribute("data-hdel")];halSave();renderHal();render();return}
   if(t.id==="hav"){t.textContent="…";call("/api/v3/ticker/price",{},false).then(function(r){if(!Array.isArray(r))throw new Error("رد غير متوقع");var m={};r.forEach(function(x){m[x.symbol]=1});var av=Object.keys(BASE).filter(function(b){return m[b+"USDT"]}).sort();LS.s("avail",JSON.stringify(av));t.textContent="تحقق من المتاح في بايننس";renderHal()}).catch(function(e){t.textContent="تحقق من المتاح في بايننس";err("تعذّر: "+e.message)});return}
   if(t.id==="havl"){var o=$("havout");o.hidden=!o.hidden;if(!o.hidden){var av=[];try{av=JSON.parse(LS.g("avail")||"[]")}catch(e){}o.innerHTML=av.length?av.map(function(c){return '<span class="chip" data-hpick="'+c+'">'+c+'</span>'}).join(""):'<div class="sub">اضغط «تحقق» أولاً</div>'}return}
+  if(t.id==="jload")return jLoad();
+  if((el=t.closest("[data-jrg]"))){JRG=+el.getAttribute("data-jrg");return renderJournal()}
+  if(t.closest("textarea"))return;
+  if((el=t.closest("[data-jk]"))){var jk=el.getAttribute("data-jk");openJ[jk]=!openJ[jk];renderJournal();return}
   if(t.id==="hexp"){$("hjs").value=JSON.stringify(HAL);return}
   if(t.id==="himp"){try{var j=JSON.parse($("hjs").value);if(j&&typeof j==="object"){Object.keys(j).forEach(function(k){if(j[k]&&HN[j[k].s])HAL[k]={s:j[k].s,n:String(j[k].n||"")}});halSave();renderHal();render();err("")}}catch(e){err("نص الاستيراد غير صالح")}return}
   if(t.id==="newbtn")return tradeSheet("");
@@ -725,6 +789,7 @@ $("calc").addEventListener("input",calcRun);
 $("lad").addEventListener("input",function(){L.rows=null;ladHint()});
 $("rcapin").addEventListener("change",function(){var v=parseFloat($("rcapin").value);if(v>0){LS.s("rcap",String(v));render()}});
 try{var cs=JSON.parse(LS.g("calc")||"{}");CIDS.forEach(function(i){if(cs[i]!=null)$(i).value=cs[i]})}catch(e){}
+$("jr").addEventListener("change",function(ev){var t=ev.target;if(t.getAttribute&&t.getAttribute("data-jt")){var k=t.getAttribute("data-jt"),v=t.value.trim();if(v)JN[k]=v;else delete JN[k];LS.s("jnotes",JSON.stringify(JN))}});
 $("rf").onclick=refresh;
 $("cfg").onclick=function(){forceCfg=!forceCfg;show()};
 $("save").onclick=function(){var k=$("k").value.trim(),s=$("s").value.trim();if(!k||!s){err("أدخل المفتاح والسر");return}LS.s("bk",k);LS.s("bs",s);var cv=parseFloat($("cap").value);if(cv>0)LS.s("cap",String(cv));PERM=null;$("k").value="";$("s").value="";err("");forceCfg=false;show();refresh()};
