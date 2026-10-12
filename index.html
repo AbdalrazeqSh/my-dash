@@ -988,6 +988,7 @@ if(creds().k)refresh();
 
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
   try{navigator.serviceWorker.register("sw.js").catch(function(){});
+  var hadC=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(hadC&&!window.__rl){window.__rl=1;location.reload()}});
   navigator.serviceWorker.addEventListener("message",function(m){if(m.data==="updated"&&!document.getElementById("upd")){var d=document.createElement("div");d.id="upd";d.className="upd";d.textContent="نسخة جديدة جاهزة، اضغط للتحديث";d.onclick=function(){location.reload()};document.body.appendChild(d)}})}catch(e){}
 }
 })();
