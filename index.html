@@ -1,44 +1,48 @@
 <!doctype html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#0b1210"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="حسابي"><title>حسابي</title>
+<meta name="color-scheme" content="dark light"><meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E9DE"><meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F1A14"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600&display=swap"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="حسابي"><title>حسابي</title>
 <style>
-:root{--bg:#0b1210;--s:#121b19;--s2:#19251f;--fg:#eaf2ee;--dim:#9db3ab;--dimmer:#6b8079;--up:#37c98f;--down:#e8766a;--gold:#e8b34f;--bd:rgba(255,255,255,.09);color-scheme:dark}
-@media (prefers-color-scheme:light){:root{--bg:#f5f8f6;--s:#fff;--s2:#eef3f0;--fg:#15211c;--dim:#50655d;--dimmer:#7c8d86;--up:#1f9d6d;--down:#c0453a;--gold:#a9731c;--bd:rgba(10,20,16,.09);color-scheme:light}}
+:root{--bg:#E4E9DE;--s:#EEF2E9;--s2:#D9E0D1;--fg:#1B2820;--dim:#55655A;--dimmer:#7C8A7F;--up:#3F6B4F;--down:#A5483B;--gold:#9A6A1C;--bd:rgba(27,40,32,.14);--onup:#fff;--ondown:#fff;--upbg:rgba(63,107,79,.14);--downbg:rgba(165,72,59,.12);--goldbg:rgba(176,122,34,.16);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--down:#E0806F;--gold:#E0AE4F;--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--down:#E0806F;--gold:#E0AE4F;--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:16px 16px calc(84px + env(safe-area-inset-bottom));max-width:640px;margin-inline:auto}
-.n{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "Readex Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:18px 20px calc(88px + env(safe-area-inset-bottom));max-width:640px;margin-inline:auto}
+.n{direction:ltr;unicode-bidi:isolate;display:inline-block;font-variant-numeric:tabular-nums}
 .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
-.top b{font-size:1.15rem}
+.top b{font-size:1.3rem;font-weight:600}
 .age{font-size:.75rem;color:var(--dim)}
-button{font:inherit;color:var(--fg);background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:6px 12px;cursor:pointer}
-button.go{background:var(--up);color:#06150f;border-color:transparent;font-weight:600}
-.c{background:var(--s);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
-.c h3{margin:0 0 8px;font-size:.8rem;color:var(--dim);font-weight:600}
-.big{font-size:2.1rem;font-weight:700;line-height:1.1}
-.sub{color:var(--dim);font-size:.82rem;margin-top:4px}
+button{font:inherit;color:var(--fg);background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:8px 14px;min-height:40px;cursor:pointer}
+button.go{background:var(--up);color:var(--onup);border-color:transparent;font-weight:600}
+.c{border-top:1px solid var(--bd);padding:14px 0;margin:0}
+.c h3{margin:0 0 8px;font-size:.95rem;color:var(--fg);font-weight:600}
+.big{font-size:3.1rem;font-weight:300;line-height:1.1;letter-spacing:-1px}
+.sub{color:var(--dim);font-size:.84rem;margin-top:4px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd)}
 .row:last-child{border-bottom:0}
-.row .l{min-width:0}.row .l b{display:block}.row .l small{color:var(--dim);font-size:.76rem}
+.row .l{min-width:0}.row .l b{display:block;font-weight:600}.row .l small{color:var(--dim);font-size:.76rem}
 .row .r{text-align:left;direction:ltr;white-space:nowrap}
 .up{color:var(--up)}.down{color:var(--down)}.flat{color:var(--dim)}
 .tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:.74rem;font-weight:600;margin-inline-start:6px}
-.tag.b{background:rgba(55,201,143,.16);color:var(--up)}.tag.s{background:rgba(232,118,106,.16);color:var(--down)}
-.err{background:rgba(232,118,106,.14);color:var(--down);border-radius:10px;padding:8px 12px;font-size:.84rem;margin-bottom:12px}
+.tag.b{background:var(--upbg);color:var(--up)}.tag.s{background:var(--downbg);color:var(--down)}.tag.g{background:var(--goldbg);color:var(--gold)}
+.err{background:var(--downbg);color:var(--down);border-radius:10px;padding:8px 12px;font-size:.84rem;margin-bottom:12px}
+.warn{background:var(--goldbg);color:var(--gold);border-radius:10px;padding:8px 12px;font-size:.84rem;margin-bottom:8px}
 .bar{display:flex;height:8px;border-radius:5px;overflow:hidden;gap:2px;margin:6px 0 10px;background:var(--s2)}
 .bar i{display:block;min-width:3px}
 label{display:block;font-size:.8rem;color:var(--dim);margin:10px 0 4px}
-input{width:100%;font:inherit;direction:ltr;color:var(--fg);background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:9px}
+input,textarea{width:100%;font:inherit;direction:ltr;color:var(--fg);background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:9px}
+textarea{min-height:70px}
 .note{font-size:.78rem;color:var(--dimmer);margin-top:10px}
-button.sm{padding:3px 9px;font-size:.78rem}
-button.buy{background:var(--up);color:#06150f;border-color:transparent;font-weight:600}
-button.sell{background:var(--down);color:#fff;border-color:transparent;font-weight:600}
+button.sm{padding:3px 10px;font-size:.78rem;min-height:30px}
+button.buy{background:var(--up);color:var(--onup);border-color:transparent;font-weight:600}
+button.sell{background:var(--down);color:var(--ondown);border-color:transparent;font-weight:600}
 .seg{display:flex;gap:8px}.seg button{flex:1}.seg button.on{outline:2px solid var(--fg)}
+.subnav{margin-bottom:12px}.subnav button{background:transparent;color:var(--dim)}.subnav button.on{outline:0;background:var(--fg);color:var(--bg);border-color:transparent;font-weight:600}
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:9}
-.sheet>div{background:var(--s);border:1px solid var(--bd);border-radius:18px 18px 0 0;padding:16px 16px 24px;width:100%;max-width:640px;max-height:92vh;overflow:auto}
+.sheet>div{background:var(--s);border:1px solid var(--bd);border-radius:20px 20px 0 0;padding:16px 16px 24px;width:100%;max-width:640px;max-height:92vh;overflow:auto}
 .badge{display:inline-block;padding:1px 8px;border-radius:99px;font-size:.72rem;font-weight:600;background:var(--s2);color:var(--dim)}
-.badge.t{background:rgba(232,179,79,.18);color:var(--gold)}
-.sum{background:var(--s2);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.9rem}
+.badge.t{background:var(--goldbg);color:var(--gold)}
+.sum{background:var(--s2);border-radius:12px;padding:10px 12px;margin:10px 0;font-size:.9rem}
 h3.fold{display:flex;justify-content:space-between;align-items:center;cursor:pointer;margin:0!important}
 h3.plain{margin-bottom:6px}
 .c.closed h3.fold{margin:0!important}.c:not(.closed) h3.fold{margin-bottom:10px!important}
@@ -48,31 +52,33 @@ h3.plain{margin-bottom:6px}
 .sm2{font-weight:400;color:var(--dimmer);font-size:.76rem;margin-inline-start:6px}
 .coin{padding:12px 0;border-bottom:1px solid var(--bd)}.coin:last-child{border-bottom:0}
 .coin .a{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.coin .nm{font-weight:700;font-size:1.02rem}
-.coin .vl{font-size:1.15rem;font-weight:700}
+.coin .nm{font-weight:600;font-size:1.02rem}
+.coin .vl{font-size:1.15rem}
 .coin .b{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:3px;font-size:.78rem;color:var(--dim)}
 .coin .t{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;align-items:center}
 .sh{color:var(--dimmer);font-weight:400;font-size:.78rem;margin-inline-start:6px}
-.pl{font-weight:700}
+.pl{font-weight:600}
 .sub2{padding-inline-start:12px;border-inline-start:2px solid var(--bd);margin:2px 0 6px}
-@keyframes sp{to{transform:rotate(360deg)}}
-#rf.spin #rfi{animation:sp .8s linear infinite}
-
-.tabs{position:fixed;bottom:0;inset-inline:0;background:var(--s);border-top:1px solid var(--bd);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:5}
+.sec{font-size:.95rem;font-weight:600;margin:18px 0 4px}
+.att{display:flex;align-items:center;gap:12px;min-height:48px;border-top:1px solid var(--bd);font-size:.9rem}
+.att svg{flex:none}
+.hc{padding:9px 0;border-top:1px solid var(--bd)}
+.hc .a{display:flex;justify-content:space-between;align-items:baseline}
+.hc .tr{height:3px;background:var(--bd);border-radius:2px;margin-top:6px}.hc .tr i{display:block;height:3px;background:var(--up);border-radius:2px}
+.tabs{position:fixed;bottom:0;inset-inline:0;background:var(--bg);border-top:1px solid var(--bd);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:5}
 .tabs div{display:flex;width:100%;max-width:640px}
-.tabs button{flex:1;border:0;border-radius:0;background:transparent;color:var(--dimmer);padding:12px 4px;font-weight:600}
-.tabs button.on{color:var(--up);box-shadow:inset 0 2px 0 var(--up)}
-.tag.g{background:rgba(232,179,79,.16);color:var(--gold)}
-.tabs button{font-size:.78rem;padding:12px 1px!important}
-.chip{display:inline-block;margin:3px;padding:3px 10px;border-radius:99px;background:var(--s2);border:1px solid var(--bd);cursor:pointer;font-size:.82rem}
-textarea{width:100%;font:inherit;direction:ltr;color:var(--fg);background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:9px;min-height:70px}
+.tabs button{flex:1;border:0;border-radius:0;background:transparent;color:var(--dim);padding:8px 2px;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:.7rem}
+.tabs button.on{color:var(--fg);font-weight:600}
+.tabs button.on svg{stroke:var(--up)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 .cbar{height:6px;border-radius:4px;background:var(--s2);margin-top:5px;overflow:hidden}.cbar i{display:block;height:100%}
-.warn{background:rgba(232,179,79,.14);color:var(--gold);border-radius:10px;padding:8px 12px;font-size:.84rem;margin-bottom:8px}
-.upd{position:fixed;top:8px;inset-inline:16px;max-width:608px;margin-inline:auto;background:var(--up);color:#06150f;border-radius:12px;padding:10px 14px;font-weight:600;z-index:20;text-align:center;cursor:pointer}
+.upd{position:fixed;top:8px;inset-inline:16px;max-width:608px;margin-inline:auto;background:var(--up);color:var(--onup);border-radius:12px;padding:10px 14px;font-weight:600;z-index:20;text-align:center;cursor:pointer}
+.chip{display:inline-block;margin:3px;padding:3px 10px;border-radius:99px;background:var(--s2);border:1px solid var(--bd);cursor:pointer;font-size:.82rem}
+@keyframes sp{to{transform:rotate(360deg)}}
+#rf.spin #rfi{animation:sp .8s linear infinite}
 [hidden]{display:none!important}
 </style></head><body>
-<div class="top"><div><b>حسابي</b><div class="age"><span id="age"></span> <span class="badge" id="perm" hidden></span></div></div><div><button id="rf" class="go" hidden><span id="rfi" style="display:inline-block">↻</span> تحديث</button> <button id="cfg">المفتاح</button></div></div>
+<div class="top"><div><b>حسابي</b><div class="age"><span id="age"></span> <span class="badge" id="perm" hidden></span></div></div><div><button id="rf" class="go" hidden><span id="rfi" style="display:inline-block">↻</span> تحديث</button></div></div>
 <div id="err" class="err" hidden></div>
 
 <div id="setup" class="c" hidden>
@@ -83,17 +89,40 @@ textarea{width:100%;font:inherit;direction:ltr;color:var(--fg);background:var(--
   <label for="cap">أقصى قيمة للأمر الواحد (USDT)</label><input id="cap" inputmode="decimal" value="300"><div style="display:flex;gap:8px;margin-top:12px"><button class="go" id="save">حفظ وتحديث</button><button id="clr">حذف المفتاح من الجوال</button></div><div style="margin-top:10px"><button id="diag">فحص الاتصال</button></div><div class="sum" id="diagout" hidden style="direction:ltr;text-align:left;font-size:.8rem;white-space:pre-wrap"></div>
 </div>
 
+<div id="hload" class="sub" hidden>جارٍ التحميل…</div>
+<div id="subnav" class="seg subnav" hidden></div>
+<div id="hm" hidden>
+  <div style="font-size:.82rem;color:var(--dim)">ارتفاعك الآن</div>
+  <div class="big"><span class="n" id="tot">$0</span></div>
+  <div class="sub" id="totsub"></div>
+  <svg viewBox="0 0 342 168" style="width:100%;max-width:440px;height:auto;display:block;margin:6px 0 0" role="img" aria-label="مسار صاعد نحو القمة، والمسافر عند تقدّمك الحالي">
+    <g style="fill:none;stroke:var(--fg);stroke-opacity:.13;stroke-width:1"><ellipse cx="60" cy="46" rx="22" ry="13"/><ellipse cx="68" cy="52" rx="46" ry="27"/><ellipse cx="84" cy="62" rx="74" ry="42"/><ellipse cx="108" cy="76" rx="108" ry="58"/><ellipse cx="140" cy="94" rx="146" ry="74"/><ellipse cx="180" cy="116" rx="190" ry="92"/></g>
+    <path id="trk" d="M312 152 C298 150 282 144 268 134 C250 120 228 112 200 110 S130 88 96 58 S72 46 62 44" style="fill:none;stroke:var(--fg);stroke-opacity:.5;stroke-width:2;stroke-linecap:round;stroke-dasharray:1 7"/>
+    <path id="trs" pathLength="100" d="M312 152 C298 150 282 144 268 134 C250 120 228 112 200 110 S130 88 96 58 S72 46 62 44" stroke-dasharray="0 100" style="fill:none;stroke:var(--up);stroke-width:3;stroke-linecap:round"/>
+    <circle id="trv" cx="312" cy="152" r="7" style="fill:var(--bg);stroke:var(--up);stroke-width:3"/>
+    <path d="M62 44 V18" style="stroke:var(--fg);stroke-width:1.6"/><path d="M62 18 L84 25 L62 32 Z" style="fill:var(--gold)"/>
+    <text id="trg" x="62" y="10" text-anchor="middle" font-size="11" style="fill:var(--fg)">30,000</text>
+  </svg>
+  <div class="sub" id="gline"></div>
+  <div class="bar" id="bar" hidden></div>
+  <div class="sec">يحتاج انتباهك</div><div id="hattn"></div>
+  <div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span>العملات</span><button class="sm" id="allc">كل العملات</button></div>
+  <div id="hcoins"></div>
+</div>
 <div id="main" hidden>
-  <div class="c"><h3>الرصيد</h3>
-    <div class="big"><span class="n" id="tot">$0</span></div>
-    <div class="sub" id="totsub"></div>
-    <div class="bar" id="bar"></div>
-  </div>
   <div class="c"><h3 class="plain">العملات</h3><div style="margin-bottom:4px"><button class="sm" id="avgall">حساب الربح لكل العملات</button></div><div id="coins"></div></div>
   <div class="c closed" id="cord"><h3 class="fold" data-f="cord"><span>الأوامر المفتوحة <span class="sm2" id="ordsum"></span></span><span class="chev">›</span></h3><div class="fb"><div id="ords"></div><div id="newo" style="margin-top:10px" hidden><button class="sm" id="newbtn">+ أمر جديد</button></div></div></div>
   <div class="c closed" id="ctod"><h3 class="fold" data-f="ctod"><span>صفقات اليوم <span class="sm2" id="todsum"></span></span><span class="chev">›</span></h3><div class="fb"><div id="today"><div class="sub">اضغط «تحميل» لعرض صفقات اليوم</div></div><div style="margin-top:10px"><button class="sm" id="tdbtn">تحميل صفقات اليوم</button></div></div></div>
 </div>
 
+  <div id="ordp" hidden><div class="c"><h3 class="plain">أمر واحد</h3><div class="sub">أمر Limit بسعر وكمية تحددهما. لا يُرسل إلا بعد مراجعتك وتأكيدك.</div><button class="go" id="newbtn2" style="margin-top:10px;width:100%">أمر جديد</button></div></div>
+  <div id="stg" class="c" hidden><h3 class="plain">الهدف والمظهر</h3>
+    <label for="stc">رأس المال الأول $</label><input id="stc" inputmode="decimal">
+    <label for="snd">صافي الإيداعات والسحوبات $ (سالب إن سحبت)</label><input id="snd" inputmode="decimal">
+    <label for="sgl">الهدف $</label><input id="sgl" inputmode="decimal" placeholder="30000">
+    <div class="sub">الربح = الرصيد − رأس المال − صافي الإيداعات. يظهر التقدّم في الرئيسية.</div>
+    <label>المظهر</label><div class="seg"><button data-th="auto">تلقائي</button><button data-th="light">فاتح</button><button data-th="dark">داكن</button></div>
+  </div>
   <div id="risk" hidden>
     <div id="rwarn"></div>
     <div class="c"><h3 class="plain">التركّز</h3>
@@ -159,8 +188,8 @@ textarea{width:100%;font:inherit;direction:ltr;color:var(--fg);background:var(--
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">عمليات البيع <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 13</div>
-<nav class="tabs" id="tabs" hidden><div><button data-tab="home">الحساب</button><button data-tab="risk">المخاطر</button><button data-tab="calc">الحاسبة</button><button data-tab="lad">السلّم</button><button data-tab="hal">الشرعية</button><button data-tab="jr">السجل</button></div></nav>
+<div class="note" style="text-align:center" id="foot">النسخة 14</div>
+<nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
 <script>
@@ -316,7 +345,7 @@ function avgFor(sym,held){
 }
 
 /* --- state / render --- */
-var RUN=0,VER="13",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
+var RUN=0,VER="14",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
 function render(){
   if(!snap)return;
   var as=snap.assets.map(function(a){a.avg=AVG[a.sym]?AVG[a.sym].a:0;return a}).sort(function(a,b){return b.val-a.val});
@@ -366,7 +395,7 @@ function render(){
     }
     return h;
   }).join(""):'<div class="sub">لا توجد أوامر مفتوحة</div>';
-  renderRisk(as,tot);
+  renderRisk(as,tot);renderHome(as,tot);
   ages();
 }
 function ages(){
@@ -377,14 +406,20 @@ function ages(){
 function err(m){var e=$("err");e.textContent=m||"";e.hidden=!m}
 function show(){
   $("newo").hidden=!CAN;
-  var has=!!(creds().k&&creds().s);
-  var ok=has&&!forceCfg;
-  $("setup").hidden=ok;$("tabs").hidden=!ok;$("rf").hidden=!has;
-  $("main").hidden=!(ok&&snap&&TAB==="home");$("risk").hidden=!(ok&&snap&&TAB==="risk");$("calc").hidden=!(ok&&TAB==="calc");$("lad").hidden=!(ok&&TAB==="lad");$("hal").hidden=!(ok&&TAB==="hal");$("jr").hidden=!(ok&&TAB==="jr");
+  var has=!!(creds().k&&creds().s),sb=SUB,ld=!snap&&has&&(TAB==="home"||TAB==="wal"||(TAB==="ana"&&sb.ana==="risk"));
+  var secs={hm:has&&snap&&TAB==="home",main:has&&snap&&TAB==="wal",ordp:has&&TAB==="trd"&&sb.trd==="ord",lad:has&&TAB==="trd"&&sb.trd==="lad",calc:has&&TAB==="trd"&&sb.trd==="calc",risk:has&&snap&&TAB==="ana"&&sb.ana==="risk",jr:has&&TAB==="ana"&&sb.ana==="jr",setup:!has||(TAB==="set"&&sb.set==="key"),stg:has&&TAB==="set"&&sb.set==="key",hal:has&&TAB==="set"&&sb.set==="hal",hload:ld};
+  for(var k in secs)$(k).hidden=!secs[k];
+  $("tabs").hidden=!has;$("rf").hidden=!has;
+  var sn=$("subnav"),l2=SUBL[TAB];
+  if(has&&l2){sn.hidden=false;sn.innerHTML=l2.map(function(x){return '<button data-sub="'+x[0]+'"'+(sb[TAB]===x[0]?' class="on"':'')+'>'+x[1]+'</button>'}).join("")}else sn.hidden=true;
   var tb=document.querySelectorAll("#tabs button");for(var i=0;i<tb.length;i++)tb[i].classList.toggle("on",tb[i].getAttribute("data-tab")===TAB);
 }
-var TAB=LS.g("tab")||"home";if(["home","risk","calc","lad","hal","jr"].indexOf(TAB)<0)TAB="home";
-function setTab(t){TAB=t;LS.s("tab",t);forceCfg=false;show();render();if(t==="hal")renderHal();if(t==="lad")ladHint();if(t==="jr")renderJournal();try{window.scrollTo(0,0)}catch(e){}}
+var SUBL={trd:[["ord","أمر"],["lad","سلّم"],["calc","حاسبة"]],ana:[["risk","المخاطر"],["jr","السجل"]],set:[["key","الحساب"],["hal","الشرعية"]]};
+var SUB=(function(){try{var j=JSON.parse(LS.g("sub")||"{}");return{trd:j.trd||"ord",ana:j.ana||"risk",set:j.set||"key"}}catch(e){return{trd:"ord",ana:"risk",set:"key"}}})();
+var TAB=LS.g("tab")||"home";if(["home","wal","trd","ana","set"].indexOf(TAB)<0)TAB="home";
+function enter(){show();render();if(TAB==="set"&&SUB.set==="hal")renderHal();if(TAB==="trd"&&SUB.trd==="lad")ladHint();if(TAB==="ana"&&SUB.ana==="jr")renderJournal();try{window.scrollTo(0,0)}catch(e){}}
+function setTab(t){TAB=t;LS.s("tab",t);enter()}
+function applyTheme(){var t=LS.g("theme")||"auto",r=document.documentElement;if(t==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",t);var b=document.querySelectorAll("[data-th]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-th")===t)}
 var forceCfg=false;
 
 function refresh(){
@@ -418,6 +453,28 @@ function refresh(){
   }).then(function(){clearTimeout(wd);if(my===RUN){busy=false;$("rf").classList.remove("spin")}});
 }
 
+
+/* --- home --- */
+function goalCfg(){return{s:parseFloat(LS.g("startcap")),d:parseFloat(LS.g("netdep"))||0,g:parseFloat(LS.g("goal"))||30000}}
+function setTrail(p){try{var L=$("trk").getTotalLength(),pt=$("trk").getPointAtLength(L*p);$("trv").setAttribute("cx",pt.x);$("trv").setAttribute("cy",pt.y)}catch(e){$("trv").setAttribute("cx",312);$("trv").setAttribute("cy",152)}$("trs").setAttribute("stroke-dasharray",(p*100)+" 100")}
+var ICW='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v5M12 18v.5"/></svg>',ICC='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--up)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+function renderHome(as,tot){
+  var gc=goalCfg(),p=0,line;
+  $("trg").textContent=gc.g.toLocaleString("en-US");
+  if(gc.s>0){var pr=tot-gc.s-gc.d;p=Math.max(0,Math.min(1,pr/gc.g));
+    line=pr>=0?'باقٍ للقمة <span class="n">'+Math.max(0,gc.g-pr).toLocaleString("en-US",{maximumFractionDigits:0})+'</span> · أنجزت <span class="n">'+(pr/gc.g*100).toFixed(1)+'%</span> · ربحك <span class="n up">'+sg(pr)+'</span>':'أنت تحت نقطة البداية بـ <span class="n down">'+usd(-pr,0)+'</span>'}
+  else line='حدّد رأس مالك في الإعدادات لحساب التقدّم نحو الهدف';
+  $("gline").innerHTML=line;setTrail(p);
+  var rc=rcap(),at=[],cash=snap.usdt+as.filter(function(a){return STABLE[a.sym]}).reduce(function(t,a){return t+a.val},0);
+  as.forEach(function(a){if(STABLE[a.sym])return;var sh=tot>0?a.val/tot*100:0;if(sh>rc)at.push(ICW+'<div>'+esc(a.sym)+' وحدها <span class="n">'+sh.toFixed(0)+'%</span> من محفظتك، فوق سقفك</div>')});
+  var cp=tot>0?cash/tot*100:0;if(cp<10)at.push(ICW+'<div>السيولة <span class="n">'+cp.toFixed(0)+'%</span> فقط</div>');
+  var near=[];snap.orders.forEach(function(o){var l=snap.px[o.symbol];if(!l)return;var d=(o.price/l-1)*100;if(Math.abs(d)<=3)near.push({s:o.symbol.replace(/USDT$/,""),d:d,b:o.side==="BUY"})});
+  near.sort(function(x,y){return Math.abs(x.d)-Math.abs(y.d)}).slice(0,2).forEach(function(x){at.push(ICC+'<div>'+esc(x.s)+': أمر '+(x.b?"شراء":"بيع")+' قريب من التنفيذ <span class="n">'+pc(x.d)+'</span></div>')});
+  var outl=as.filter(function(a){return !STABLE[a.sym]&&a.val>=DUST&&!halS(a.sym)}).length;if(outl)at.push(ICW+'<div>'+outl+' عملات في محفظتك خارج قائمة الشرعية</div>');
+  $("hattn").innerHTML=at.length?at.slice(0,4).map(function(x){return '<div class="att">'+x+'</div>'}).join(""):'<div class="att"><div class="flat">لا شيء يحتاج انتباهك الآن</div></div>';
+  var big=as.filter(function(a){return !STABLE[a.sym]&&a.val>=DUST}).slice(0,4);
+  $("hcoins").innerHTML=big.map(function(a){var sh=tot>0?a.val/tot*100:0,pl=a.avg?(a.price/a.avg-1)*100:null;return '<div class="hc"><div class="a"><span style="font-weight:600">'+esc(a.sym)+' <span class="sh n">'+sh.toFixed(0)+'%</span>'+(pl!=null?' <span class="n '+cl(pl)+'" style="font-size:.78rem">'+pc(pl)+'</span>':'')+'</span><span class="n" style="font-size:1rem">'+usd(a.val,0)+'</span></div><div class="tr"><i style="width:'+Math.min(100,sh)+'%"></i></div></div>'}).join("")||'<div class="sub">لا عملات</div>';
+}
 
 /* --- risk --- */
 function rcap(){var v=parseFloat(LS.g("rcap"));return v>0?v:35}
@@ -710,6 +767,10 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-hdel]"))){delete HAL[el.getAttribute("data-hdel")];halSave();renderHal();render();return}
   if(t.id==="hav"){t.textContent="…";call("/api/v3/ticker/price",{},false).then(function(r){if(!Array.isArray(r))throw new Error("رد غير متوقع");var m={};r.forEach(function(x){m[x.symbol]=1});var av=Object.keys(BASE).filter(function(b){return m[b+"USDT"]}).sort();LS.s("avail",JSON.stringify(av));t.textContent="تحقق من المتاح في بايننس";renderHal()}).catch(function(e){t.textContent="تحقق من المتاح في بايننس";err("تعذّر: "+e.message)});return}
   if(t.id==="havl"){var o=$("havout");o.hidden=!o.hidden;if(!o.hidden){var av=[];try{av=JSON.parse(LS.g("avail")||"[]")}catch(e){}o.innerHTML=av.length?av.map(function(c){return '<span class="chip" data-hpick="'+c+'">'+c+'</span>'}).join(""):'<div class="sub">اضغط «تحقق» أولاً</div>'}return}
+  if((el=t.closest("[data-sub]"))){SUB[TAB]=el.getAttribute("data-sub");LS.s("sub",JSON.stringify(SUB));return enter()}
+  if((el=t.closest("[data-th]"))){LS.s("theme",el.getAttribute("data-th"));return applyTheme()}
+  if(t.id==="allc")return setTab("wal");
+  if(t.id==="newbtn2"){if(!CAN){err("جارٍ التحقق من المفتاح، حاول بعد لحظة");return}return tradeSheet("")}
   if(t.id==="jload")return jLoad();
   if((el=t.closest("[data-jrg]"))){JRG=+el.getAttribute("data-jrg");return renderJournal()}
   if(t.closest("textarea"))return;
@@ -790,8 +851,9 @@ $("lad").addEventListener("input",function(){L.rows=null;ladHint()});
 $("rcapin").addEventListener("change",function(){var v=parseFloat($("rcapin").value);if(v>0){LS.s("rcap",String(v));render()}});
 try{var cs=JSON.parse(LS.g("calc")||"{}");CIDS.forEach(function(i){if(cs[i]!=null)$(i).value=cs[i]})}catch(e){}
 $("jr").addEventListener("change",function(ev){var t=ev.target;if(t.getAttribute&&t.getAttribute("data-jt")){var k=t.getAttribute("data-jt"),v=t.value.trim();if(v)JN[k]=v;else delete JN[k];LS.s("jnotes",JSON.stringify(JN))}});
+$("stg").addEventListener("input",function(){var m={stc:"startcap",snd:"netdep",sgl:"goal"};for(var k in m){var v=parseFloat($(k).value);if(isNaN(v))LS.d(m[k]);else LS.s(m[k],String(v))}render()});
+$("stc").value=LS.g("startcap")||"";$("snd").value=LS.g("netdep")||"";$("sgl").value=LS.g("goal")||"";applyTheme();
 $("rf").onclick=refresh;
-$("cfg").onclick=function(){forceCfg=!forceCfg;show()};
 $("save").onclick=function(){var k=$("k").value.trim(),s=$("s").value.trim();if(!k||!s){err("أدخل المفتاح والسر");return}LS.s("bk",k);LS.s("bs",s);var cv=parseFloat($("cap").value);if(cv>0)LS.s("cap",String(cv));PERM=null;$("k").value="";$("s").value="";err("");forceCfg=false;show();refresh()};
 $("clr").onclick=function(){LS.d("bk");LS.d("bs");CAN=false;PERM=null;$("perm").hidden=true;LS.d("snap");LS.d("avg");snap=null;AVG={};forceCfg=false;err("");show()};
 document.addEventListener("click",function(ev){
