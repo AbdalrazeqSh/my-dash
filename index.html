@@ -136,15 +136,19 @@ textarea{width:100%;font:inherit;direction:ltr;color:var(--fg);background:var(--
   </div>
   <div id="hal" hidden>
     <div class="c"><h3 class="plain">قائمة الشرعية</h3>
-      <div class="sub" style="margin:0 0 8px">حكمك أنت على كل عملة. شراء الممنوعة يُمنع، وغير المصنّفة أو قيد المراجعة تُحذَّر.</div>
+      <div class="sub" style="margin:0 0 8px">حكمك أنت على كل عملة. الشراء مسموح فقط للعملات في قائمتك الأساسية أو المصنّفة «مسموحة». الممنوعة والخارجة عن القائمة تُمنع، وقيد المراجعة تُحذَّر.</div>
       <div class="g2"><div><label for="hs">العملة</label><input id="hs" autocapitalize="characters" autocomplete="off"></div><div><label for="hn">ملاحظة</label><input id="hn" style="direction:rtl"></div></div>
       <div class="seg" style="margin-top:10px"><button class="buy" data-hs="ok">مسموحة</button><button data-hs="rev" style="color:var(--gold)">مراجعة</button><button class="sell" data-hs="no">ممنوعة</button></div>
       <div id="hun" style="margin-top:10px"></div>
     </div>
+    <div class="c"><h3 class="plain">القائمة الأساسية (من ملفك)</h3>
+      <div class="sub" id="hbase"></div>
+      <div style="display:flex;gap:8px;margin-top:8px"><button id="hav">تحقق من المتاح في بايننس</button><button id="havl">عرض</button></div>
+      <div id="havout" style="margin-top:8px" hidden></div></div>
     <div class="c"><h3 class="plain">القائمة <span class="sm2" id="hcnt"></span></h3><div id="hlist"></div></div>
     <div class="c closed" id="chb"><h3 class="fold" data-f="chb"><span>نسخ احتياطي ونقل</span><span class="chev">›</span></h3><div class="fb"><div class="sub" style="margin:0 0 6px">انسخ النص هنا والصقه في الجهاز الآخر ثم «استيراد».</div><textarea id="hjs"></textarea><div style="display:flex;gap:8px;margin-top:8px"><button id="hexp">تصدير</button><button id="himp">استيراد</button></div></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 9</div>
+<div class="note" style="text-align:center" id="foot">النسخة 10</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home">الحساب</button><button data-tab="risk">المخاطر</button><button data-tab="calc">الحاسبة</button><button data-tab="lad">السلّم</button><button data-tab="hal">الشرعية</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -301,7 +305,7 @@ function avgFor(sym,held){
 }
 
 /* --- state / render --- */
-var RUN=0,VER="9",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
+var RUN=0,VER="10",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
 function render(){
   if(!snap)return;
   var as=snap.assets.map(function(a){a.avg=AVG[a.sym]?AVG[a.sym].a:0;return a}).sort(function(a,b){return b.val-a.val});
@@ -324,7 +328,7 @@ function render(){
     var tg='';
     if(oi.sn)tg+='<span class="tag s" style="margin:0">بيع ×'+oi.sn+(oi.sd!=null?' · أقرب '+pc(oi.sd):'')+'</span>';
     if(oi.bn)tg+='<span class="tag b" style="margin:0">شراء ×'+oi.bn+(oi.bd!=null?' · أقرب '+pc(oi.bd):'')+'</span>';
-    var hh=halS(a.sym);if(hh==='no')tg+='<span class="tag s" style="margin:0">ممنوعة</span>';else if(hh==='rev')tg+='<span class="tag g" style="margin:0">مراجعة</span>';
+    var hh=halS(a.sym);if(hh==='no')tg+='<span class="tag s" style="margin:0">ممنوعة</span>';else if(hh==='rev')tg+='<span class="tag g" style="margin:0">مراجعة</span>';else if(!hh&&!STABLE[a.sym])tg+='<span class="tag g" style="margin:0">خارج القائمة</span>';
     return '<div class="coin"><div class="a"><span class="nm"><span style="color:'+COL[Math.min(i,5)]+'">●</span> '+esc(a.sym)+'<span class="sh">'+share.toFixed(share<10?1:0)+'%</span></span><span class="vl n">'+usd(a.val)+'</span></div>'+
       '<div class="b"><span><span class="n">'+qt(a.qty)+'</span> × '+(a.price?'<span class="n">'+px(a.price)+'</span>':'بلا سعر USDT')+'</span>'+
       (a.avg?'<span class="pl n '+cl(pv)+'">'+sg(pv)+' ('+pc(p)+')</span>':'<span class="flat" data-g="'+esc(a.sym)+'" style="text-decoration:underline">احسب الربح</span>')+'</div>'+
@@ -458,8 +462,9 @@ function calcRun(){
 }
 
 /* --- halal list --- */
+var HALAL_BASE="0G,2Z,ACH,ACN,ACT,ACU,ADA,ADI,AGI,AGLD,AGRS,AGT,AIA,AIN,AIO,AIOT,AIX,AIXBT,AKE,ALCH,ALEO,ALEPH,ALGO,ALI,ALPH,ALPINE,ALTLAYER,AME,AMP,ANKR,ANYONE,AO,APE,API3,APT,APTM,AR,ARB,ARC,ARCS,ARCSOL,AREA,ARK,ARKM,ARPA,ARRR,ART,ARX,ASM,ASP,ASTR,AT,ATH,ATLAS,ATOM,ATR,ATS,AUKI,AURORA,AVA,AVAAI,AVAIL,AVAX,AWE,AZERO,AZTEC,B2,B3,B3TR,BANANA,BAT,BCH,BDX,BDXN,BEAM,BEAMX,BGSC,BICO,BID,BILL,BIO,BIOFI,BLEND,BLESS,BLUAI,BMT,BOBA,BOSON,BREV,BSV,BTC,BTT,BZZ,CAMP,CARR,CARV,CBK,CCD,CELL,CELO,CELR,CESS,CFX,CGPT,CHEQ,CHEX,CHR,CHZ,CKB,CLANKER,CLS,COAI,COMAI,COOKIE,CORE,COS,CREO,CROSS,CSPR,CTK,CTP,CUDIS,CWEB,CYBER,CYS,DASH,DATA,DCR,DDMT,DEAI,DEGEN,DEXE,DIAM,DIN,DKA,DMTR,DN,DNX,DOGE,DOP2,DOT,DSYNC,DUSK,EAI,ECHELON,EDEN,EDGE,EDU,EFFECT,EGLD,EGO,EIGEN,EL,ELA,ELF,ELIZAOS,ELSA,ENJ,ENS,ENSO,EPIC,ERA,ES,ESP,ESX,ETC,ETH,ETHW,ETN,EURI,EWT,FDUSD,FET,FHE,FIDA,FIL,FIRO,FITFI,FLOCK,FLR,FLT,FLUX,FORT,FREEDOM,FUEL,GAIA,GAIN,GALA,GEOD,GHX,GLMR,GLQ,GOMINING,GPS,GRAM,GRASS,GRIFFAIN,GRT,GTAI,GTC,GWEI,HAI,HASHAI,HBAR,HEART,HEU,HIGH,HIVE,HMND,HNS,HNT,HOLO,HONEY,HOOK,HOPR,HOT,HTR,HYPER,ICNT,ICP,ID,IKA,IMU,IMX,INIT,IO,ION,IOST,IOTA,IOTX,IQ,IRON,IRYS,ISP,JASMY,JCT,KAIA,KAITO,KARRAT,KAS,KAT,KGEN,KITE,KITEAI,KLV,KSM,KTA,KULA,L3,LA,LAT,LAVA,LBC,LINEA,LINK,LIT,LKY,LL,LOT,LPT,LRC,LTC,LUMIA,LUNA,LYN,LYX,MAGIC,MAN,MANA,MANTA,MAP,MAPO,MASK,MAT,MATH,ME,MEGA,MERL,METIS,MGO,MINA,MIRA,MNTC,MOCA,MON,MOVE,MOVR,MPC,MYRIA,MYST,NAORIS,NATIX,NAVI,NC,NCDT,NCT,NEAR,NEON,NERO,NES,NETX,NEWT,NEXA,NFP,NFT,NIGHT,NIL,NIM,NKN,NOCK,NODL,NOS,NRG,NS,NTX,NUM,NXRA,NYM,OAS,OBOL,OBT,OCTA,OL,OLAS,OMG,OMI,ON,ONE,ONG,ONI,OORT,OP,OPEN,OPENX,OPG,ORAI,ORDI,OVPP,OVR,OWL,OXT,PAAL,PAL,PART,PARTI,PAYAI,PEAQ,PEP,PEPECOIN,PHA,PHB,PIB,PIEVERSE,PIGGY,PIVX,PLAY,POKT,POL,POLYX,POND,PORTAL,POWER,PPC,PRL,PRO,PROMPT,PROPC,PROPS,PROVE,PUBLIC,PUNDIAI,PUNDIX,PUSH,PYTH,QAIT,QBX,QKC,QNT,QRL,QTUM,QUAI,QUBIC,RAD,RAIL,RARE,REAL,REEF,RENDER,REQ,RIF,RIO,RIZ,RIZE,RLC,RNBW,ROAM,RON,ROSE,RSC,RSR,RSS3,RVN,RXD,SAFE,SAGA,SAHARA,SAND,SAPIEN,SC,SCR,SCRT,SEI,SENT,SERV,SFP,SHARE,SHELL,SHM,SHR,SHX,SIGN,SIX,SKL,SKR,SKYAI,SNAI,SNS,SNSY,SNT,SOL,SOLVEX,SOMI,SONIC,SOON,SOPH,SOSO,SPACE,SPEC,SQD,SQT,SRC,SRX,SSV,ST,STABLE,STAR,STBU,STEEM,STORJ,STREAM,STX,SUI,SUPRA,SWARMS,SWFTC,SXT,SYL,SYS,TA,TAG,TAI,TAIKO,TAKE,TAO,TARA,TEL,TERRA,TET,TFUEL,THREE,TIA,TLOS,TNSR,TOKEN,TORN,TOWNS,TRAC,TRUF,TRUST,TRVL,TRX,TTM,TTN,TUSD,TWT,TX,U2U,ULTIMA,UPC,UQC,US,USAT,USDC,USDP,VAI,VANA,VANRY,VELO,VERONA,VET,VEX,VIRTUAL,VR,VRA,VSYS,VTHO,VVV,WAL,WALLI,WAVES,WAXP,WBAI,WCT,WIN,WLD,WMTX,WXT,XAI,XAN,XCH,XCN,XCX,XDB,XEC,XEL,XEP,XL1,XLM,XMN,XMR,XNA,XNY,XPL,XR,XRD,XRP,XRPH,XSWAP,XTER,XTZ,XU3O8,XUSD,XVG,XYM,XYO,YNE,YOM,ZAMA,ZANO,ZBCN,ZEC,ZEN,ZENT,ZETA,ZIG,ZIL,ZK,ZKC,ZKJ,ZKP,ZKWASM,ZRC,ZRO,ZTC";var BASE={};HALAL_BASE.split(",").forEach(function(x){BASE[x]=1});
 var HAL=(function(){try{return JSON.parse(LS.g("halal")||"{}")}catch(e){return{}}})(),HSEL="ok";
-function halS(sym){return HAL[sym]?HAL[sym].s:null}
+function halS(sym){if(HAL[sym])return HAL[sym].s;return BASE[sym]?"ok":null}
 function halSave(){LS.s("halal",JSON.stringify(HAL))}
 var HN={ok:"مسموحة",rev:"مراجعة",no:"ممنوعة"};
 function halCheck(sym,side){
@@ -467,12 +472,14 @@ function halCheck(sym,side){
   var h=halS(sym);
   if(h==="no")return{block:true,msg:esc(sym)+" ممنوعة حسب قائمتك. لن يُرسل أمر شراء."};
   if(h==="rev")return{block:false,msg:esc(sym)+" قيد المراجعة في قائمتك."};
-  if(!h)return{block:false,msg:esc(sym)+" غير مصنّفة في قائمة الشرعية."};
+  if(!h)return{block:true,msg:esc(sym)+" ليست في قائمتك المسموحة. أضفها من تبويب الشرعية إن أردت شراءها."};
   return{block:false,msg:""};
 }
 function renderHal(){
   var k=Object.keys(HAL).sort(function(a,b){var o={no:0,rev:1,ok:2};return o[HAL[a].s]-o[HAL[b].s]||(a<b?-1:1)});
   $("hcnt").textContent=k.length?k.length+" عملة":"";
+  var av=[];try{av=JSON.parse(LS.g("avail")||"[]")}catch(e){}
+  $("hbase").textContent=Object.keys(BASE).length+" عملة مسموحة في ملفك"+(av.length?" · متاح منها في بايننس بـ USDT: "+av.length:"")+". تصنيفاتك اليدوية تتقدّم على الملف.";
   $("hlist").innerHTML=k.length?k.map(function(c){var h=HAL[c];
     return '<div class="row"><div class="l"><b>'+esc(c)+' <span class="tag '+(h.s==="ok"?"b":h.s==="no"?"s":"g")+'">'+HN[h.s]+'</span></b>'+(h.n?'<small>'+esc(h.n)+'</small>':'')+'</div><div class="r"><button class="sm" data-hedit="'+esc(c)+'">تعديل</button> <button class="sm" data-hdel="'+esc(c)+'">حذف</button></div></div>';}).join(""):'<div class="sub">القائمة فارغة</div>';
   var un=snap?snap.assets.filter(function(a){return !STABLE[a.sym]&&a.val>=DUST&&!HAL[a.sym]}):[];
@@ -628,6 +635,8 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-hpick]"))){$("hs").value=el.getAttribute("data-hpick");return}
   if((el=t.closest("[data-hedit]"))){var c1=el.getAttribute("data-hedit");$("hs").value=c1;$("hn").value=HAL[c1].n||"";HSEL=HAL[c1].s;renderHal();return}
   if((el=t.closest("[data-hdel]"))){delete HAL[el.getAttribute("data-hdel")];halSave();renderHal();render();return}
+  if(t.id==="hav"){t.textContent="…";call("/api/v3/ticker/price",{},false).then(function(r){if(!Array.isArray(r))throw new Error("رد غير متوقع");var m={};r.forEach(function(x){m[x.symbol]=1});var av=Object.keys(BASE).filter(function(b){return m[b+"USDT"]}).sort();LS.s("avail",JSON.stringify(av));t.textContent="تحقق من المتاح في بايننس";renderHal()}).catch(function(e){t.textContent="تحقق من المتاح في بايننس";err("تعذّر: "+e.message)});return}
+  if(t.id==="havl"){var o=$("havout");o.hidden=!o.hidden;if(!o.hidden){var av=[];try{av=JSON.parse(LS.g("avail")||"[]")}catch(e){}o.innerHTML=av.length?av.map(function(c){return '<span class="chip" data-hpick="'+c+'">'+c+'</span>'}).join(""):'<div class="sub">اضغط «تحقق» أولاً</div>'}return}
   if(t.id==="hexp"){$("hjs").value=JSON.stringify(HAL);return}
   if(t.id==="himp"){try{var j=JSON.parse($("hjs").value);if(j&&typeof j==="object"){Object.keys(j).forEach(function(k){if(j[k]&&HN[j[k].s])HAL[k]={s:j[k].s,n:String(j[k].n||"")}});halSave();renderHal();render();err("")}}catch(e){err("نص الاستيراد غير صالح")}return}
   if(t.id==="newbtn")return tradeSheet("");
