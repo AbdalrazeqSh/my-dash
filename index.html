@@ -78,7 +78,7 @@ h3.plain{margin-bottom:6px}
 #rf.spin #rfi{animation:sp .8s linear infinite}
 [hidden]{display:none!important}
 </style></head><body>
-<div class="top"><div><b>حسابي</b><div class="age"><span id="age"></span> <span class="badge" id="perm" hidden></span></div></div><div><button id="rf" class="go" hidden><span id="rfi" style="display:inline-block">↻</span> تحديث</button></div></div>
+<div class="top"><div><b>حسابي</b><div class="age"><span id="age"></span> <span class="badge" id="perm" hidden></span></div></div><div><button id="rf" hidden><span id="rfi" style="display:inline-block">↻</span> تحديث</button></div></div>
 <div id="err" class="err" hidden></div>
 
 <div id="setup" class="c" hidden>
@@ -188,7 +188,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">عمليات البيع <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 14</div>
+<div class="note" style="text-align:center" id="foot">النسخة 15</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -345,12 +345,12 @@ function avgFor(sym,held){
 }
 
 /* --- state / render --- */
-var RUN=0,VER="14",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
+var RUN=0,VER="15",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
 function render(){
   if(!snap)return;
   var as=snap.assets.map(function(a){a.avg=AVG[a.sym]?AVG[a.sym].a:0;return a}).sort(function(a,b){return b.val-a.val});
   var hold=as.reduce(function(t,a){return t+a.val},0),tot=snap.usdt+hold;
-  $("tot").textContent=usd(tot);
+  $("tot").textContent=usd(tot,0);
   var pnl=as.reduce(function(t,a){return t+(a.avg?(a.price-a.avg)*a.qty:0)},0);
   $("totsub").innerHTML="عملات "+usd(hold)+" · سيولة "+usd(snap.usdt)+(pnl?" · ربح مفتوح <span class='n "+cl(pnl)+"'>"+sg(pnl)+"</span>":"");
   var parts=as.filter(function(a){return a.val>=DUST}).map(function(a){return{k:a.sym,v:a.val}});var dsum=as.filter(function(a){return a.val<DUST}).reduce(function(t,a){return t+a.val},0);if(dsum>0)parts.push({k:"أخرى",v:dsum});if(snap.usdt>0)parts.push({k:"USDT",v:snap.usdt});
