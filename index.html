@@ -227,7 +227,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 21</div>
+<div class="note" style="text-align:center" id="foot">النسخة 22</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -440,7 +440,7 @@ function render(){
 function ages(){
   if(!snap){$("age").textContent="";return}
   var s=Math.round((Date.now()-snap.t)/1000);
-  $("age").textContent=busy?"جارٍ التحديث…":"آخر تحديث قبل "+(s<60?s+" ث":Math.round(s/60)+" د");
+  $("age").textContent=busy?"جارٍ التحديث…":"آخر تحديث قبل "+(s<60?(s<3?"لحظات":s+" ثانية"):(function(m){return m===1?"دقيقة":m===2?"دقيقتين":m<=10?m+" دقائق":m+" دقيقة"})(Math.round(s/60)));
 }
 function err(m){var e=$("err");e.textContent=m||"";e.hidden=!m}
 function show(){
@@ -791,10 +791,14 @@ function renderJournal(){
       (op?'<div class="sub2"><textarea data-jt="'+esc(e.k)+'" placeholder="ملاحظة: سبب الدخول، ما تعلمته…" style="direction:rtl;min-height:60px">'+esc(nt)+'</textarea></div>':'');
   }).join(""):'<div class="sub">لا شيء</div>';
 }
+function N(t){return '<span class="n">'+t+'</span>'}
+function mix(h){return '<span style="direction:rtl;unicode-bidi:isolate;display:inline-block;text-align:right">'+h+'</span>'}
+function un(n,f){return n===1?f[0]:n===2?f[1]:N(n)+" "+(n<=10?f[2]:f[3])}
+var UD=["يوم","يومان","أيام","يوماً"],UH=["ساعة","ساعتان","ساعات","ساعة"],UM=["دقيقة","دقيقتان","دقائق","دقيقة"];
 function dur(ms){
   var m=Math.round(ms/6e4);if(m<1)return "أقل من دقيقة";
-  if(m<60)return m+" د";var h=Math.floor(m/60);if(h<24)return h+" س"+(m%60?" "+(m%60)+" د":"");
-  var d=Math.floor(h/24);return d+" ي"+(h%24?" "+(h%24)+" س":"");
+  if(m<60)return un(m,UM);var h=Math.floor(m/60);if(h<24)return un(h,UH)+(m%60?" و"+un(m%60,UM):"");
+  var d=Math.floor(h/24);return un(d,UD)+(h%24?" و"+un(h%24,UH):"");
 }
 function jCoin(sym){
   if(!JEV)return;
@@ -805,19 +809,19 @@ function jCoin(sym){
     if(e.fee)fee+=e.fee;if(e.fu)fu=1;if(e.ot&&e.t>e.ot){hs+=e.t-e.ot;hn++}if(e.pnl>best.pnl)best=e;if(e.pnl<worst.pnl)worst=e});
   var h='<h3 style="margin:0 0 4px">'+esc(sym)+' / USDT</h3><div class="sub" style="margin:0 0 8px">'+(JRG===1?"آخر 24 ساعة":JRG===3?"آخر 3 أيام":JRG?"آخر "+JRG+" يوماً":"كل الفترة")+'</div>';
   h+='<div class="sum">'+oRow("الربح المحقّق",sg(pnl)+" · "+pc(pnl/cost*100),cl(pnl))
-   +oRow("الصفقات",ev.length+" · نسبة الربح "+Math.round(w/ev.length*100)+"%")
+   +oRow("الصفقات",N(ev.length)+" · نسبة الربح "+N(Math.round(w/ev.length*100)+"%"),"",1)
    +oRow("متوسط الدخول → متوسط الخروج",px(cost/cs)+" → "+px(rev/q))
    +oRow("حجم البيع",usd(rev))
    +(w?oRow("متوسط الصفقة الرابحة","+"+usd(wp/w),"up"):"")+(ln?oRow("متوسط الصفقة الخاسرة","−"+usd(Math.abs(lp/ln)),"down"):"")
-   +(hn?oRow("متوسط مدة الصفقة",dur(hs/hn)):"")
-   +(fee>0?oRow("رسوم البيع",usd(fee,fee<0.01?4:2)+(fu?" + رسوم بعملة أخرى":"")):"")+'</div>';
+   +(hn?oRow("متوسط مدة الصفقة",dur(hs/hn),"",1):"")
+   +(fee>0?oRow("رسوم البيع",N(usd(fee,fee<0.01?4:2))+(fu?" + رسوم بعملة أخرى":""),"",fu?1:0):"")+'</div>';
   var hold=snap&&snap.assets.filter(function(a){return a.sym===sym})[0],oc=snap?snap.orders.filter(function(o){return o.symbol===sym+"USDT"}).length:0;
-  if(hold||oc)h+='<div class="sub" style="margin:0 0 8px">'+(hold?"لديك الآن "+qt(hold.qty)+" بقيمة "+usd(hold.val):"لا تملكها الآن")+(oc?" · "+oc+" أوامر مفتوحة":"")+'</div>';
+  if(hold||oc)h+='<div class="sub" style="margin:0 0 8px">'+(hold?"لديك الآن "+N(qt(hold.qty))+" بقيمة "+N(usd(hold.val)):"لا تملكها الآن")+(oc?" · "+un(oc,["أمر مفتوح","أمران مفتوحان","أوامر مفتوحة","أمراً مفتوحاً"]):"")+'</div>';
   h+='<div style="font-weight:600;margin:10px 0 2px">الصفقات</div>'+ev.map(function(e){
     var t0=e.ft?(dayKey(e.ft)===dayKey(e.t)?hm(e.ft)+(e.t-e.ft>6e4?" ← "+hm(e.t):""):dayKey(e.ft)+" "+hm(e.ft)+" ← "+dayKey(e.t)+" "+hm(e.t)):hm(e.t);
     return '<div class="row"><div class="l"><b><span class="n">'+e.day+'</span> <span class="n flat" style="font-weight:400">'+t0+'</span></b><small><span class="n">'+qt(e.q)+' @ '+px(e.rev/e.q)+'</span> · دخول <span class="n">'+px(e.cost/e.cs)+'</span>'
-     +(e.ot?' · دخلت <span class="n">'+dayKey(e.ot)+' '+hm(e.ot)+'</span> · المدة '+dur(Math.max(0,e.t-e.ot)):'')
-     +(e.nb>1?' · '+e.nb+' عمليات شراء':'')+(e.n>1?' · '+e.n+' تنفيذات بيع':'')+(e.cl===false?' · بقي جزء':'')
+     +(e.ot?' · دخلت '+N(dayKey(e.ot)+' '+hm(e.ot))+' · المدة '+dur(Math.max(0,e.t-e.ot)):'')
+     +(e.nb>1?' · شراء '+N('×'+e.nb):'')+(e.n>1?' · بيع '+N('×'+e.n):'')+(e.cl===false?' · بقي جزء':'')
      +(e.fee?' · رسوم <span class="n">'+usd(e.fee,e.fee<0.01?4:2)+'</span>':'')+(JN[e.k]?' · 📝 '+esc(JN[e.k]):'')+'</small></div><div class="r"><b class="n '+cl(e.pnl)+'">'+sg(e.pnl)+'</b><br><small class="n '+cl(e.pnl)+'">'+pc(e.pct)+'</small></div></div>'}).join("");
   if(!JEV.v)h+='<div class="note">لعرض أوقات الدخول والمدة اضغط «تحميل من بايننس» مرة أخرى.</div>';
   h+='<button id="tclose" style="width:100%;margin-top:12px">إغلاق</button>';
@@ -871,7 +875,7 @@ function oSync(){
     if(q>0&&p>0)$("ov").value=(q*p).toFixed(2);else $("ov").value="";
   }
 }
-function oRow(l,v,c){return '<div class="row"><div class="l">'+l+'</div><div class="r"><b class="n '+(c||"")+'">'+v+'</b></div></div>'}
+function oRow(l,v,c,raw){if(raw===undefined&&/[\u0600-\u06FF]/.test(v)){v=String(v).replace(/[+\u2212-]?\$?\d[\d,.]*%?/g,N);raw=1}return '<div class="row"><div class="l">'+l+'</div><div class="r"><b class="'+(raw?"":"n ")+(c||"")+'">'+(raw?mix(v):v)+'</b></div></div>'}
 function oCalc(){
   var sy=$("os").value.trim().toUpperCase(),o=$("osum"),buy=O.side==="BUY";
   $("ost").innerHTML=sy?halTag(sy,O.side):"";
