@@ -227,7 +227,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 22</div>
+<div class="note" style="text-align:center" id="foot">النسخة 23</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -796,9 +796,9 @@ function mix(h){return '<span style="direction:rtl;unicode-bidi:isolate;display:
 function un(n,f){return n===1?f[0]:n===2?f[1]:N(n)+" "+(n<=10?f[2]:f[3])}
 var UD=["يوم","يومان","أيام","يوماً"],UH=["ساعة","ساعتان","ساعات","ساعة"],UM=["دقيقة","دقيقتان","دقائق","دقيقة"];
 function dur(ms){
-  var m=Math.round(ms/6e4);if(m<1)return "أقل من دقيقة";
-  if(m<60)return un(m,UM);var h=Math.floor(m/60);if(h<24)return un(h,UH)+(m%60?" و"+un(m%60,UM):"");
-  var d=Math.floor(h/24);return un(d,UD)+(h%24?" و"+un(h%24,UH):"");
+  var m=Math.round(ms/6e4),t;
+  if(m<1)t="<1m";else if(m<60)t=m+"m";else{var h=Math.floor(m/60);if(h<24)t=h+"h"+(m%60?" "+(m%60)+"m":"");else{var d=Math.floor(h/24);t=d+"d"+(h%24?" "+(h%24)+"h":"")}}
+  return N(t);
 }
 function jCoin(sym){
   if(!JEV)return;
