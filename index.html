@@ -36,7 +36,7 @@ textarea{min-height:70px}
 button.sm{padding:3px 10px;font-size:.78rem;min-height:30px}
 button.buy{background:var(--buy);color:var(--onbs);border-color:transparent;font-weight:600}
 button.sell{background:var(--sell);color:var(--onbs);border-color:transparent;font-weight:600}
-.seg{display:flex;gap:8px}.seg button{flex:1}.seg button.on{outline:2px solid var(--fg)}
+.seg{display:flex;gap:8px}.seg button{flex:1}.seg button.on{outline:2px solid var(--fg)}.segs{gap:5px}.segs button{padding:8px 2px;font-size:.84rem}
 .subnav{margin-bottom:12px}.subnav button{background:transparent;color:var(--dim)}.subnav button.on{outline:0;background:var(--fg);color:var(--bg);border-color:transparent;font-weight:600}
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:9}
 .sheet>div{background:var(--s);border:1px solid var(--bd);border-radius:20px 20px 0 0;padding:16px 16px 24px;width:100%;max-width:640px;max-height:92vh;overflow:auto}
@@ -219,7 +219,7 @@ h3.plain{margin-bottom:6px}
   </div>
   <div id="jr" hidden>
     <div class="c"><h3 class="plain">سجل الصفقات</h3>
-      <div class="seg"><button data-jrg="7">7 أيام</button><button data-jrg="30" class="on">30 يوماً</button><button data-jrg="0">الكل</button></div>
+      <div class="seg segs"><button data-jrg="1">24 س</button><button data-jrg="3">3 أيام</button><button data-jrg="7">7 أيام</button><button data-jrg="30" class="on">30 يوماً</button><button data-jrg="0">الكل</button></div>
       <div style="display:flex;gap:8px;align-items:center;margin-top:10px"><button class="go" id="jload">تحميل من بايننس</button><span class="sub" style="margin:0" id="jinfo"></span></div>
       <div class="note" style="margin-top:6px">الربح محسوب بمتوسط التكلفة قبل الرسوم.</div>
     </div>
@@ -227,7 +227,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 20</div>
+<div class="note" style="text-align:center" id="foot">النسخة 21</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -803,7 +803,7 @@ function jCoin(sym){
   var pnl=0,cost=0,cs=0,rev=0,q=0,w=0,wp=0,lp=0,ln=0,fee=0,fu=0,hs=0,hn=0,best=ev[0],worst=ev[0];
   ev.forEach(function(e){pnl+=e.pnl;cost+=e.cost;cs+=e.cs;rev+=e.rev;q+=e.q;if(e.pnl>0){w++;wp+=e.pnl}else{ln++;lp+=e.pnl}
     if(e.fee)fee+=e.fee;if(e.fu)fu=1;if(e.ot&&e.t>e.ot){hs+=e.t-e.ot;hn++}if(e.pnl>best.pnl)best=e;if(e.pnl<worst.pnl)worst=e});
-  var h='<h3 style="margin:0 0 4px">'+esc(sym)+' / USDT</h3><div class="sub" style="margin:0 0 8px">'+(JRG?"آخر "+JRG+" يوماً":"كل الفترة")+'</div>';
+  var h='<h3 style="margin:0 0 4px">'+esc(sym)+' / USDT</h3><div class="sub" style="margin:0 0 8px">'+(JRG===1?"آخر 24 ساعة":JRG===3?"آخر 3 أيام":JRG?"آخر "+JRG+" يوماً":"كل الفترة")+'</div>';
   h+='<div class="sum">'+oRow("الربح المحقّق",sg(pnl)+" · "+pc(pnl/cost*100),cl(pnl))
    +oRow("الصفقات",ev.length+" · نسبة الربح "+Math.round(w/ev.length*100)+"%")
    +oRow("متوسط الدخول → متوسط الخروج",px(cost/cs)+" → "+px(rev/q))
