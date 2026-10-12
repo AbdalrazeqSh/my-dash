@@ -227,7 +227,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 19</div>
+<div class="note" style="text-align:center" id="foot">النسخة 20</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -377,7 +377,7 @@ function avgFor(sym,held){
     tr.sort(function(a,b){return a.time-b.time});
     tr.forEach(function(t){
       var qq=+t.qty,pp=+t.price;
-      if(t.isBuyer){q+=qq;cost+=qq*pp}else{var a=q>0?cost/q:0;q-=qq;cost-=qq*a;if(q<=1e-9){q=0;cost=0}}
+      if(t.isBuyer){q+=qq;cost+=qq*pp}else{var a=q>0?cost/q:0;q-=qq;cost-=qq*a;if(q<=1e-9){q=0;cost=0}e.cl=q<=1e-9;}
     });
     var avg=q>0?cost/q:0;AVG[sym]={a:avg,t:Date.now()};LS.s("avg",JSON.stringify(AVG));return avg;
   });
@@ -758,12 +758,16 @@ function jCompute(all){
   var by={};all.forEach(function(t){(by[t.sym]=by[t.sym]||[]).push(t)});
   var ev={};
   Object.keys(by).forEach(function(sym){
-    var tr=by[sym].sort(function(a,b){return a.time-b.time}),q=0,cost=0;
+    var tr=by[sym].sort(function(a,b){return a.time-b.time}),q=0,cost=0,cur={ot:0,nb:0};
     tr.forEach(function(t){
-      var qq=+t.qty,pp=+t.price;
-      if(t.isBuyer){q+=qq;cost+=qq*pp;return}
+      var qq=+t.qty,pp=+t.price,cm=+t.commission||0,fu=t.commissionAsset==="USDT"?cm:t.commissionAsset===sym?cm*pp:null;
+      if(t.isBuyer){if(q<=1e-9)cur={ot:t.time,nb:0};cur.nb++;q+=qq;cost+=qq*pp;return}
       var known=q>1e-9,a=known?cost/q:0,k=sym+"|"+dayKey(t.time),e=ev[k]||(ev[k]={k:k,sym:sym,day:dayKey(t.time),t:t.time,q:0,rev:0,cost:0,pnl:0,n:0,unk:0});
       e.q+=qq;e.rev+=qq*pp;e.n++;if(t.time>e.t)e.t=t.time;
+      if(!e.ft||t.time<e.ft)e.ft=t.time;
+      if(known&&cur.ot&&(!e.ot||cur.ot<e.ot))e.ot=cur.ot;
+      if(known)e.nb=Math.max(e.nb||0,cur.nb);
+      if(fu==null)e.fu=1;else e.fee=(e.fee||0)+fu;
       if(known){var uq=Math.min(qq,q);e.cost+=uq*a;e.pnl+=uq*(pp-a);e.cs=(e.cs||0)+uq}else e.unk+=qq;
       q-=qq;cost-=qq*a;if(q<=1e-9){q=0;cost=0}
     });
@@ -780,12 +784,44 @@ function renderJournal(){
   $("jsum").innerHTML='<div class="c"><h3>الربح المحقّق</h3><div class="big"><span class="n '+cl(tot)+'">'+sg(tot)+'</span></div><div class="sub">'+known.length+' صفقة مغلقة · نسبة الربح '+(known.length?Math.round(win/known.length*100):0)+'%'+(best?' · أفضل صفقة <span class="n up">'+sg(best.pnl)+'</span> '+esc(best.sym):'')+(worst&&worst.pnl<0?' · أسوأ صفقة <span class="n down">'+sg(worst.pnl)+'</span> '+esc(worst.sym):'')+'</div></div>';
   var cg={};known.forEach(function(e){var c=cg[e.sym]||(cg[e.sym]={s:e.sym,p:0,n:0,w:0,c:0});c.p+=e.pnl;c.n++;c.c+=e.cost;if(e.pnl>0)c.w++});
   var cs=Object.keys(cg).map(function(k){return cg[k]}).sort(function(a,b){return b.p-a.p});
-  $("jcoin").innerHTML=cs.length?cs.map(function(c){return '<div class="row"><div class="l"><b>'+esc(c.s)+'</b><small>'+c.n+' صفقات · نسبة الربح '+Math.round(c.w/c.n*100)+'%</small></div><div class="r"><b class="n '+cl(c.p)+'">'+sg(c.p)+'</b><br><small class="flat n">'+(c.c>0?pc(c.p/c.c*100):"")+'</small></div></div>'}).join(""):'<div class="sub">لا صفقات مغلقة في هذه الفترة</div>';
+  $("jcoin").innerHTML=cs.length?cs.map(function(c){return '<div class="row" data-jc="'+esc(c.s)+'" style="cursor:pointer"><div class="l"><b>'+esc(c.s)+' <span class="flat">›</span></b><small>'+c.n+' صفقات · نسبة الربح '+Math.round(c.w/c.n*100)+'%</small></div><div class="r"><b class="n '+cl(c.p)+'">'+sg(c.p)+'</b><br><small class="flat n">'+(c.c>0?pc(c.p/c.c*100):"")+'</small></div></div>'}).join(""):'<div class="sub">لا صفقات مغلقة في هذه الفترة</div>';
   $("jlist").innerHTML=ev.length?ev.slice(0,60).map(function(e){
     var nt=JN[e.k]||"",op=openJ[e.k];
     return '<div class="row" data-jk="'+esc(e.k)+'" style="cursor:pointer"><div class="l"><b>'+esc(e.sym)+'<span class="tag ts">بيع</span></b><small><span class="n">'+e.day+'</span> · <span class="n">'+qt(e.q)+' @ '+px(e.rev/e.q)+'</span>'+(e.cost>0?' · دخول <span class="n">'+px(e.cost/e.cs)+'</span>':' · متوسط الدخول غير معروف')+(nt?' · 📝':'')+'</small></div><div class="r">'+(e.cost>0?'<b class="n '+cl(e.pnl)+'">'+sg(e.pnl)+'</b><br><small class="flat n">'+pc(e.pct)+'</small>':'<span class="flat">—</span>')+'</div></div>'+
       (op?'<div class="sub2"><textarea data-jt="'+esc(e.k)+'" placeholder="ملاحظة: سبب الدخول، ما تعلمته…" style="direction:rtl;min-height:60px">'+esc(nt)+'</textarea></div>':'');
   }).join(""):'<div class="sub">لا شيء</div>';
+}
+function dur(ms){
+  var m=Math.round(ms/6e4);if(m<1)return "أقل من دقيقة";
+  if(m<60)return m+" د";var h=Math.floor(m/60);if(h<24)return h+" س"+(m%60?" "+(m%60)+" د":"");
+  var d=Math.floor(h/24);return d+" ي"+(h%24?" "+(h%24)+" س":"");
+}
+function jCoin(sym){
+  if(!JEV)return;
+  var from=JRG?Date.now()-JRG*864e5:0,ev=JEV.ev.filter(function(e){return e.sym===sym&&e.cost>0&&e.t>=from}).sort(function(a,b){return b.t-a.t});
+  if(!ev.length)return;
+  var pnl=0,cost=0,cs=0,rev=0,q=0,w=0,wp=0,lp=0,ln=0,fee=0,fu=0,hs=0,hn=0,best=ev[0],worst=ev[0];
+  ev.forEach(function(e){pnl+=e.pnl;cost+=e.cost;cs+=e.cs;rev+=e.rev;q+=e.q;if(e.pnl>0){w++;wp+=e.pnl}else{ln++;lp+=e.pnl}
+    if(e.fee)fee+=e.fee;if(e.fu)fu=1;if(e.ot&&e.t>e.ot){hs+=e.t-e.ot;hn++}if(e.pnl>best.pnl)best=e;if(e.pnl<worst.pnl)worst=e});
+  var h='<h3 style="margin:0 0 4px">'+esc(sym)+' / USDT</h3><div class="sub" style="margin:0 0 8px">'+(JRG?"آخر "+JRG+" يوماً":"كل الفترة")+'</div>';
+  h+='<div class="sum">'+oRow("الربح المحقّق",sg(pnl)+" · "+pc(pnl/cost*100),cl(pnl))
+   +oRow("الصفقات",ev.length+" · نسبة الربح "+Math.round(w/ev.length*100)+"%")
+   +oRow("متوسط الدخول → متوسط الخروج",px(cost/cs)+" → "+px(rev/q))
+   +oRow("حجم البيع",usd(rev))
+   +(w?oRow("متوسط الصفقة الرابحة","+"+usd(wp/w),"up"):"")+(ln?oRow("متوسط الصفقة الخاسرة","−"+usd(Math.abs(lp/ln)),"down"):"")
+   +(hn?oRow("متوسط مدة الصفقة",dur(hs/hn)):"")
+   +(fee>0?oRow("رسوم البيع",usd(fee,fee<0.01?4:2)+(fu?" + رسوم بعملة أخرى":"")):"")+'</div>';
+  var hold=snap&&snap.assets.filter(function(a){return a.sym===sym})[0],oc=snap?snap.orders.filter(function(o){return o.symbol===sym+"USDT"}).length:0;
+  if(hold||oc)h+='<div class="sub" style="margin:0 0 8px">'+(hold?"لديك الآن "+qt(hold.qty)+" بقيمة "+usd(hold.val):"لا تملكها الآن")+(oc?" · "+oc+" أوامر مفتوحة":"")+'</div>';
+  h+='<div style="font-weight:600;margin:10px 0 2px">الصفقات</div>'+ev.map(function(e){
+    var t0=e.ft?(dayKey(e.ft)===dayKey(e.t)?hm(e.ft)+(e.t-e.ft>6e4?" ← "+hm(e.t):""):dayKey(e.ft)+" "+hm(e.ft)+" ← "+dayKey(e.t)+" "+hm(e.t)):hm(e.t);
+    return '<div class="row"><div class="l"><b><span class="n">'+e.day+'</span> <span class="n flat" style="font-weight:400">'+t0+'</span></b><small><span class="n">'+qt(e.q)+' @ '+px(e.rev/e.q)+'</span> · دخول <span class="n">'+px(e.cost/e.cs)+'</span>'
+     +(e.ot?' · دخلت <span class="n">'+dayKey(e.ot)+' '+hm(e.ot)+'</span> · المدة '+dur(Math.max(0,e.t-e.ot)):'')
+     +(e.nb>1?' · '+e.nb+' عمليات شراء':'')+(e.n>1?' · '+e.n+' تنفيذات بيع':'')+(e.cl===false?' · بقي جزء':'')
+     +(e.fee?' · رسوم <span class="n">'+usd(e.fee,e.fee<0.01?4:2)+'</span>':'')+(JN[e.k]?' · 📝 '+esc(JN[e.k]):'')+'</small></div><div class="r"><b class="n '+cl(e.pnl)+'">'+sg(e.pnl)+'</b><br><small class="n '+cl(e.pnl)+'">'+pc(e.pct)+'</small></div></div>'}).join("");
+  if(!JEV.v)h+='<div class="note">لعرض أوقات الدخول والمدة اضغط «تحميل من بايننس» مرة أخرى.</div>';
+  h+='<button id="tclose" style="width:100%;margin-top:12px">إغلاق</button>';
+  openSheet(h);
 }
 function jLoad(){
   var b=$("jload");if(!snap||b.disabled)return;b.disabled=true;b.textContent="…";
@@ -796,7 +832,7 @@ function jLoad(){
   function next(){if(i>=list.length)return;var s=list[i++];
     return call("/api/v3/myTrades",{symbol:s+"USDT",limit:1000},true).then(function(tr){tr.forEach(function(t){t.sym=s;all.push(t)})},function(){fails++}).then(function(){done++;b.textContent="… "+done+"/"+list.length;return next()})}
   Promise.all([next(),next(),next()]).then(function(){
-    JEV={t:Date.now(),ev:jCompute(all)};LS.s("jev",JSON.stringify(JEV));
+    JEV={v:2,t:Date.now(),ev:jCompute(all)};LS.s("jev",JSON.stringify(JEV));
     b.disabled=false;b.textContent="تحميل من بايننس";if(fails)err("تعذّر تحميل "+fails+" عملات");renderJournal();
   });
 }
@@ -993,6 +1029,7 @@ document.addEventListener("click",function(ev){
   if(t.id==="jload")return jLoad();
   if((el=t.closest("[data-jrg]"))){JRG=+el.getAttribute("data-jrg");return renderJournal()}
   if(t.closest("textarea"))return;
+  if((el=t.closest("[data-jc]")))return jCoin(el.getAttribute("data-jc"));
   if((el=t.closest("[data-jk]"))){var jk=el.getAttribute("data-jk");openJ[jk]=!openJ[jk];renderJournal();return}
   if(t.id==="hexp"){$("hjs").value=JSON.stringify(HAL);return}
   if(t.id==="himp"){try{var j=JSON.parse($("hjs").value);if(j&&typeof j==="object"){Object.keys(j).forEach(function(k){if(j[k]&&HN[j[k].s])HAL[k]={s:j[k].s,n:String(j[k].n||"")}});halSave();renderHal();render();err("")}}catch(e){err("نص الاستيراد غير صالح")}return}
