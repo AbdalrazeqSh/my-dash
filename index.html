@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="dark light"><title>حسابي</title>
+<meta name="color-scheme" content="dark light"><meta name="theme-color" content="#0b1210"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="حسابي"><title>حسابي</title>
 <style>
 :root{--bg:#0b1210;--s:#121b19;--s2:#19251f;--fg:#eaf2ee;--dim:#9db3ab;--dimmer:#6b8079;--up:#37c98f;--down:#e8766a;--gold:#e8b34f;--bd:rgba(255,255,255,.09);color-scheme:dark}
 @media (prefers-color-scheme:light){:root{--bg:#f5f8f6;--s:#fff;--s2:#eef3f0;--fg:#15211c;--dim:#50655d;--dimmer:#7c8d86;--up:#1f9d6d;--down:#c0453a;--gold:#a9731c;--bd:rgba(10,20,16,.09);color-scheme:light}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:16px 16px 40px;max-width:640px;margin-inline:auto}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:16px 16px calc(84px + env(safe-area-inset-bottom));max-width:640px;margin-inline:auto}
 .n{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
 .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
 .top b{font-size:1.15rem}
@@ -57,6 +57,15 @@ h3.plain{margin-bottom:6px}
 .sub2{padding-inline-start:12px;border-inline-start:2px solid var(--bd);margin:2px 0 6px}
 @keyframes sp{to{transform:rotate(360deg)}}
 #rf.spin #rfi{animation:sp .8s linear infinite}
+
+.tabs{position:fixed;bottom:0;inset-inline:0;background:var(--s);border-top:1px solid var(--bd);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:5}
+.tabs div{display:flex;width:100%;max-width:640px}
+.tabs button{flex:1;border:0;border-radius:0;background:transparent;color:var(--dimmer);padding:12px 4px;font-weight:600}
+.tabs button.on{color:var(--up);box-shadow:inset 0 2px 0 var(--up)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.cbar{height:6px;border-radius:4px;background:var(--s2);margin-top:5px;overflow:hidden}.cbar i{display:block;height:100%}
+.warn{background:rgba(232,179,79,.14);color:var(--gold);border-radius:10px;padding:8px 12px;font-size:.84rem;margin-bottom:8px}
+.upd{position:fixed;top:8px;inset-inline:16px;max-width:608px;margin-inline:auto;background:var(--up);color:#06150f;border-radius:12px;padding:10px 14px;font-weight:600;z-index:20;text-align:center;cursor:pointer}
 [hidden]{display:none!important}
 </style></head><body>
 <div class="top"><div><b>حسابي</b><div class="age"><span id="age"></span> <span class="badge" id="perm" hidden></span></div></div><div><button id="rf" class="go" hidden><span id="rfi" style="display:inline-block">↻</span> تحديث</button> <button id="cfg">المفتاح</button></div></div>
@@ -80,7 +89,32 @@ h3.plain{margin-bottom:6px}
   <div class="c closed" id="cord"><h3 class="fold" data-f="cord"><span>الأوامر المفتوحة <span class="sm2" id="ordsum"></span></span><span class="chev">›</span></h3><div class="fb"><div id="ords"></div><div id="newo" style="margin-top:10px" hidden><button class="sm" id="newbtn">+ أمر جديد</button></div></div></div>
   <div class="c closed" id="ctod"><h3 class="fold" data-f="ctod"><span>صفقات اليوم <span class="sm2" id="todsum"></span></span><span class="chev">›</span></h3><div class="fb"><div id="today"><div class="sub">اضغط «تحميل» لعرض صفقات اليوم</div></div><div style="margin-top:10px"><button class="sm" id="tdbtn">تحميل صفقات اليوم</button></div></div></div>
 </div>
-<div class="note" style="text-align:center" id="foot">النسخة 7</div>
+
+  <div id="risk" hidden>
+    <div id="rwarn"></div>
+    <div class="c"><h3 class="plain">التركّز</h3>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="sub" style="margin:0">سقف العملة الواحدة %</span><input id="rcapin" inputmode="decimal" style="width:80px"></div>
+      <div id="rconc"></div></div>
+    <div class="c"><h3 class="plain">لو هبط السوق</h3><div id="rstress"></div></div>
+    <div class="c"><h3 class="plain">الأوامر المعلّقة</h3><div id="rords"></div></div>
+  </div>
+  <div id="calc" hidden>
+    <div class="c"><h3 class="plain">حاسبة الصفقة (شراء)</h3>
+      <div class="g2">
+        <div><label for="cs">العملة (اختياري)</label><input id="cs" autocapitalize="characters" autocomplete="off"></div>
+        <div><label for="cc">رأس المال $ (فارغ = رصيدك)</label><input id="cc" inputmode="decimal"></div>
+        <div><label for="cr">المخاطرة %</label><input id="cr" inputmode="decimal" value="1"></div>
+        <div><label for="cf">الرسوم % للجهة</label><input id="cf" inputmode="decimal" value="0.1"></div>
+        <div><label for="ce">سعر الدخول</label><input id="ce" inputmode="decimal"></div>
+        <div><label for="cx">وقف الخسارة</label><input id="cx" inputmode="decimal"></div>
+        <div><label for="ct">الهدف (اختياري)</label><input id="ct" inputmode="decimal"></div>
+        <div style="align-self:end"><button id="cpx" style="width:100%">سعر حالي</button></div>
+      </div>
+      <div id="cout" style="margin-top:12px"></div>
+    </div>
+  </div>
+<div class="note" style="text-align:center" id="foot">النسخة 8</div>
+<nav class="tabs" id="tabs" hidden><div><button data-tab="home">الحساب</button><button data-tab="risk">المخاطر</button><button data-tab="calc">الحاسبة</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
 <script>
@@ -236,7 +270,7 @@ function avgFor(sym,held){
 }
 
 /* --- state / render --- */
-var RUN=0,VER="7",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
+var RUN=0,VER="8",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
 function render(){
   if(!snap)return;
   var as=snap.assets.map(function(a){a.avg=AVG[a.sym]?AVG[a.sym].a:0;return a}).sort(function(a,b){return b.val-a.val});
@@ -285,6 +319,7 @@ function render(){
     }
     return h;
   }).join(""):'<div class="sub">لا توجد أوامر مفتوحة</div>';
+  renderRisk(as,tot);
   ages();
 }
 function ages(){
@@ -296,8 +331,13 @@ function err(m){var e=$("err");e.textContent=m||"";e.hidden=!m}
 function show(){
   $("newo").hidden=!CAN;
   var has=!!(creds().k&&creds().s);
-  $("setup").hidden=has&&!forceCfg;$("main").hidden=!(has&&snap);$("rf").hidden=!has;
+  var ok=has&&!forceCfg;
+  $("setup").hidden=ok;$("tabs").hidden=!ok;$("rf").hidden=!has;
+  $("main").hidden=!(ok&&snap&&TAB==="home");$("risk").hidden=!(ok&&snap&&TAB==="risk");$("calc").hidden=!(ok&&TAB==="calc");
+  var tb=document.querySelectorAll("#tabs button");for(var i=0;i<tb.length;i++)tb[i].classList.toggle("on",tb[i].getAttribute("data-tab")===TAB);
 }
+var TAB=LS.g("tab")||"home";if(["home","risk","calc"].indexOf(TAB)<0)TAB="home";
+function setTab(t){TAB=t;LS.s("tab",t);forceCfg=false;show();render();window.scrollTo(0,0)}
 var forceCfg=false;
 
 function refresh(){
@@ -332,6 +372,59 @@ function refresh(){
 }
 
 
+/* --- risk --- */
+function rcap(){var v=parseFloat(LS.g("rcap"));return v>0?v:35}
+function renderRisk(as,tot){
+  var rc=rcap(),stableV=0,cr=[];
+  as.forEach(function(a){if(STABLE[a.sym])stableV+=a.val;else cr.push(a)});
+  var cash=snap.usdt+stableV,crypto=cr.reduce(function(t,a){return t+a.val},0);
+  if(document.activeElement!==$("rcapin"))$("rcapin").value=rc;
+  var big=cr.filter(function(a){return a.val>=DUST}),dv=cr.filter(function(a){return a.val<DUST}).reduce(function(t,a){return t+a.val},0);
+  var ws=[];
+  big.forEach(function(a){var sh=tot>0?a.val/tot*100:0;if(sh>rc)ws.push("<b>"+esc(a.sym)+"</b> "+sh.toFixed(0)+"% من محفظتك، فوق سقفك "+rc+"%")});
+  var cp=tot>0?cash/tot*100:0;if(cp<10)ws.push("السيولة "+cp.toFixed(0)+"% فقط، لا مجال للتعزيز أو الفرص");
+  $("rwarn").innerHTML=ws.map(function(w){return '<div class="warn">'+w+'</div>'}).join("");
+  var rows=big.map(function(a){return{n:a.sym,v:a.val}});if(dv>0)rows.push({n:"أرصدة صغيرة",v:dv});rows.push({n:"سيولة (USDT)",v:cash,c:1});
+  $("rconc").innerHTML=rows.map(function(r){
+    var sh=tot>0?r.v/tot*100:0,over=!r.c&&r.n!=="أرصدة صغيرة"&&sh>rc;
+    return '<div style="margin-bottom:10px"><div class="a" style="display:flex;justify-content:space-between"><b>'+esc(r.n)+'</b><span class="n '+(over?"down":"")+'">'+sh.toFixed(1)+'% · '+usd(r.v,0)+'</span></div><div class="cbar"><i style="width:'+Math.min(100,sh)+'%;background:'+(over?"var(--down)":r.c?"var(--dimmer)":"var(--up)")+'"></i></div></div>';
+  }).join("");
+  var top=big[0],sc=[10,20,30,50];
+  var st=sc.map(function(p){var l=crypto*p/100;return '<div class="row"><div class="l"><b>هبوط '+p+'% في كل العملات</b><small>الرصيد يصير <span class="n">'+usd(tot-l,0)+'</span></small></div><div class="r"><span class="n down"><b>−'+usd(l,0)+'</b></span><br><small class="flat n">'+(tot>0?(l/tot*100).toFixed(1):0)+'% من الرصيد</small></div></div>'});
+  if(top){var l2=top.val*0.3;st.push('<div class="row"><div class="l"><b>'+esc(top.sym)+' وحدها −30%</b><small>أكبر عملة عندك</small></div><div class="r"><span class="n down"><b>−'+usd(l2,0)+'</b></span><br><small class="flat n">'+(tot>0?(l2/tot*100).toFixed(1):0)+'% من الرصيد</small></div></div>')}
+  $("rstress").innerHTML=st.join("");
+  var bv=0,sv=0,bn=0,sn=0;snap.orders.forEach(function(o){if(o.side==="BUY"){bv+=o.price*o.qty;bn++}else{sv+=o.price*o.qty;sn++}});
+  $("rords").innerHTML=snap.orders.length?
+    '<div class="row"><div class="l"><b>أوامر شراء ('+bn+')</b><small>لو نُفذت كلها تبقى سيولة <span class="n">'+usd(Math.max(0,cash-bv),0)+'</span></small></div><div class="r"><span class="n"><b>'+usd(bv,0)+'</b></span></div></div>'+
+    '<div class="row"><div class="l"><b>أوامر بيع ('+sn+')</b><small>قيمتها عند أسعارها</small></div><div class="r"><span class="n"><b>'+usd(sv,0)+'</b></span></div></div>':'<div class="sub">لا توجد أوامر معلّقة</div>';
+}
+
+/* --- calculator --- */
+var CALC=null,CIDS=["cs","cc","cr","cf","ce","cx","ct"];
+function nv(id){var v=parseFloat($(id).value);return v>0?v:0}
+function equity(){return snap?snap.usdt+snap.assets.reduce(function(t,a){return t+a.val},0):0}
+function calcRun(){
+  var o=$("cout"),sv={};CIDS.forEach(function(i){sv[i]=$(i).value});LS.s("calc",JSON.stringify(sv));
+  var eq=equity(),cap=nv("cc")||eq,rk=nv("cr"),f=nv("cf")/100,e=nv("ce"),x=nv("cx"),t=nv("ct");CALC=null;
+  if(!(cap&&rk&&e&&x)){o.innerHTML='<div class="sub">أدخل سعر الدخول والوقف</div>';return}
+  if(x>=e){o.innerHTML='<div class="err">الوقف يجب أن يكون أقل من الدخول (شراء فقط)</div>';return}
+  var risk=cap*rk/100,per=(e-x)+(e+x)*f,q=risk/per,val=q*e,ws=[];
+  var cash=snap?snap.usdt:0;
+  if(snap&&val>cash)ws.push("القيمة أكبر من سيولتك ("+usd(cash,0)+")");
+  if(val>capVal())ws.push("القيمة أكبر من سقف الأمر ("+usd(capVal(),0)+")");
+  if(eq&&val/eq*100>rcap())ws.push("الصفقة "+(val/eq*100).toFixed(0)+"% من محفظتك، فوق سقف التركّز");
+  var h=ws.map(function(w){return '<div class="warn">'+w+'</div>'}).join("");
+  h+='<div class="sum"><div class="row"><div class="l"><b>الكمية</b></div><div class="r"><b class="n">'+(q>=1?q.toFixed(2):q.toPrecision(3))+'</b></div></div>'+
+    '<div class="row"><div class="l"><b>قيمة الصفقة</b><small><span class="n">'+(eq?(val/eq*100).toFixed(1):"-")+'%</span> من الرصيد</small></div><div class="r"><b class="n">'+usd(val)+'</b></div></div>'+
+    '<div class="row"><div class="l"><b>الخسارة عند الوقف</b><small>شاملة الرسوم</small></div><div class="r"><b class="n down">−'+usd(risk)+'</b></div></div>';
+  if(t>e){var g=q*(t-e)-q*(e+t)*f;h+='<div class="row"><div class="l"><b>الربح عند الهدف</b><small>صافي بعد الرسوم · نسبة ربح/مخاطرة <span class="n">'+(g/risk).toFixed(2)+'</span></small></div><div class="r"><b class="n up">+'+usd(g)+'</b></div></div>'}
+  else if(t&&t<=e)h+='<div class="warn">الهدف يجب أن يكون أعلى من الدخول</div>';
+  h+='</div>';
+  var sy=$("cs").value.trim().toUpperCase();
+  if(sy&&CAN)h+='<button class="go" id="cgo" style="width:100%">جهّز أمر شراء في نافذة التداول</button>';
+  CALC={sym:sy,p:e,q:q};o.innerHTML=h;
+}
+
 /* --- permissions / trading --- */
 function checkPerm(){PERM={};CAN=true;var b=$("perm");b.hidden=false;b.className="badge";b.textContent="التداول حسب صلاحية المفتاح";show();render()}
 function capVal(){var v=parseFloat(LS.g("cap"));return v>0?v:300}
@@ -340,8 +433,8 @@ function flo(v,step){var d=dec(step);return (Math.floor(v/step+1e-9)*step).toFix
 function closeSheet(){$("sheet").hidden=true;$("sheetin").innerHTML=""}
 function openSheet(h){$("sheetin").innerHTML=h;$("sheet").hidden=false}
 var T=null;
-function tradeSheet(sym){
-  T={sym:sym,side:"BUY",f:null};
+function tradeSheet(sym,pre){
+  T={sym:sym,side:"BUY",f:null,pre:pre||null};
   openSheet('<h3 style="margin:0 0 10px">'+(sym?esc(sym)+" / USDT":"أمر جديد")+'</h3><div id="tin">جارٍ التحميل…</div>');
   if(!sym){drawForm();return}
   loadSym(sym);
@@ -361,8 +454,8 @@ function drawForm(){
   if(T.sym&&T.f){
     h+='<div class="seg"><button class="buy'+(T.side==="BUY"?" on":"")+'" data-sd="BUY">شراء</button><button class="sell'+(T.side==="SELL"?" on":"")+'" data-sd="SELL">بيع</button></div>'+
     '<div class="sub">السعر الحالي: <span class="n">'+px(T.last)+'</span>'+(held?' · لديك <span class="n">'+qt(held.qty)+'</span>':'')+'</div>'+
-    '<label for="tp">السعر (أمر محدد)</label><input id="tp" inputmode="decimal" value="'+px(T.last)+'">'+
-    '<label for="tq">الكمية</label><input id="tq" inputmode="decimal" value="'+(T.side==="SELL"&&held?flo(held.qty,T.f.step):"")+'">'+
+    '<label for="tp">السعر (أمر محدد)</label><input id="tp" inputmode="decimal" value="'+(T.pre&&T.side==="BUY"?flo(T.pre.p,T.f.tick):px(T.last))+'">'+
+    '<label for="tq">الكمية</label><input id="tq" inputmode="decimal" value="'+(T.side==="SELL"&&held?flo(held.qty,T.f.step):(T.pre&&T.side==="BUY"?flo(T.pre.q,T.f.step):""))+'">'+
     '<label for="tv">أو القيمة بالدولار</label><input id="tv" inputmode="decimal">'+
     '<div id="terr"></div><div style="display:flex;gap:8px;margin-top:12px"><button class="go" id="treview">مراجعة</button><button id="tclose">إغلاق</button></div>';
   }else if(T.sym){h+='<button id="tclose">إغلاق</button>'}
@@ -406,6 +499,9 @@ document.addEventListener("click",function(ev){
   var t=ev.target;if(!t.closest)return;var el;
   if((el=t.closest("[data-t]")))return tradeSheet(el.getAttribute("data-t"));
   if((el=t.closest("[data-x]")))return cancelSheet(el.getAttribute("data-x"),el.getAttribute("data-xs"));
+  if((el=t.closest("[data-tab]")))return setTab(el.getAttribute("data-tab"));
+  if(t.id==="cgo"&&CALC)return tradeSheet(CALC.sym,{p:CALC.p,q:CALC.q});
+  if(t.id==="cpx"){var sy=$("cs").value.trim().toUpperCase();if(!sy){err("اكتب رمز العملة أولاً");return}err("");t.textContent="…";call("/api/v3/ticker/price",{symbol:sy+"USDT"},false).then(function(r){$("ce").value=String(+r.price);t.textContent="سعر حالي";calcRun()},function(e){t.textContent="سعر حالي";err("تعذّر جلب السعر: "+e.message)});return}
   if(t.id==="newbtn")return tradeSheet("");
   if(t.id==="tclose")return closeSheet();
   if(t.id==="tload"){var s=$("tsym").value.trim().toUpperCase();if(s){$("tin").textContent="…";loadSym(s)}return}
@@ -475,6 +571,9 @@ document.addEventListener("click",function(ev){
   if(t.closest("#dusttg")){dustOpen=!dustOpen;render()}
 });
 
+$("calc").addEventListener("input",calcRun);
+$("rcapin").addEventListener("change",function(){var v=parseFloat($("rcapin").value);if(v>0){LS.s("rcap",String(v));render()}});
+try{var cs=JSON.parse(LS.g("calc")||"{}");CIDS.forEach(function(i){if(cs[i]!=null)$(i).value=cs[i]})}catch(e){}
 $("rf").onclick=refresh;
 $("cfg").onclick=function(){forceCfg=!forceCfg;show()};
 $("save").onclick=function(){var k=$("k").value.trim(),s=$("s").value.trim();if(!k||!s){err("أدخل المفتاح والسر");return}LS.s("bk",k);LS.s("bs",s);var cv=parseFloat($("cap").value);if(cv>0)LS.s("cap",String(cv));PERM=null;$("k").value="";$("s").value="";err("");forceCfg=false;show();refresh()};
@@ -491,7 +590,12 @@ setInterval(function(){if(!document.hidden&&!busy)refresh()},90000);
 
 try{var sv=LS.g("snap");if(sv)snap=JSON.parse(sv)}catch(e){snap=null}
 $("cap").value=capVal();try{var F0=JSON.parse(LS.g("fold")||"{}");["cord","ctod"].forEach(function(k){if(F0[k]===false)$(k).classList.remove("closed")})}catch(e){}
-show();render();
+show();render();calcRun();
 if(creds().k)refresh();
+
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
+  try{navigator.serviceWorker.register("sw.js").catch(function(){});
+  navigator.serviceWorker.addEventListener("message",function(m){if(m.data==="updated"&&!document.getElementById("upd")){var d=document.createElement("div");d.id="upd";d.className="upd";d.textContent="نسخة جديدة جاهزة، اضغط للتحديث";d.onclick=function(){location.reload()};document.body.appendChild(d)}})}catch(e){}
+}
 })();
 </script></body></html>
