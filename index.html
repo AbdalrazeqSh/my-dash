@@ -227,7 +227,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 23</div>
+<div class="note" style="text-align:center" id="foot">النسخة 25</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -377,7 +377,7 @@ function avgFor(sym,held){
     tr.sort(function(a,b){return a.time-b.time});
     tr.forEach(function(t){
       var qq=+t.qty,pp=+t.price;
-      if(t.isBuyer){q+=qq;cost+=qq*pp}else{var a=q>0?cost/q:0;q-=qq;cost-=qq*a;if(q<=1e-9){q=0;cost=0}e.cl=q<=1e-9;}
+      if(t.isBuyer){q+=qq;cost+=qq*pp}else{var a=q>0?cost/q:0;q-=qq;cost-=qq*a;if(q*pp<5){q=0;cost=0}e.cl=q<=1e-9;}
     });
     var avg=q>0?cost/q:0;AVG[sym]={a:avg,t:Date.now()};LS.s("avg",JSON.stringify(AVG));return avg;
   });
@@ -758,15 +758,18 @@ function jCompute(all){
   var by={};all.forEach(function(t){(by[t.sym]=by[t.sym]||[]).push(t)});
   var ev={};
   Object.keys(by).forEach(function(sym){
-    var tr=by[sym].sort(function(a,b){return a.time-b.time}),q=0,cost=0,cur={ot:0,nb:0};
+    var tr=by[sym].sort(function(a,b){return a.time-b.time}),q=0,cost=0,lots=[];
     tr.forEach(function(t){
       var qq=+t.qty,pp=+t.price,cm=+t.commission||0,fu=t.commissionAsset==="USDT"?cm:t.commissionAsset===sym?cm*pp:null;
-      if(t.isBuyer){if(q<=1e-9)cur={ot:t.time,nb:0};cur.nb++;q+=qq;cost+=qq*pp;return}
+      if(t.isBuyer){if(q*pp<5){q=0;cost=0;lots=[]}lots.push({t:t.time,q:qq});q+=qq;cost+=qq*pp;return}
       var known=q>1e-9,a=known?cost/q:0,k=sym+"|"+dayKey(t.time),e=ev[k]||(ev[k]={k:k,sym:sym,day:dayKey(t.time),t:t.time,q:0,rev:0,cost:0,pnl:0,n:0,unk:0});
       e.q+=qq;e.rev+=qq*pp;e.n++;if(t.time>e.t)e.t=t.time;
       if(!e.ft||t.time<e.ft)e.ft=t.time;
-      if(known&&cur.ot&&(!e.ot||cur.ot<e.ot))e.ot=cur.ot;
-      if(known)e.nb=Math.max(e.nb||0,cur.nb);
+      var rem=qq;
+      while(rem>1e-12&&lots.length){var L0=lots[0],u0=Math.min(rem,L0.q);
+        e.hw=(e.hw||0)+u0*(t.time-L0.t);e.hq=(e.hq||0)+u0;e.nb=(e.nb||0)+(L0.c?0:1);L0.c=1;
+        if(!e.ot||L0.t<e.ot)e.ot=L0.t;
+        L0.q-=u0;rem-=u0;if(L0.q<=1e-12)lots.shift()}
       if(fu==null)e.fu=1;else e.fee=(e.fee||0)+fu;
       if(known){var uq=Math.min(qq,q);e.cost+=uq*a;e.pnl+=uq*(pp-a);e.cs=(e.cs||0)+uq}else e.unk+=qq;
       q-=qq;cost-=qq*a;if(q<=1e-9){q=0;cost=0}
@@ -806,7 +809,7 @@ function jCoin(sym){
   if(!ev.length)return;
   var pnl=0,cost=0,cs=0,rev=0,q=0,w=0,wp=0,lp=0,ln=0,fee=0,fu=0,hs=0,hn=0,best=ev[0],worst=ev[0];
   ev.forEach(function(e){pnl+=e.pnl;cost+=e.cost;cs+=e.cs;rev+=e.rev;q+=e.q;if(e.pnl>0){w++;wp+=e.pnl}else{ln++;lp+=e.pnl}
-    if(e.fee)fee+=e.fee;if(e.fu)fu=1;if(e.ot&&e.t>e.ot){hs+=e.t-e.ot;hn++}if(e.pnl>best.pnl)best=e;if(e.pnl<worst.pnl)worst=e});
+    if(e.fee)fee+=e.fee;if(e.fu)fu=1;if(e.hq>0){hs+=e.hw;hn+=e.hq}if(e.pnl>best.pnl)best=e;if(e.pnl<worst.pnl)worst=e});
   var h='<h3 style="margin:0 0 4px">'+esc(sym)+' / USDT</h3><div class="sub" style="margin:0 0 8px">'+(JRG===1?"آخر 24 ساعة":JRG===3?"آخر 3 أيام":JRG?"آخر "+JRG+" يوماً":"كل الفترة")+'</div>';
   h+='<div class="sum">'+oRow("الربح المحقّق",sg(pnl)+" · "+pc(pnl/cost*100),cl(pnl))
    +oRow("الصفقات",N(ev.length)+" · نسبة الربح "+N(Math.round(w/ev.length*100)+"%"),"",1)
@@ -820,10 +823,10 @@ function jCoin(sym){
   h+='<div style="font-weight:600;margin:10px 0 2px">الصفقات</div>'+ev.map(function(e){
     var t0=e.ft?(dayKey(e.ft)===dayKey(e.t)?hm(e.ft)+(e.t-e.ft>6e4?" ← "+hm(e.t):""):dayKey(e.ft)+" "+hm(e.ft)+" ← "+dayKey(e.t)+" "+hm(e.t)):hm(e.t);
     return '<div class="row"><div class="l"><b><span class="n">'+e.day+'</span> <span class="n flat" style="font-weight:400">'+t0+'</span></b><small><span class="n">'+qt(e.q)+' @ '+px(e.rev/e.q)+'</span> · دخول <span class="n">'+px(e.cost/e.cs)+'</span>'
-     +(e.ot?' · دخلت '+N(dayKey(e.ot)+' '+hm(e.ot))+' · المدة '+dur(Math.max(0,e.t-e.ot)):'')
-     +(e.nb>1?' · شراء '+N('×'+e.nb):'')+(e.n>1?' · بيع '+N('×'+e.n):'')+(e.cl===false?' · بقي جزء':'')
+     +(e.hq>0?' · أول دخول '+N(dayKey(e.ot)+' '+hm(e.ot))+' · المدة '+dur(Math.max(0,e.hw/e.hq)):'')
+     +(e.nb>1?' · شراءات '+N('×'+e.nb):'')+(e.n>1?' · بيع '+N('×'+e.n):'')+(e.cl===false?' · بقي جزء':'')
      +(e.fee?' · رسوم <span class="n">'+usd(e.fee,e.fee<0.01?4:2)+'</span>':'')+(JN[e.k]?' · 📝 '+esc(JN[e.k]):'')+'</small></div><div class="r"><b class="n '+cl(e.pnl)+'">'+sg(e.pnl)+'</b><br><small class="n '+cl(e.pnl)+'">'+pc(e.pct)+'</small></div></div>'}).join("");
-  if(!JEV.v)h+='<div class="note">لعرض أوقات الدخول والمدة اضغط «تحميل من بايننس» مرة أخرى.</div>';
+  if(JEV.v!==3)h+='<div class="note">لعرض أوقات الدخول والمدة اضغط «تحميل من بايننس» مرة أخرى.</div>';
   h+='<button id="tclose" style="width:100%;margin-top:12px">إغلاق</button>';
   openSheet(h);
 }
@@ -836,7 +839,7 @@ function jLoad(){
   function next(){if(i>=list.length)return;var s=list[i++];
     return call("/api/v3/myTrades",{symbol:s+"USDT",limit:1000},true).then(function(tr){tr.forEach(function(t){t.sym=s;all.push(t)})},function(){fails++}).then(function(){done++;b.textContent="… "+done+"/"+list.length;return next()})}
   Promise.all([next(),next(),next()]).then(function(){
-    JEV={v:2,t:Date.now(),ev:jCompute(all)};LS.s("jev",JSON.stringify(JEV));
+    JEV={v:3,t:Date.now(),ev:jCompute(all)};LS.s("jev",JSON.stringify(JEV));
     b.disabled=false;b.textContent="تحميل من بايننس";if(fails)err("تعذّر تحميل "+fails+" عملات");renderJournal();
   });
 }
