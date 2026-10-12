@@ -174,15 +174,22 @@ h3.plain{margin-bottom:6px}
   </div>
   <div id="lad" hidden>
     <div class="c"><h3 class="plain">أوامر متدرّجة (Limit)</h3>
-      <div class="seg"><button class="buy on" data-ls="BUY">شراء</button><button class="sell" data-ls="SELL">بيع</button></div>
+      <div style="display:flex;gap:10px;align-items:flex-end">
+        <div style="flex:1"><label for="ls" style="margin-top:0">العملة</label><input id="ls" autocapitalize="characters" autocomplete="off" placeholder="مثل REQ"></div>
+        <div id="lst" style="padding-bottom:9px;min-width:84px"></div>
+      </div>
+      <div class="sub" id="lpxl"></div>
+      <div class="seg" style="margin-top:10px"><button class="buy on" data-ls="BUY">شراء</button><button class="sell" data-ls="SELL">بيع</button></div>
       <div class="g2">
-        <div><label for="ls">العملة</label><input id="ls" autocapitalize="characters" autocomplete="off"></div>
-        <div><label for="ln">عدد الأوامر</label><input id="ln" inputmode="numeric" value="4"></div>
         <div><label for="lp1">أول مستوى (الأقرب للسوق)</label><input id="lp1" inputmode="decimal"></div>
         <div><label for="lp2">آخر مستوى (الأبعد)</label><input id="lp2" inputmode="decimal"></div>
+      </div>
+      <div id="lchips" style="margin:6px 0 2px"></div>
+      <div class="g2">
+        <div><label for="ln">عدد الأوامر</label><input id="ln" inputmode="numeric" value="4"></div>
+        <div></div>
         <div><label for="lv">المبلغ الكلي (USDT)</label><input id="lv" inputmode="decimal"></div>
         <div><label for="lq">الكمية الكلية</label><input id="lq" inputmode="decimal"></div>
-        <div style="grid-column:1/-1;margin-top:8px"><button id="lpx" style="width:100%">السعر الحالي</button></div>
       </div>
       <div class="seg" style="margin-top:10px"><button data-ld="eq" class="on">كميات متساوية</button><button data-ld="inc">كمية أكبر عند الأبعد</button><button data-ld="cus">مستويات مخصّصة</button></div>
       <div id="lcw" hidden><label for="lcus">كل سطر: السعر ثم النسبة % من الكمية الكلية</label><textarea id="lcus" placeholder="0.0573 17.5&#10;0.0600 17.5"></textarea></div>
@@ -220,7 +227,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 18</div>
+<div class="note" style="text-align:center" id="foot">النسخة 19</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -592,15 +599,40 @@ function renderHal(){
 }
 
 /* --- ladder --- */
-var L={side:"BUY",dist:"eq",rows:null,sym:"",f:null,ed:"v"};
+var L={side:"BUY",dist:"eq",rows:null,sym:"",f:null,ed:"v",last:0,cs:"",auto:true},lTm=null;
 function ladHint(){
   var sy=$("ls").value.trim().toUpperCase(),h=snap&&snap.assets.filter(function(a){return a.sym===sy})[0];
-  $("lrisk").hidden=L.side!=="BUY";
+  $("lrisk").hidden=L.side!=="BUY";$("lst").innerHTML=sy?halTag(sy,L.side):"";lChips();
   $("lhint").textContent=L.side==="BUY"?(snap?"سيولتك: "+usd(snap.usdt,0)+" · سقف الأمر الواحد: "+usd(capVal(),0):""):(h?"لديك "+qt(h.qty)+" "+sy:"");
   var b=document.querySelectorAll("[data-ls]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-ls")===L.side);
   b=document.querySelectorAll("[data-ld]");for(i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-ld")===L.dist);
   $("lcw").hidden=L.dist!=="cus";
   ladSync();ladLive();
+}
+function lFill(){
+  if(!L.f||!L.last)return;var b=L.side==="BUY";
+  $("lp1").value=flo(L.last,L.f.tick);$("lp2").value=flo(L.last*(b?0.9:1.1),L.f.tick);L.auto=true;
+}
+function lChips(){
+  var b=L.side==="BUY",l=b?[5,10,15,20]:[5,10,15,20],h='<span class="chip" data-lpp0="1">أول مستوى = السوق</span>';
+  l.forEach(function(x){h+='<span class="chip" data-lpp="'+(b?-x:x)+'">آخر مستوى '+(b?"−":"+")+x+'%</span>'});
+  if(!b)h+='<span class="chip" data-lall="1">كل الكمية</span>';
+  $("lchips").innerHTML=h;
+}
+function lLoad(force){
+  var sym=$("ls").value.trim().toUpperCase();
+  if(!sym){L.cs="";L.f=null;L.last=0;$("lpxl").textContent="";ladHint();return}
+  if(!force&&L.cs===sym&&L.f)return;
+  L.cs=sym;L.f=null;$("lpxl").textContent="جارٍ جلب السعر…";
+  Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false)]).then(function(r){
+    if(L.cs!==sym)return;
+    var f={};r[0].symbols[0].filters.forEach(function(x){f[x.filterType]=x});
+    L.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5)};
+    L.last=+r[1].price;
+    $("lpxl").innerHTML='السعر الحالي <span class="n">'+px(L.last)+'</span> · <span style="text-decoration:underline;cursor:pointer" data-lrf="1">تحديث</span>';
+    if(force||L.auto||!(parseFloat($("lp1").value)>0))lFill();
+    ladHint();
+  },function(e){if(L.cs===sym)$("lpxl").textContent="تعذّر: "+e.message});
 }
 function ladLevels(){
   var p1=parseFloat($("lp1").value),p2=parseFloat($("lp2").value),n=parseInt($("ln").value,10),ps=[],w=[],i,sw=0;
@@ -621,12 +653,12 @@ function ladSync(){
   if(!lv){return}
   k=ladK(lv);
   var buy=L.side==="BUY";
-  if(L.ed==="v"){if(v>0)$("lq").value=String(+(buy?v*k:v/k).toPrecision(8));else $("lq").value=""}
+  if(L.ed==="v"){if(v>0){var qq=buy?v*k:v/k;$("lq").value=L.f?flo(qq,L.f.step):String(+qq.toPrecision(8))}else $("lq").value=""}
   else{if(q>0)$("lv").value=(buy?q/k:q*k).toFixed(2);else $("lv").value=""}
 }
 function ladLive(){
   var o=$("lsum"),sy=$("ls").value.trim().toUpperCase(),lv=ladLevels(),v=parseFloat($("lv").value),q=parseFloat($("lq").value);
-  if(!lv||!(v>0)||!(q>0)){o.innerHTML='';return}
+  if(!lv||!(v>0)||!(q>0)){o.innerHTML='<div class="sub" style="margin:10px 0">أدخل المستويات والمبلغ أو الكمية لتظهر الحسابات.</div>';return}
   var buy=L.side==="BUY",eq=equity(),avg=v/q,fee=0.001,hold=snap&&snap.assets.filter(function(a){return a.sym===sy})[0],h='<div class="sum">';
   h+=oRow("قيمة الأوامر",usd(v)+" · "+(eq?(v/eq*100).toFixed(1):"-")+"% من الرصيد");
   h+=oRow("متوسط السعر",px(avg));
@@ -644,7 +676,17 @@ function ladLive(){
     if(hold)h+=oRow("من كميتك",(q/hold.qty*100).toFixed(0)+"%",q>hold.qty+1e-9?"down":"");
     if(hold&&AVG[sy]&&AVG[sy].a){var pl=(avg-AVG[sy].a)*q;h+=oRow("الربح المتوقع عن متوسط تكلفتك",sg(pl)+" · "+pc((avg/AVG[sy].a-1)*100),cl(pl))}
   }
-  o.innerHTML=h+'</div>';
+  h+='</div>';
+  var ck=[],hc=halCheck(sy,L.side);
+  if(sy)ck.push([hc.block?0:(hc.msg?2:1),"الشرعية"+(hc.msg?": "+hc.msg:"")]);
+  if(buy&&snap)ck.push([v<=snap.usdt?1:0,"السيولة تكفي"]);
+  if(!buy)ck.push([hold&&q<=hold.qty+1e-9?1:0,hold?"الكمية ضمن ما تملكه ("+qt(hold.qty)+")":"لا تملك هذه العملة"]);
+  var mx=0,mn=1e18;lv.w.forEach(function(w,i){var vi=buy?v*w:q*w*lv.p[i];if(vi>mx)mx=vi;if(vi<mn)mn=vi});
+  ck.push([mx<=capVal()?1:0,"كل أمر ضمن السقف ("+usd(capVal(),0)+") · الأكبر "+usd(mx,0)]);
+  if(L.f)ck.push([mn>=L.f.minN?1:0,"أصغر أمر "+usd(mn)+(mn>=L.f.minN?"":" أقل من الحد الأدنى ("+L.f.minN+"$)")]);
+  if(L.last){var imm=lv.p.some(function(p){return buy?p>L.last*1.001:p<L.last*0.999});ck.push([imm?2:1,imm?"بعض المستويات تتجاوز السوق وستُنفَّذ فوراً":"كل المستويات خلف السوق"])}
+  h+='<div style="margin:6px 0 4px">'+ck.map(function(c){return '<div style="font-size:.84rem;padding:2px 0"><span class="'+(c[0]===1?"up":c[0]===0?"down":"")+'" style="'+(c[0]===2?"color:var(--gold)":"")+'">'+(c[0]===1?"✓":c[0]===0?"✗":"!")+'</span> '+c[1]+'</div>'}).join("")+'</div>';
+  o.innerHTML=h;
 }
 function ladPreview(){
   var sy=$("ls").value.trim().toUpperCase(),tot=parseFloat($(L.side==="BUY"?"lv":"lq").value),p1=parseFloat($("lp1").value),p2=parseFloat($("lp2").value),n=parseInt($("ln").value,10),o=$("lout"),cus=null;
@@ -924,7 +966,11 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-tab]")))return setTab(el.getAttribute("data-tab"));
   if(t.id==="cgo"&&CALC)return tradeSheet(CALC.sym,{p:CALC.p,q:CALC.q});
   if(t.id==="cpx"){var sy=$("cs").value.trim().toUpperCase();if(!sy){err("اكتب رمز العملة أولاً");return}err("");t.textContent="…";call("/api/v3/ticker/price",{symbol:sy+"USDT"},false).then(function(r){$("ce").value=String(+r.price);t.textContent="السعر الحالي";calcRun()},function(e){t.textContent="السعر الحالي";err("تعذّر جلب السعر: "+e.message)});return}
-  if((el=t.closest("[data-ls]"))){L.side=el.getAttribute("data-ls");L.rows=null;$("lout").innerHTML="";return ladHint()}
+  if((el=t.closest("[data-ls]"))){L.side=el.getAttribute("data-ls");L.rows=null;$("lout").innerHTML="";if(L.auto&&L.f)lFill();return ladHint()}
+  if(t.closest("[data-lrf]"))return lLoad(true);
+  if(t.closest("[data-lpp0]")){if(L.f){$("lp1").value=flo(L.last,L.f.tick);L.auto=false;L.rows=null;ladHint()}return}
+  if((el=t.closest("[data-lpp]"))){if(L.f){$("lp2").value=flo(L.last*(1+parseFloat(el.getAttribute("data-lpp"))/100),L.f.tick);L.auto=false;L.rows=null;ladHint()}return}
+  if(t.closest("[data-lall]")){var lh=snap&&snap.assets.filter(function(a){return a.sym===$("ls").value.trim().toUpperCase()})[0];if(lh&&L.f){$("lq").value=flo(lh.qty,L.f.step);L.ed="q";L.rows=null;ladHint()}return}
   if((el=t.closest("[data-ld]"))){L.dist=el.getAttribute("data-ld");L.rows=null;return ladHint()}
   if(t.id==="lprev")return ladPreview();
   if(t.id==="lgo")return ladSend();
@@ -1020,7 +1066,7 @@ document.addEventListener("click",function(ev){
 });
 
 $("calc").addEventListener("input",calcRun);
-$("lad").addEventListener("input",function(ev){L.rows=null;var id=ev.target.id;if(id==="lv")L.ed="v";else if(id==="lq")L.ed="q";ladHint()});
+$("lad").addEventListener("input",function(ev){L.rows=null;var id=ev.target.id;if(id==="lv")L.ed="v";else if(id==="lq")L.ed="q";else if(id==="lp1"||id==="lp2")L.auto=false;else if(id==="ls"){clearTimeout(lTm);lTm=setTimeout(lLoad,450)}ladHint()});
 $("rcapin").addEventListener("change",function(){var v=parseFloat($("rcapin").value);if(v>0){LS.s("rcap",String(v));render()}});
 try{var cs=JSON.parse(LS.g("calc")||"{}");CIDS.forEach(function(i){if(cs[i]!=null)$(i).value=cs[i]})}catch(e){}
 $("jr").addEventListener("change",function(ev){var t=ev.target;if(t.getAttribute&&t.getAttribute("data-jt")){var k=t.getAttribute("data-jt"),v=t.value.trim();if(v)JN[k]=v;else delete JN[k];LS.s("jnotes",JSON.stringify(JN))}});
