@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>معاينة التصميم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--r:16px}
+.a{--bg:#EEE9F8;--s:#FFFFFF;--s2:#F5F1FC;--ink:#241B3A;--dim:#6B6285;--line:rgba(36,27,58,.1);--acc:#F26B3A;--acc2:#B9A7E8;--up:#1B7A68;--dn:#B23B66;--on:#fff}
+.a.dk{--bg:#171229;--s:#211A38;--s2:#2A2246;--ink:#F0ECFA;--dim:#A59DC0;--line:rgba(240,236,250,.12);--acc:#FF8A5C;--acc2:#7C69C4;--up:#5CCDB4;--dn:#F08AB0;--on:#1b1030}
+.b{--bg:#E6EDEC;--s:#FFFFFF;--s2:#F1F6F5;--ink:#0F3D3E;--dim:#5B7778;--line:rgba(15,61,62,.12);--acc:#E0A21B;--acc2:#7FB7B1;--up:#17725F;--dn:#B5473A;--on:#2a1d00}
+.b.dk{--bg:#0C1F20;--s:#132C2D;--s2:#1A3839;--ink:#E4F1EF;--dim:#8FB0AD;--line:rgba(228,241,239,.12);--acc:#F2BC45;--acc2:#4F8F89;--up:#5CCDB4;--dn:#F09A8D;--on:#2a1d00}
+*{box-sizing:border-box}
+body{margin:0;font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;background:#888;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+.ctl{position:sticky;top:0;z-index:5;display:flex;gap:8px;padding:10px;background:#222;width:100%;justify-content:center}
+.ctl button{font:inherit;color:#fff;background:#444;border:0;border-radius:10px;padding:8px 14px;cursor:pointer}
+.ctl button.on{background:#fff;color:#000;font-weight:700}
+.app{width:100%;max-width:420px;min-height:calc(100vh - 56px);background:var(--bg);color:var(--ink);padding:20px 18px 96px;position:relative;transition:background .2s}
+.n{direction:ltr;unicode-bidi:isolate;display:inline-block;font-variant-numeric:tabular-nums}
+.top{display:flex;justify-content:space-between;align-items:center}
+.top h1{margin:0;font-size:1.25rem;font-weight:700}
+.top span{color:var(--dim);font-size:.82rem}
+.hero{margin-top:18px}
+.lbl{color:var(--dim);font-size:.85rem}
+.big{font-size:3rem;font-weight:700;line-height:1.05;margin:2px 0 0;letter-spacing:-.02em}
+.sub{color:var(--dim);font-size:.9rem;margin-top:4px}
+.path{margin:14px -6px 0}
+.path svg{width:100%;height:auto;display:block;overflow:visible}
+.goalrow{display:flex;justify-content:space-between;font-size:.82rem;color:var(--dim);margin-top:-2px}
+.sec{margin-top:26px}
+.sec h2{font-size:.95rem;margin:0 0 6px;font-weight:700}
+.att{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+.att:first-of-type{border-top:0}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--acc);margin-top:7px;flex:none}
+.att b{display:block;font-weight:500}.att small{color:var(--dim)}
+.coin{padding:12px 0;border-top:1px solid var(--line)}
+.coin:first-of-type{border-top:0}
+.cr{display:flex;justify-content:space-between;align-items:baseline}
+.cr b{font-weight:700;font-size:1.02rem}
+.cr .v{font-weight:500;font-size:1.05rem}
+.bar{height:5px;background:var(--s2);border-radius:3px;margin:7px 0 5px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc2);border-radius:3px}
+.bar i.hot{background:var(--acc)}
+.cm{display:flex;justify-content:space-between;color:var(--dim);font-size:.8rem}
+.up{color:var(--up)}.dn{color:var(--dn)}
+.sheet{margin-top:26px;background:var(--s);border:1.5px solid var(--acc);border-radius:var(--r);padding:14px}
+.sheet h3{margin:0 0 4px;font-size:.95rem}
+.sheet p{margin:0;color:var(--dim);font-size:.85rem}
+.sheet .go{margin-top:12px;display:block;width:100%;font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px;background:var(--acc);color:var(--on)}
+.nav{position:fixed;bottom:0;inset-inline:0;max-width:420px;margin-inline:auto;background:var(--s);border-top:1px solid var(--line);display:flex;padding:6px 6px calc(8px + env(safe-area-inset-bottom))}
+.nav div{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;color:var(--dim);font-size:.72rem}
+.nav div.on{color:var(--ink);font-weight:700}
+.nav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav div.on svg{stroke:var(--acc)}
+.note{margin:18px 0 0;font-size:.74rem;color:var(--dim);text-align:center}
+@media (prefers-reduced-motion:no-preference){.pg{animation:dr 1.4s ease-out both}@keyframes dr{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}}
+</style></head><body>
+<div class="ctl"><button data-p="a" class="on">أ · بنفسجي</button><button data-p="b">ب · بحري</button><button id="dk">داكن</button></div>
+<div class="app a" id="app">
+  <div class="top"><h1>رحلتي</h1><span>الاثنين ١٢ أكتوبر</span></div>
+
+  <div class="hero">
+    <div class="lbl">حسابي الآن</div>
+    <div class="big"><span class="n">$3,497</span></div>
+    <div class="sub">سيولة <span class="n">$412</span> · اليوم <span class="n up">+$38</span></div>
+    <div class="path">
+      <svg viewBox="0 0 320 110" aria-label="التقدّم نحو الهدف">
+        <path id="trk" d="M8 96 C70 96 90 52 150 56 S250 22 312 14" fill="none" stroke="var(--line)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 7"/>
+        <path id="prg" class="pg" d="M8 96 C70 96 90 52 150 56 S250 22 312 14" fill="none" stroke="var(--acc)" stroke-width="4" stroke-linecap="round"/>
+        <g id="flags"></g><circle id="me" r="7" fill="var(--acc)" stroke="var(--bg)" stroke-width="3"/>
+      </svg>
+    </div>
+    <div class="goalrow"><span>ربح <span class="n">$2,140</span></span><span>الهدف <span class="n">$30,000</span> · <span class="n">7%</span></span></div>
+  </div>
+
+  <div class="sec"><h2>يحتاج انتباهك</h2>
+    <div class="att"><span class="dot"></span><div><b>RVN تشكّل ٣٣٪ من محفظتك</b><small>سقفك ٣٥٪، أنت قريب منه</small></div></div>
+    <div class="att"><span class="dot"></span><div><b>أمر بيع REQ قريب</b><small>الأول عند 0.0573، يبعد ٢٪</small></div></div>
+  </div>
+
+  <div class="sec"><h2>عملاتي</h2>
+    <div class="coin"><div class="cr"><b>RVN</b><span class="v n">$1,165</span></div><div class="bar"><i class="hot" style="width:33%"></i></div><div class="cm"><span>٣٣٪ من المحفظة</span><span class="n up">+12.4%</span></div></div>
+    <div class="coin"><div class="cr"><b>ONE</b><span class="v n">$373</span></div><div class="bar"><i style="width:11%"></i></div><div class="cm"><span>١١٪</span><span class="n dn">−3.1%</span></div></div>
+    <div class="coin"><div class="cr"><b>REQ</b><span class="v n">$196</span></div><div class="bar"><i style="width:6%"></i></div><div class="cm"><span>٦٪ · ٦ أوامر بيع</span><span class="n up">+0.8%</span></div></div>
+  </div>
+
+  <div class="sheet"><h3>أمر حقيقي</h3><p>هكذا تبدو شاشة الإرسال: إطار بلون التمييز، وفي أعلاها نتيجة الفحص.</p><button class="go">تأكيد وإرسال</button></div>
+  <div class="note">أرقام عيّنة للمعاينة فقط</div>
+
+  <nav class="nav">
+    <div class="on"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>الرئيسية</div>
+    <div><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>المحفظة</div>
+    <div><svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg>تداول</div>
+    <div><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>تحليل</div>
+    <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</div>
+  </nav>
+</div>
+<script>
+var app=document.getElementById('app'),P='a',D=false;
+function ap(){app.className='app '+P+(D?' dk':'');document.querySelectorAll('[data-p]').forEach(function(b){b.classList.toggle('on',b.dataset.p===P)});document.getElementById('dk').classList.toggle('on',D)}
+document.querySelectorAll('[data-p]').forEach(function(b){b.onclick=function(){P=b.dataset.p;ap()}});
+document.getElementById('dk').onclick=function(){D=!D;ap()};
+var trk=document.getElementById('trk'),L=trk.getTotalLength(),pg=document.getElementById('prg'),f=.07+0*0;
+pg.style.setProperty('--len',L);pg.setAttribute('stroke-dasharray',L*.07+' '+L);pg.style.strokeDashoffset=0;
+var m=trk.getPointAtLength(L*.07),me=document.getElementById('me');me.setAttribute('cx',m.x);me.setAttribute('cy',m.y);
+var fl='';[.33,.66,1].forEach(function(t,i){var p=trk.getPointAtLength(L*t);fl+='<circle cx="'+p.x+'" cy="'+p.y+'" r="4" fill="var(--bg)" stroke="var(--dim)" stroke-width="2"/>'});
+document.getElementById('flags').innerHTML=fl;
+</script></body></html>
