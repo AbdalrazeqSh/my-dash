@@ -3,9 +3,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light"><meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E9DE"><meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F1A14"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600&display=swap"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="حسابي"><title>حسابي</title>
 <style>
-:root{--bg:#E4E9DE;--s:#EEF2E9;--s2:#D9E0D1;--fg:#1B2820;--dim:#55655A;--dimmer:#7C8A7F;--up:#3F6B4F;--down:#A5483B;--gold:#9A6A1C;--bd:rgba(27,40,32,.14);--onup:#fff;--ondown:#fff;--upbg:rgba(63,107,79,.14);--downbg:rgba(165,72,59,.12);--goldbg:rgba(176,122,34,.16);color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--down:#E0806F;--gold:#E0AE4F;--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}}
-:root[data-theme=dark]{--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--down:#E0806F;--gold:#E0AE4F;--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}
+:root{--bg:#E4E9DE;--s:#EEF2E9;--s2:#D9E0D1;--fg:#1B2820;--dim:#55655A;--dimmer:#7C8A7F;--up:#3F6B4F;--down:#A5483B;--gold:#9A6A1C;--buy:#2F5F7F;--sell:#7B4A72;--onbs:#fff;--buybg:rgba(47,95,127,.14);--sellbg:rgba(123,74,114,.14);--bd:rgba(27,40,32,.14);--onup:#fff;--ondown:#fff;--upbg:rgba(63,107,79,.14);--downbg:rgba(165,72,59,.12);--goldbg:rgba(176,122,34,.16);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--down:#E0806F;--gold:#E0AE4F;--buy:#8DBAD8;--sell:#CFA0C6;--onbs:#0E1620;--buybg:rgba(141,186,216,.16);--sellbg:rgba(207,160,198,.16);--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--down:#E0806F;--gold:#E0AE4F;--buy:#8DBAD8;--sell:#CFA0C6;--onbs:#0E1620;--buybg:rgba(141,186,216,.16);--sellbg:rgba(207,160,198,.16);--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "Readex Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:18px 20px calc(88px + env(safe-area-inset-bottom));max-width:640px;margin-inline:auto}
 .n{direction:ltr;unicode-bidi:isolate;display:inline-block;font-variant-numeric:tabular-nums}
@@ -24,7 +24,7 @@ button.go{background:var(--up);color:var(--onup);border-color:transparent;font-w
 .row .r{text-align:left;direction:ltr;white-space:nowrap}
 .up{color:var(--up)}.down{color:var(--down)}.flat{color:var(--dim)}
 .tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:.74rem;font-weight:600;margin-inline-start:6px}
-.tag.b{background:var(--upbg);color:var(--up)}.tag.s{background:var(--downbg);color:var(--down)}.tag.g{background:var(--goldbg);color:var(--gold)}
+.tag.b{background:var(--upbg);color:var(--up)}.tag.s{background:var(--downbg);color:var(--down)}.tag.tb{background:var(--buybg);color:var(--buy)}.tag.ts{background:var(--sellbg);color:var(--sell)}.tag.g{background:var(--goldbg);color:var(--gold)}
 .err{background:var(--downbg);color:var(--down);border-radius:10px;padding:8px 12px;font-size:.84rem;margin-bottom:12px}
 .warn{background:var(--goldbg);color:var(--gold);border-radius:10px;padding:8px 12px;font-size:.84rem;margin-bottom:8px}
 .bar{display:flex;height:8px;border-radius:5px;overflow:hidden;gap:2px;margin:6px 0 10px;background:var(--s2)}
@@ -34,8 +34,8 @@ input,textarea{width:100%;font:inherit;direction:ltr;color:var(--fg);background:
 textarea{min-height:70px}
 .note{font-size:.78rem;color:var(--dimmer);margin-top:10px}
 button.sm{padding:3px 10px;font-size:.78rem;min-height:30px}
-button.buy{background:var(--up);color:var(--onup);border-color:transparent;font-weight:600}
-button.sell{background:var(--down);color:var(--ondown);border-color:transparent;font-weight:600}
+button.buy{background:var(--buy);color:var(--onbs);border-color:transparent;font-weight:600}
+button.sell{background:var(--sell);color:var(--onbs);border-color:transparent;font-weight:600}
 .seg{display:flex;gap:8px}.seg button{flex:1}.seg button.on{outline:2px solid var(--fg)}
 .subnav{margin-bottom:12px}.subnav button{background:transparent;color:var(--dim)}.subnav button.on{outline:0;background:var(--fg);color:var(--bg);border-color:transparent;font-weight:600}
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:9}
@@ -127,7 +127,7 @@ h3.plain{margin-bottom:6px}
       <div><label for="oq">الكمية</label><input id="oq" inputmode="decimal"></div>
     </div>
     <div id="ochips" style="margin:6px 0 2px"></div>
-    <div class="g2"><div><label for="ov">أو القيمة بالدولار</label><input id="ov" inputmode="decimal"></div><div></div></div>
+    <div class="g2"><div><label for="ov">القيمة (USDT)</label><input id="ov" inputmode="decimal"></div><div class="sub" style="align-self:end;padding-bottom:10px">الكمية والقيمة تتحدّثان معاً</div></div>
     <div class="c" id="orisk" style="margin-top:14px">
       <h3 class="plain">المخاطرة</h3>
       <div class="g2">
@@ -177,15 +177,21 @@ h3.plain{margin-bottom:6px}
       <div class="seg"><button class="buy on" data-ls="BUY">شراء</button><button class="sell" data-ls="SELL">بيع</button></div>
       <div class="g2">
         <div><label for="ls">العملة</label><input id="ls" autocapitalize="characters" autocomplete="off"></div>
-        <div><label for="lt" id="ltl">المبلغ الكلي (USDT)</label><input id="lt" inputmode="decimal"></div>
+        <div><label for="ln">عدد الأوامر</label><input id="ln" inputmode="numeric" value="4"></div>
         <div><label for="lp1">أول مستوى (الأقرب للسوق)</label><input id="lp1" inputmode="decimal"></div>
         <div><label for="lp2">آخر مستوى (الأبعد)</label><input id="lp2" inputmode="decimal"></div>
-        <div><label for="ln">عدد الأوامر</label><input id="ln" inputmode="numeric" value="4"></div>
-        <div style="align-self:end"><button id="lpx" style="width:100%">السعر الحالي</button></div>
+        <div><label for="lv">المبلغ الكلي (USDT)</label><input id="lv" inputmode="decimal"></div>
+        <div><label for="lq">الكمية الكلية</label><input id="lq" inputmode="decimal"></div>
+        <div style="grid-column:1/-1;margin-top:8px"><button id="lpx" style="width:100%">السعر الحالي</button></div>
       </div>
       <div class="seg" style="margin-top:10px"><button data-ld="eq" class="on">كميات متساوية</button><button data-ld="inc">كمية أكبر عند الأبعد</button><button data-ld="cus">مستويات مخصّصة</button></div>
       <div id="lcw" hidden><label for="lcus">كل سطر: السعر ثم النسبة % من الكمية الكلية</label><textarea id="lcus" placeholder="0.0573 17.5&#10;0.0600 17.5"></textarea></div>
+      <div id="lrisk" class="g2" hidden>
+        <div><label for="lx">وقف الخسارة (للحساب فقط)</label><input id="lx" inputmode="decimal"></div>
+        <div><label for="lg">الهدف (اختياري)</label><input id="lg" inputmode="decimal"></div>
+      </div>
       <div id="lhint" class="sub"></div>
+      <div id="lsum"></div>
       <button class="go" id="lprev" style="width:100%;margin-top:10px">معاينة</button>
       <div id="lout" style="margin-top:12px"></div>
     </div>
@@ -214,7 +220,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 17</div>
+<div class="note" style="text-align:center" id="foot">النسخة 18</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -392,8 +398,8 @@ function render(){
   function coinRow(a,i){
     var p=a.avg?(a.price/a.avg-1)*100:null,pv=a.avg?(a.price-a.avg)*a.qty:null,oi=ordInfo(a.sym),share=tot>0?a.val/tot*100:0;
     var tg='';
-    if(oi.sn)tg+='<span class="tag s" style="margin:0">بيع ×'+oi.sn+(oi.sd!=null?' · أقرب '+pc(oi.sd):'')+'</span>';
-    if(oi.bn)tg+='<span class="tag b" style="margin:0">شراء ×'+oi.bn+(oi.bd!=null?' · أقرب '+pc(oi.bd):'')+'</span>';
+    if(oi.sn)tg+='<span class="tag ts" style="margin:0">بيع ×'+oi.sn+(oi.sd!=null?' · أقرب '+pc(oi.sd):'')+'</span>';
+    if(oi.bn)tg+='<span class="tag tb" style="margin:0">شراء ×'+oi.bn+(oi.bd!=null?' · أقرب '+pc(oi.bd):'')+'</span>';
     var hh=halS(a.sym);if(hh==='no')tg+='<span class="tag s" style="margin:0">ممنوعة</span>';else if(hh==='rev')tg+='<span class="tag g" style="margin:0">مراجعة</span>';else if(!hh&&!STABLE[a.sym])tg+='<span class="tag g" style="margin:0">خارج القائمة</span>';
     return '<div class="coin"><div class="a"><span class="nm"><span style="color:'+COL[Math.min(i,5)]+'">●</span> '+esc(a.sym)+'<span class="sh">'+share.toFixed(share<10?1:0)+'%</span></span><span class="vl n">'+usd(a.val)+'</span></div>'+
       '<div class="b"><span><span class="n">'+qt(a.qty)+'</span> × '+(a.price?'<span class="n">'+px(a.price)+'</span>':'لا يوجد سوق USDT')+'</span>'+
@@ -416,7 +422,7 @@ function render(){
     if(openOrd[k]){
       h+='<div class="sub2">'+arr.sort(function(x,y){return y.price-x.price}).map(function(o){
         var buy=o.side==="BUY",d=last?(o.price/last-1)*100:null;
-        return '<div class="row"><div class="l"><b><span class="tag '+(buy?"b":"s")+'" style="margin:0">'+(buy?"شراء":"بيع")+'</span></b><small><span class="n">'+qt(o.qty)+'</span></small></div><div class="r"><span class="n"><b>'+px(o.price)+'</b></span> <small class="flat"><span class="n">'+(d==null?"":pc(d))+'</span></small>'+(CAN?' <button class="sm" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'">إلغاء</button>':'')+'</div></div>';
+        return '<div class="row"><div class="l"><b><span class="tag '+(buy?"tb":"ts")+'" style="margin:0">'+(buy?"شراء":"بيع")+'</span></b><small><span class="n">'+qt(o.qty)+'</span></small></div><div class="r"><span class="n"><b>'+px(o.price)+'</b></span> <small class="flat"><span class="n">'+(d==null?"":pc(d))+'</span></small>'+(CAN?' <button class="sm" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'">إلغاء</button>':'')+'</div></div>';
       }).join("")+'</div>';
     }
     return h;
@@ -586,17 +592,62 @@ function renderHal(){
 }
 
 /* --- ladder --- */
-var L={side:"BUY",dist:"eq",rows:null,sym:"",f:null};
+var L={side:"BUY",dist:"eq",rows:null,sym:"",f:null,ed:"v"};
 function ladHint(){
   var sy=$("ls").value.trim().toUpperCase(),h=snap&&snap.assets.filter(function(a){return a.sym===sy})[0];
-  $("ltl").textContent=L.side==="BUY"?"المبلغ الكلي (USDT)":"الكمية الكلية ("+(sy||"عملة")+")";
+  $("lrisk").hidden=L.side!=="BUY";
   $("lhint").textContent=L.side==="BUY"?(snap?"سيولتك: "+usd(snap.usdt,0)+" · سقف الأمر الواحد: "+usd(capVal(),0):""):(h?"لديك "+qt(h.qty)+" "+sy:"");
   var b=document.querySelectorAll("[data-ls]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-ls")===L.side);
   b=document.querySelectorAll("[data-ld]");for(i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-ld")===L.dist);
   $("lcw").hidden=L.dist!=="cus";
+  ladSync();ladLive();
+}
+function ladLevels(){
+  var p1=parseFloat($("lp1").value),p2=parseFloat($("lp2").value),n=parseInt($("ln").value,10),ps=[],w=[],i,sw=0;
+  if(L.dist==="cus"){
+    var cs=$("lcus").value.split(/\n/).map(function(l){var m=l.trim().split(/[\s,;]+/);return{p:parseFloat(m[0]),w:parseFloat(m[1])}}).filter(function(x){return x.p>0&&x.w>0});
+    if(!cs.length)return null;cs.forEach(function(c){ps.push(c.p);w.push(c.w/100)});sw=1;
+  }else{
+    if(!(p1>0)||!(p2>0)||!(n>=1&&n<=10))return null;
+    for(i=0;i<n;i++){ps.push(n===1?p1:p1+(p2-p1)*i/(n-1));var x=L.dist==="inc"?1+i*0.5:1;w.push(x);sw+=x}
+  }
+  return{p:ps,w:w.map(function(x){return x/sw})};
+}
+function ladK(lv){
+  var k=0;for(var i=0;i<lv.p.length;i++)k+=L.side==="BUY"?lv.w[i]/lv.p[i]:lv.w[i]*lv.p[i];return k;
+}
+function ladSync(){
+  var lv=ladLevels(),v=parseFloat($("lv").value),q=parseFloat($("lq").value),k;
+  if(!lv){return}
+  k=ladK(lv);
+  var buy=L.side==="BUY";
+  if(L.ed==="v"){if(v>0)$("lq").value=String(+(buy?v*k:v/k).toPrecision(8));else $("lq").value=""}
+  else{if(q>0)$("lv").value=(buy?q/k:q*k).toFixed(2);else $("lv").value=""}
+}
+function ladLive(){
+  var o=$("lsum"),sy=$("ls").value.trim().toUpperCase(),lv=ladLevels(),v=parseFloat($("lv").value),q=parseFloat($("lq").value);
+  if(!lv||!(v>0)||!(q>0)){o.innerHTML='';return}
+  var buy=L.side==="BUY",eq=equity(),avg=v/q,fee=0.001,hold=snap&&snap.assets.filter(function(a){return a.sym===sy})[0],h='<div class="sum">';
+  h+=oRow("قيمة الأوامر",usd(v)+" · "+(eq?(v/eq*100).toFixed(1):"-")+"% من الرصيد");
+  h+=oRow("متوسط السعر",px(avg));
+  if(buy){
+    var x=parseFloat($("lx").value),t=parseFloat($("lg").value);
+    if(snap)h+=oRow("السيولة بعد الشراء",usd(Math.max(0,snap.usdt-v)),snap.usdt-v<0?"down":"");
+    var sh=eq?((hold?hold.val:0)+v)/eq*100:0;
+    h+=oRow(esc(sy||"العملة")+" بعد الصفقة",sh.toFixed(0)+"% من محفظتك",sh>rcap()?"down":"");
+    if(x>0&&x<avg){
+      var risk=(avg-x)*q+(avg+x)*q*fee;
+      h+=oRow("الخسارة عند الوقف","−"+usd(risk)+" · "+(eq?(risk/eq*100).toFixed(2):"-")+"%","down");
+      if(t>avg){var g=q*(t-avg)-q*(avg+t)*fee;h+=oRow("الربح عند الهدف","+"+usd(g)+" · عائد/مخاطرة "+(g/risk).toFixed(2),"up")}
+    }else if(x>0)h+='<div class="warn" style="margin-top:8px">الوقف يجب أن يكون أقل من متوسط السعر</div>';
+  }else{
+    if(hold)h+=oRow("من كميتك",(q/hold.qty*100).toFixed(0)+"%",q>hold.qty+1e-9?"down":"");
+    if(hold&&AVG[sy]&&AVG[sy].a){var pl=(avg-AVG[sy].a)*q;h+=oRow("الربح المتوقع عن متوسط تكلفتك",sg(pl)+" · "+pc((avg/AVG[sy].a-1)*100),cl(pl))}
+  }
+  o.innerHTML=h+'</div>';
 }
 function ladPreview(){
-  var sy=$("ls").value.trim().toUpperCase(),tot=parseFloat($("lt").value),p1=parseFloat($("lp1").value),p2=parseFloat($("lp2").value),n=parseInt($("ln").value,10),o=$("lout"),cus=null;
+  var sy=$("ls").value.trim().toUpperCase(),tot=parseFloat($(L.side==="BUY"?"lv":"lq").value),p1=parseFloat($("lp1").value),p2=parseFloat($("lp2").value),n=parseInt($("ln").value,10),o=$("lout"),cus=null;
   function bad(m){o.innerHTML='<div class="err">'+m+'</div>'}
   if(!sy)return bad("اكتب رمز العملة");
   if(!(tot>0))return bad("أدخل "+(L.side==="BUY"?"المبلغ":"الكمية"));
@@ -690,7 +741,7 @@ function renderJournal(){
   $("jcoin").innerHTML=cs.length?cs.map(function(c){return '<div class="row"><div class="l"><b>'+esc(c.s)+'</b><small>'+c.n+' صفقات · نسبة الربح '+Math.round(c.w/c.n*100)+'%</small></div><div class="r"><b class="n '+cl(c.p)+'">'+sg(c.p)+'</b><br><small class="flat n">'+(c.c>0?pc(c.p/c.c*100):"")+'</small></div></div>'}).join(""):'<div class="sub">لا صفقات مغلقة في هذه الفترة</div>';
   $("jlist").innerHTML=ev.length?ev.slice(0,60).map(function(e){
     var nt=JN[e.k]||"",op=openJ[e.k];
-    return '<div class="row" data-jk="'+esc(e.k)+'" style="cursor:pointer"><div class="l"><b>'+esc(e.sym)+'<span class="tag s">بيع</span></b><small><span class="n">'+e.day+'</span> · <span class="n">'+qt(e.q)+' @ '+px(e.rev/e.q)+'</span>'+(e.cost>0?' · دخول <span class="n">'+px(e.cost/e.cs)+'</span>':' · متوسط الدخول غير معروف')+(nt?' · 📝':'')+'</small></div><div class="r">'+(e.cost>0?'<b class="n '+cl(e.pnl)+'">'+sg(e.pnl)+'</b><br><small class="flat n">'+pc(e.pct)+'</small>':'<span class="flat">—</span>')+'</div></div>'+
+    return '<div class="row" data-jk="'+esc(e.k)+'" style="cursor:pointer"><div class="l"><b>'+esc(e.sym)+'<span class="tag ts">بيع</span></b><small><span class="n">'+e.day+'</span> · <span class="n">'+qt(e.q)+' @ '+px(e.rev/e.q)+'</span>'+(e.cost>0?' · دخول <span class="n">'+px(e.cost/e.cs)+'</span>':' · متوسط الدخول غير معروف')+(nt?' · 📝':'')+'</small></div><div class="r">'+(e.cost>0?'<b class="n '+cl(e.pnl)+'">'+sg(e.pnl)+'</b><br><small class="flat n">'+pc(e.pct)+'</small>':'<span class="flat">—</span>')+'</div></div>'+
       (op?'<div class="sub2"><textarea data-jt="'+esc(e.k)+'" placeholder="ملاحظة: سبب الدخول، ما تعلمته…" style="direction:rtl;min-height:60px">'+esc(nt)+'</textarea></div>':'');
   }).join(""):'<div class="sub">لا شيء</div>';
 }
@@ -709,7 +760,7 @@ function jLoad(){
 }
 
 /* --- order page (single order + live risk) --- */
-var O={side:"BUY",sym:"",f:null,last:0},oTm=null;
+var O={side:"BUY",sym:"",f:null,last:0,ed:"q"},oTm=null;
 function halTag(sym,side){var h=halS(sym);if(side==="SELL")return"";return h==="no"?'<span class="tag s" style="margin:0">ممنوعة</span>':h==="ok"?'<span class="tag b" style="margin:0">مسموحة</span>':h==="rev"?'<span class="tag g" style="margin:0">مراجعة</span>':'<span class="tag g" style="margin:0">خارج القائمة</span>'}
 function oChips(){
   var l=O.side==="BUY"?[0,-1,-3,-5]:[0,3,5,10],h='';
@@ -731,8 +782,16 @@ function oLoad(){
     O.last=+r[1].price;
     $("opx").innerHTML='السعر الحالي <span class="n">'+px(O.last)+'</span> · <span style="text-decoration:underline;cursor:pointer" data-orf="1">تحديث</span>';
     if(!(parseFloat($("op").value)>0))$("op").value=flo(O.last,O.f.tick);
-    oCalc();
+    oSync();oCalc();
   },function(e){if(O.sym===sym)$("opx").textContent="تعذّر: "+e.message});
+}
+function oSync(){
+  var p=parseFloat($("op").value),q=parseFloat($("oq").value),v=parseFloat($("ov").value),st=O.f?O.f.step:0;
+  if(O.ed==="v"){
+    if(v>0&&p>0){var qq=v/p;$("oq").value=st?flo(qq,st):String(+qq.toPrecision(8))}else $("oq").value="";
+  }else{
+    if(q>0&&p>0)$("ov").value=(q*p).toFixed(2);else $("ov").value="";
+  }
 }
 function oRow(l,v,c){return '<div class="row"><div class="l">'+l+'</div><div class="r"><b class="n '+(c||"")+'">'+v+'</b></div></div>'}
 function oCalc(){
@@ -778,7 +837,7 @@ function oReview(){
 }
 function oOpen(sym,side){
   TAB="trd";SUB.trd="ord";LS.s("tab",TAB);LS.s("sub",JSON.stringify(SUB));
-  O.side=side||"BUY";$("os").value=sym||"";$("op").value="";$("oq").value="";$("ov").value="";O.sym="";O.f=null;
+  O.side=side||"BUY";$("os").value=sym||"";$("op").value="";$("oq").value="";$("ov").value="";O.ed="q";O.sym="";O.f=null;
   oChips();enter();oLoad();
 }
 
@@ -880,9 +939,9 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-th]"))){LS.s("theme",el.getAttribute("data-th"));return applyTheme()}
   if(t.id==="allc")return setTab("wal");
   if((el=t.closest("[data-os]"))){O.side=el.getAttribute("data-os");oChips();return oCalc()}
-  if((el=t.closest("[data-opp]"))){if(!O.f)return;var pp=O.last*(1+parseFloat(el.getAttribute("data-opp"))/100);$("op").value=flo(pp,O.f.tick);return oCalc()}
-  if(t.closest("[data-oall]")){var hh=snap&&snap.assets.filter(function(a){return a.sym===O.sym})[0];if(hh&&O.f){$("oq").value=flo(hh.qty,O.f.step);$("ov").value=""}return oCalc()}
-  if((el=t.closest("[data-ouse]"))){var uq=parseFloat(el.getAttribute("data-ouse"));if(O.f)$("oq").value=flo(uq,O.f.step);else $("oq").value=String(uq);$("ov").value="";return oCalc()}
+  if((el=t.closest("[data-opp]"))){if(!O.f)return;var pp=O.last*(1+parseFloat(el.getAttribute("data-opp"))/100);$("op").value=flo(pp,O.f.tick);oSync();return oCalc()}
+  if(t.closest("[data-oall]")){var hh=snap&&snap.assets.filter(function(a){return a.sym===O.sym})[0];if(hh&&O.f){$("oq").value=flo(hh.qty,O.f.step);O.ed="q";oSync()}return oCalc()}
+  if((el=t.closest("[data-ouse]"))){var uq=parseFloat(el.getAttribute("data-ouse"));if(O.f)$("oq").value=flo(uq,O.f.step);else $("oq").value=String(uq);O.ed="q";oSync();return oCalc()}
   if(t.closest("[data-orf]")){O.f=null;return oLoad()}
   if(t.id==="orev")return oReview();
   if(t.id==="jload")return jLoad();
@@ -946,7 +1005,7 @@ function loadToday(){
     var rows=Object.keys(g).map(function(k){return g[k]}).sort(function(a,b){return b.tm-a.tm});
     $("todsum").textContent=rows.length?"شراء "+usd(bv,0)+" · بيع "+usd(sv,0):"لا صفقات";
     $("today").innerHTML=rows.length?rows.map(function(x){
-      return '<div class="row"><div class="l"><b>'+esc(x.sym)+'<span class="tag '+(x.buy?"b":"s")+'">'+(x.buy?"شراء":"بيع")+'</span></b><small><span class="n">'+hm(x.tm)+'</span> · '+x.n+' تنفيذ</small></div><div class="r"><span class="n"><b>'+usd(x.v)+'</b></span><br><small class="flat"><span class="n">'+qt(x.q)+' @ '+px(x.v/x.q)+'</span></small></div></div>';
+      return '<div class="row"><div class="l"><b>'+esc(x.sym)+'<span class="tag '+(x.buy?"tb":"ts")+'">'+(x.buy?"شراء":"بيع")+'</span></b><small><span class="n">'+hm(x.tm)+'</span> · '+x.n+' تنفيذ</small></div><div class="r"><span class="n"><b>'+usd(x.v)+'</b></span><br><small class="flat"><span class="n">'+qt(x.q)+' @ '+px(x.v/x.q)+'</span></small></div></div>';
     }).join(""):'<div class="sub">لا صفقات اليوم</div>';
     b.disabled=false;b.textContent="تحديث صفقات اليوم";
   });
@@ -961,13 +1020,13 @@ document.addEventListener("click",function(ev){
 });
 
 $("calc").addEventListener("input",calcRun);
-$("lad").addEventListener("input",function(){L.rows=null;ladHint()});
+$("lad").addEventListener("input",function(ev){L.rows=null;var id=ev.target.id;if(id==="lv")L.ed="v";else if(id==="lq")L.ed="q";ladHint()});
 $("rcapin").addEventListener("change",function(){var v=parseFloat($("rcapin").value);if(v>0){LS.s("rcap",String(v));render()}});
 try{var cs=JSON.parse(LS.g("calc")||"{}");CIDS.forEach(function(i){if(cs[i]!=null)$(i).value=cs[i]})}catch(e){}
 $("jr").addEventListener("change",function(ev){var t=ev.target;if(t.getAttribute&&t.getAttribute("data-jt")){var k=t.getAttribute("data-jt"),v=t.value.trim();if(v)JN[k]=v;else delete JN[k];LS.s("jnotes",JSON.stringify(JN))}});
 $("stg").addEventListener("input",function(){var m={stc:"startcap",snd:"netdep",sgl:"goal"};for(var k in m){var v=parseFloat($(k).value);if(isNaN(v))LS.d(m[k]);else LS.s(m[k],String(v))}render()});
 $("stc").value=LS.g("startcap")||"";$("snd").value=LS.g("netdep")||"";$("sgl").value=LS.g("goal")||"";applyTheme();
-$("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov"&&$("ov").value)$("oq").value="";oCalc()}});
+$("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov")O.ed="v";else if(id==="oq")O.ed="q";if(id==="ov"||id==="oq"||id==="op")oSync();oCalc()}});
 $("rf").onclick=refresh;
 $("save").onclick=function(){var k=$("k").value.trim(),s=$("s").value.trim();if(!k||!s){err("أدخل المفتاح والسر");return}LS.s("bk",k);LS.s("bs",s);var cv=parseFloat($("cap").value);if(cv>0)LS.s("cap",String(cv));PERM=null;$("k").value="";$("s").value="";err("");forceCfg=false;show();refresh()};
 $("clr").onclick=function(){LS.d("bk");LS.d("bs");CAN=false;PERM=null;$("perm").hidden=true;LS.d("snap");LS.d("avg");snap=null;AVG={};forceCfg=false;err("");show()};
