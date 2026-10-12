@@ -149,7 +149,7 @@ textarea{width:100%;font:inherit;direction:ltr;color:var(--fg);background:var(--
     <div class="c"><h3 class="plain">القائمة <span class="sm2" id="hcnt"></span></h3><div id="hlist"></div></div>
     <div class="c closed" id="chb"><h3 class="fold" data-f="chb"><span>نسخ احتياطي ونقل</span><span class="chev">›</span></h3><div class="fb"><div class="sub" style="margin:0 0 6px">انسخ النص هنا والصقه في الجهاز الآخر ثم «استيراد».</div><textarea id="hjs"></textarea><div style="display:flex;gap:8px;margin-top:8px"><button id="hexp">تصدير</button><button id="himp">استيراد</button></div></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 11</div>
+<div class="note" style="text-align:center" id="foot">النسخة 12</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home">الحساب</button><button data-tab="risk">المخاطر</button><button data-tab="calc">الحاسبة</button><button data-tab="lad">السلّم</button><button data-tab="hal">الشرعية</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -306,7 +306,7 @@ function avgFor(sym,held){
 }
 
 /* --- state / render --- */
-var RUN=0,VER="11",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
+var RUN=0,VER="12",snap=null,busy=false,CAN=false,PERM=null,DUST=10,dustOpen=false,openOrd={};
 function render(){
   if(!snap)return;
   var as=snap.assets.map(function(a){a.avg=AVG[a.sym]?AVG[a.sym].a:0;return a}).sort(function(a,b){return b.val-a.val});
@@ -517,7 +517,7 @@ function ladPreview(){
   o.innerHTML='<div class="sub">جارٍ التحميل…</div>';
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sy+"USDT"},false),call("/api/v3/ticker/price",{symbol:sy+"USDT"},false)]).then(function(r){
     var f={};r[0].symbols[0].filters.forEach(function(x){f[x.filterType]=x});
-    var F={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5)},last=+r[1].price;
+    var F={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0)},last=+r[1].price;
     var w=[],sw=0,i;
     if(cus){cus.forEach(function(c){w.push(c.w/100)});sw=1}else for(i=0;i<n;i++){var x=L.dist==="inc"?1+i*0.5:1;w.push(x);sw+=x}
     var rows=[],errs=[],warns=[],sv=0,sq=0;
@@ -528,6 +528,8 @@ function ladPreview(){
       if(+qs<F.minQ||val<F.minN)errs.push("الأمر "+(i+1)+": قيمته "+usd(val)+" أقل من الحد الأدنى ("+F.minN+"$)");
       else if(val>capVal())errs.push("الأمر "+(i+1)+": "+usd(val,0)+" فوق سقف الأمر ("+usd(capVal(),0)+")");
       var dev=(+ps/last-1)*100;
+      if(L.side==="SELL"&&F.up&&+ps>last*F.up*0.97)errs.push("الأمر "+(i+1)+": السعر "+ps+" فوق الحد الذي تقبله بايننس لهذه العملة (حوالي "+px(last*F.up*0.97)+" حالياً)");
+      if(L.side==="BUY"&&F.dn&&+ps<last*F.dn*1.03)errs.push("الأمر "+(i+1)+": السعر "+ps+" تحت الحد الذي تقبله بايننس (حوالي "+px(last*F.dn*1.03)+" حالياً)");
       if(L.side==="BUY"&&+ps>last*1.001)warns.push("سعر الأمر "+(i+1)+" فوق السعر الحالي فسيُنفَّذ فوراً");
       if(L.side==="SELL"&&+ps<last*0.999)warns.push("سعر الأمر "+(i+1)+" تحت السعر الحالي فسيُنفَّذ فوراً");
       rows.push({p:ps,q:qs,v:val,d:dev});sv+=val;sq+=+qs;
