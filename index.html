@@ -231,7 +231,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 29</div>
+<div class="note" style="text-align:center" id="foot">النسخة 30</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -330,7 +330,7 @@ function wsReq(method,params,signed,retry){
     throw e;
   });
 }
-var PUBM={"/api/v3/ticker/price":"ticker.price","/api/v3/exchangeInfo":"exchangeInfo","/api/v3/depth":"depth"};
+var PUBM={"/api/v3/klines":"klines","/api/v3/ticker/price":"ticker.price","/api/v3/exchangeInfo":"exchangeInfo","/api/v3/depth":"depth"};
 function restCall(path,params,hi){
   hi=hi||0;var q=[];
   for(var k in params)q.push(k+"="+encodeURIComponent(typeof params[k]==="object"?JSON.stringify(params[k]):params[k]));
@@ -1002,32 +1002,75 @@ function cancelAllSheet(sym){
   openSheet('<div class="sum"><b>إلغاء كل أوامر '+esc(sym)+'</b><br>'+N(arr.length)+' أوامر ستُلغى، وتشمل أوامر الوقف والـ OCO إن وُجدت.</div><div id="terr"></div><div style="display:flex;gap:8px"><button class="sell" id="cxgo" data-s="'+esc(k)+'">تأكيد إلغاء الكل</button><button id="tclose">رجوع</button></div>');
 }
 
-/* --- coin detail: schematic ladder chart --- */
-var CD={sym:"",zone:null};
+/* --- coin detail: real line chart (klines) --- */
+var CD={sym:"",zone:null,tf:"5m",sp:"24h",tm:null},KL={};
+var KSP={"24h":{ms:864e5,l:"24 س"},"3d":{ms:2592e5,l:"3 أيام"},"7d":{ms:6048e5,l:"أسبوع"}};
+function klLimit(tf,sp){return Math.round(KSP[sp].ms/(tf==="5m"?3e5:36e5))}
+function klKey(sym,tf,sp){return sym+"|"+tf+"|"+sp}
+function klLoad(sym,force){
+  var key=klKey(sym,CD.tf,CD.sp),e=KL[key];
+  if(e&&e.busy)return;
+  if(e&&!force&&Date.now()-e.t<3e5)return;
+  e=KL[key]=e||{t:0,d:null};e.busy=true;e.err=false;
+  coinChartRefresh(sym);
+  call("/api/v3/klines",{symbol:sym+"USDT",interval:CD.tf,limit:klLimit(CD.tf,CD.sp)}).then(function(r){
+    e.busy=false;
+    if(Array.isArray(r)&&r.length>1){e.d=r.map(function(k){return [+k[0],+k[4]]});e.t=Date.now()}else e.err=true;
+    coinChartRefresh(sym)},function(){e.busy=false;e.err=true;coinChartRefresh(sym)});
+}
+function coinChartRefresh(sym){
+  if(CD.sym!==sym||$("sheet").hidden)return;var el=$("cchart");if(el)el.innerHTML=coinChartBlock(sym);
+}
+function coinChartBlock(sym){
+  var a=snap.assets.filter(function(x){return x.sym===sym})[0];if(!a)return "";
+  var k=sym+"USDT",last=a.price||snap.px[k]||0,avg=AVG[sym]?AVG[sym].a:0,
+    ords=snap.orders.filter(function(o){return o.symbol===k}),e=KL[klKey(sym,CD.tf,CD.sp)]||{},z=CD.zone;
+  var h='<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0;margin-bottom:4px">';
+  [["5m","5د"],["1h","1س"]].forEach(function(x){h+='<span class="chip'+(CD.tf===x[0]?' on':'')+'" data-ctf="'+x[0]+'">'+x[1]+'</span>'});
+  h+='<span style="width:10px"></span>';
+  ["24h","3d","7d"].forEach(function(x){h+='<span class="chip'+(CD.sp===x?' on':'')+'" data-csp="'+x+'">'+KSP[x].l+'</span>'});
+  h+='<span class="chip" data-crf="1" title="تحديث">'+(e.busy?'…':'↻')+'</span></div>';
+  h+=coinChart({last:last,avg:avg,orders:ords,zone:z,k:e.d});
+  var cap;
+  if(e.d&&e.d.length){var cs=e.d.map(function(x){return x[1]}),hi=Math.max.apply(null,cs),lo=Math.min.apply(null,cs),ch=(last/e.d[0][1]-1)*100;
+    cap='التغير خلال '+KSP[CD.sp].l+': '+N(pc(ch))+' · أعلى '+N(px(hi))+' · أدنى '+N(px(lo))+(e.t?' · آخر تحديث '+N(hm(e.t)):'')+(e.err?' · تعذّر التحديث':'')}
+  else cap=e.busy?'جارٍ جلب الشارت…':(e.err?'تعذّر جلب الشارت، اضغط ↻ للمحاولة':'');
+  return h+'<div class="sub" style="text-align:center;margin:2px 0 8px">'+cap+'</div>';
+}
 function coinChart(c){
-  var W=360,H=190,top=14,bot=14,x0=6,pw=232,lx=244,P=[c.last];
-  if(c.avg)P.push(c.avg);c.orders.forEach(function(o){P.push(opx(o))});if(c.zone){P.push(c.zone.lo);P.push(c.zone.hi)}
-  var mn=Math.min.apply(null,P),mx=Math.max.apply(null,P),lo=mn*0.96,hi=mx*1.04,lg=hi/lo>2.5;
-  function y(p){var t=lg?(Math.log(p)-Math.log(lo))/(Math.log(hi)-Math.log(lo)):(p-lo)/(hi-lo);return top+(1-t)*(H-top-bot)}
-  var yl=y(c.last),o='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="رسم تمثيلي لمواقع أوامرك بالنسبة للسعر" style="direction:ltr;display:block;max-width:420px;margin:auto">';
-  var labs=[];
-  if(c.zone){var yz1=y(c.zone.hi),yz2=y(c.zone.lo),hh=Math.max(6,yz2-yz1);o+='<rect x="'+x0+'" y="'+(yz1-(hh>yz2-yz1?(hh-(yz2-yz1))/2:0))+'" width="'+pw+'" height="'+hh+'" rx="4" style="fill:var(--buybg)"/>'}
-  if(c.avg){var ya=y(c.avg);o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+ya+'" y2="'+ya+'" style="stroke:var(--gold);stroke-width:1.5;stroke-dasharray:2 4"/>';labs.push({y:ya,t:px(c.avg),c:"var(--gold)"})}
-  c.orders.forEach(function(r){var rp=opx(r),yy=y(rp),buy=r.side==="BUY",col=buy?"var(--buy)":"var(--sell)",d=(rp/c.last-1)*100;
-    o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+yy+'" y2="'+yy+'" style="stroke:'+col+';stroke-width:2'+(isStop(r)?';stroke-dasharray:6 4':'')+'"/>';
-    labs.push({y:yy,t:px(rp)+"  "+(d>0?"+":"−")+Math.abs(d).toFixed(1)+"%",c:col})});
-  var d0=c.avg?Math.max(-45,Math.min(45,(y(c.avg)-yl)*0.5)):0,pts=[];
-  for(var i=0;i<=24;i++){var sv=1-i/24,yy2=yl+d0*sv+(Math.sin(i*0.9)*5+Math.sin(i*0.37+1)*8)*sv;pts.push((x0+pw*i/24).toFixed(1)+","+Math.max(top,Math.min(H-bot,yy2)).toFixed(1))}
-  o+='<polyline points="'+pts.join(" ")+'" fill="none" style="stroke:var(--fg);stroke-opacity:.45;stroke-width:2;stroke-linejoin:round;stroke-linecap:round"/>';
-  o+='<circle cx="'+(x0+pw)+'" cy="'+yl+'" r="5" style="fill:var(--bg);stroke:var(--fg);stroke-width:2.5"/>';
+  var W=360,H=196,top=14,bot=20,x0=6,pw=232,lx=244,k=c.k&&c.k.length>1?c.k:null,P=[];
+  if(k){k.forEach(function(q){P.push(q[1])});P.push(c.last)}else P.push(c.last);
+  var cmn=Math.min.apply(null,P),cmx=Math.max.apply(null,P),rg=Math.max(cmx-cmn,cmx*0.002);
+  var ov=[];if(c.avg)ov.push(c.avg);c.orders.forEach(function(o){ov.push(opx(o))});if(c.zone){ov.push(c.zone.lo);ov.push(c.zone.hi)}
+  var near=function(p){return k?(p>=cmn-rg*1.2&&p<=cmx+rg*1.2):Math.abs(p/c.last-1)<0.5};
+  ov.forEach(function(p){if(near(p))P.push(p)});
+  var mn=Math.min.apply(null,P),mx=Math.max.apply(null,P),pad=(mx-mn||mx*0.01)*0.08,lo=mn-pad,hi=mx+pad;
+  function y(p){return top+(1-(p-lo)/(hi-lo))*(H-top-bot)}
+  var inr=function(p){return p>=lo&&p<=hi},yl=y(c.last);
+  var o='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="شارت خطي لسعر العملة مع أوامرك" style="direction:ltr;display:block;max-width:420px;margin:auto">';
+  var labs=[],yb=H-bot;
+  if(c.zone&&(inr(c.zone.hi)||inr(c.zone.lo))){var zh=Math.min(c.zone.hi,hi),zl=Math.max(c.zone.lo,lo),yz1=y(zh),yz2=y(zl),hh=Math.max(6,yz2-yz1);o+='<rect x="'+x0+'" y="'+Math.max(top-4,yz1-(hh-(yz2-yz1))/2)+'" width="'+pw+'" height="'+hh+'" rx="4" style="fill:var(--buybg)"/>'}
+  function edge(p){var up=p>hi;return {y:up?top:yb,arrow:up?"↑ ":"↓ "}}
+  if(c.avg){var ia=inr(c.avg),ya=ia?y(c.avg):edge(c.avg).y;
+    if(ia)o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+ya+'" y2="'+ya+'" style="stroke:var(--gold);stroke-width:1.5;stroke-dasharray:2 4"/>';
+    labs.push({y:ya,t:(ia?"":edge(c.avg).arrow)+px(c.avg),c:"var(--gold)"})}
+  c.orders.forEach(function(r){var rp=opx(r),ir=inr(rp),yy=ir?y(rp):edge(rp).y,buy=r.side==="BUY",col=buy?"var(--buy)":"var(--sell)",d=(rp/c.last-1)*100;
+    if(ir)o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+yy+'" y2="'+yy+'" style="stroke:'+col+';stroke-width:2'+(isStop(r)?';stroke-dasharray:6 4':'')+'"/>';
+    labs.push({y:yy,t:(ir?"":edge(rp).arrow)+px(rp)+"  "+(d>0?"+":"−")+Math.abs(d).toFixed(1)+"%",c:col})});
+  var xl=x0+pw;
+  if(k){var t0=k[0][0],t1=k[k.length-1][0],pts=k.map(function(q){return (x0+pw*(q[0]-t0)/(t1-t0||1)).toFixed(1)+","+y(q[1]).toFixed(1)});
+    o+='<polyline points="'+pts.join(" ")+'" fill="none" style="stroke:var(--fg);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round"/>';
+    var span=t1-t0>9e7,f=function(t){return span?dayKey(t).slice(5)+" "+hm(t):hm(t)};
+    o+='<text x="'+x0+'" y="'+(H-4)+'" style="fill:var(--dim);font-size:10px;font-family:inherit">'+f(t0)+'</text><text x="'+(x0+pw)+'" y="'+(H-4)+'" text-anchor="end" style="fill:var(--dim);font-size:10px;font-family:inherit">'+f(t1)+'</text>'}
+  o+='<circle cx="'+xl+'" cy="'+yl+'" r="4.5" style="fill:var(--bg);stroke:var(--fg);stroke-width:2.5"/>';
   labs.push({y:yl,t:px(c.last),c:"var(--fg)",b:1});
   labs.sort(function(a,b){return a.y-b.y});
-  var ly=labs.map(function(l){return l.y});
+  var ly=labs.map(function(l){return l.y}),i;
   for(i=1;i<ly.length;i++)if(ly[i]-ly[i-1]<13)ly[i]=ly[i-1]+13;
   if(ly.length&&ly[ly.length-1]>H-4){ly[ly.length-1]=H-4;for(i=ly.length-2;i>=0;i--)if(ly[i+1]-ly[i]<13)ly[i]=ly[i+1]-13}
-  labs.forEach(function(l,k){
-    o+='<polyline points="'+(x0+pw+(l.b?6:0))+','+l.y+' '+(lx-6)+','+l.y+' '+(lx-2)+','+ly[k]+'" fill="none" style="stroke:'+l.c+';stroke-opacity:.5;stroke-width:1"/>';
-    o+='<text x="'+lx+'" y="'+(ly[k]+4)+'" style="fill:'+l.c+';font-size:11px;font-weight:'+(l.b?700:500)+';font-family:inherit">'+esc(l.t)+'</text>'});
+  labs.forEach(function(l,q){
+    o+='<polyline points="'+(xl+(l.b?6:0))+','+l.y+' '+(lx-6)+','+l.y+' '+(lx-2)+','+ly[q]+'" fill="none" style="stroke:'+l.c+';stroke-opacity:.5;stroke-width:1"/>';
+    o+='<text x="'+lx+'" y="'+(ly[q]+4)+'" style="fill:'+l.c+';font-size:11px;font-weight:'+(l.b?700:500)+';font-family:inherit">'+esc(l.t)+'</text>'});
   return o+'</svg>';
 }
 function coinHtml(sym){
@@ -1039,8 +1082,7 @@ function coinHtml(sym){
   var h='<h3 style="margin:0 0 2px">'+esc(sym)+' / USDT</h3><div class="sub" style="margin:0 0 8px">'+(last?'السعر الآن '+N(px(last)):'لا يوجد سوق USDT')+' · '+N(qt(a.qty))+' بقيمة '+N(usd(a.val))+'</div>';
   if(!last)return h+'<button id="tclose" style="width:100%;margin-top:12px">إغلاق</button>';
   var z=CD.sym===sym?CD.zone:null;
-  h+=coinChart({last:last,avg:avg,orders:ords,zone:z});
-  h+='<div class="sub" style="text-align:center;margin:2px 0 8px">رسم تمثيلي للمواقع النسبية، وليس تاريخ السعر</div>';
+  h+='<div id="cchart">'+coinChartBlock(sym)+'</div>';
   h+='<div style="margin-bottom:8px"><span class="tag tb">طلبات شراء</span><span class="tag ts">طلبات بيع</span>'+(avg?'<span class="tag g">متوسط تكلفتك</span>':'')+(stops.length?'<span class="tag ts" style="border:1px dashed var(--sell)">وقف خسارة</span>':'')+(z?'<span class="tag tb" style="opacity:.7">منطقة شرائك</span>':'')+'</div>';
   var fq=freeQ(a),pl=PLAN[sym];
   if(CAN&&(stops.length||fq*last>=5)){
@@ -1082,7 +1124,10 @@ function coinHtml(sym){
 }
 function coinSheet(sym){
   if(!snap)return;
-  CD={sym:sym,zone:null};openSheet(coinHtml(sym));
+  CD={sym:sym,zone:null,tf:CD.tf||"5m",sp:CD.sp||"24h",tm:CD.tm};
+  if(CD.tm)clearInterval(CD.tm);
+  CD.tm=setInterval(function(){if($("sheet").hidden||CD.sym!==sym){clearInterval(CD.tm);CD.tm=null;return}klLoad(sym)},6e4);
+  openSheet(coinHtml(sym));klLoad(sym);
   if(!CAN)return;
   call("/api/v3/myTrades",{symbol:sym+"USDT",limit:1000},true).then(function(tr){
     if(CD.sym!==sym||!Array.isArray(tr))return;
@@ -1356,6 +1401,9 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-edpp]"))){if(ED){var tg=$("ed_s")||$("ed_p"),nv=flo(ED.last*(1+(+el.getAttribute("data-edpp"))/100),ED.f.tick);if($("ed_s")){$("ed_s").value=nv;$("ed_p").value=flo(+nv*0.995,ED.f.tick)}else $("ed_p").value=nv;edCalc()}return}
   if(t.id==="edgo")return edSend();
   if(t.id==="edrest")return edRestore();
+  if((el=t.closest("[data-ctf]"))){CD.tf=el.getAttribute("data-ctf");if(CD.tf==="5m"&&CD.sp==="7d")CD.sp="3d";coinChartRefresh(CD.sym);return klLoad(CD.sym)}
+  if((el=t.closest("[data-csp]"))){CD.sp=el.getAttribute("data-csp");if(CD.sp==="7d"&&CD.tf==="5m")CD.tf="1h";coinChartRefresh(CD.sym);return klLoad(CD.sym)}
+  if((el=t.closest("[data-crf]"))){return klLoad(CD.sym,true)}
   if((el=t.closest("[data-cmk]"))){closeSheet();return oOpen(el.getAttribute("data-cmk"),"SELL",{type:"MARKET",pct:100})}
   if((el=t.closest("[data-cxall]")))return cancelAllSheet(el.getAttribute("data-cxall"));
   if(t.id==="cxgo"){t.disabled=true;t.textContent="…";call("/api/v3/openOrders",{symbol:t.getAttribute("data-s")},true,0,"DELETE").then(function(){closeSheet();busy=false;refresh()},function(e){$("terr").innerHTML='<div class="err">'+esc(e.message)+'</div>';t.disabled=false;t.textContent="إعادة المحاولة"});return}
