@@ -231,7 +231,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 28</div>
+<div class="note" style="text-align:center" id="foot">النسخة 29</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -960,7 +960,6 @@ function edVal(){
   else if(buy&&val>freeUsdt()+o.price*o.qty+1e-9)e="السيولة المتاحة لا تكفي ("+usd(freeUsdt()+o.price*o.qty)+")";
   else if(!buy&&+qs>freeQ(assetOf(ED.sym))+o.qty+1e-9)e="الكمية أكبر من المتاح للبيع ("+qt(freeQ(assetOf(ED.sym))+o.qty)+")";
   else if(isStop(o)&&!buy&&!(+ss<L))e="سعر التفعيل يجب أن يكون أقل من السعر الحالي";
-  else if(!trig&&Math.abs((+ps/L-1)*100)>15)e="السعر يبعد "+Math.abs((+ps/L-1)*100).toFixed(1)+"% عن السوق. تأكد منه.";
   else if(!trig&&!buy&&f.up&&+ps>L*f.up*0.97)e="السعر فوق الحد الذي تقبله بايننس (حوالي "+px(L*f.up*0.97)+")";
   else if(!trig&&buy&&f.dn&&+ps<L*f.dn*1.03)e="السعر تحت الحد الذي تقبله بايننس (حوالي "+px(L*f.dn*1.03)+")";
   else if(o.t==="LIMIT_MAKER"&&((buy&&+ps>=L)||(!buy&&+ps<=L)))e="أمر صانع فقط: هذا السعر سيُنفَّذ فوراً فسترفضه بايننس";
@@ -970,6 +969,7 @@ function edCalc(){
   if(!ED||!$("edsum"))return;
   var o=ED.o,v=edVal(),L=ED.last,h='';
   if(!v.e||v.p){h+='<div class="sum">'+oRow("السعر","من "+px(opx(o))+" إلى "+px(v.s||v.p))+oRow("عن السوق",pc(((v.s||v.p)/L-1)*100))+oRow("الكمية","من "+qt(o.qty)+" إلى "+qt(v.q))+oRow("القيمة",usd(v.val))+'</div>'}
+  if(!v.e&&!isTrig(o)&&Math.abs((+v.p/L-1)*100)>15)h+='<div class="warn">السعر يبعد '+Math.abs((+v.p/L-1)*100).toFixed(1)+'% عن السوق. تأكد منه.</div>';
   if(v.e)h+='<div class="err">'+v.e+'</div>';
   $("edsum").innerHTML=h;return v;
 }
@@ -1207,7 +1207,7 @@ function oCalc(){
   if(mk){ck.push([2,"أمر سوق: يُنفَّذ فوراً بأفضل الأسعار المتاحة ولا يمكن التراجع عنه"]);
     if(wk&&!wk.full)ck.push([0,"عمق السوق لا يكفي لتنفيذ كامل الكمية"]);else if(wk&&((wk.avg/oPx()-1)*100*(buy?1:-1))>0.5)ck.push([2,"انزلاق مرتفع، فكّر في أمر محدد"]);
     if(!O.book)ck.push([2,"تعذّر جلب عمق السوق، فالسعر تقريبي"])}
-  else if(O.last){var dev=(p/O.last-1)*100;ck.push([Math.abs(dev)<=15?1:0,"السعر "+pc(dev)+" عن السوق"]);
+  else if(O.last){var dev=(p/O.last-1)*100;ck.push([Math.abs(dev)<=15?1:2,"السعر "+pc(dev)+" عن السوق"+(Math.abs(dev)>15?" (تنبيه فقط)":"")]);
     var mkt2=(buy&&p>=(O.book?O.book.ask:O.last*1.001))||(!buy&&p<=(O.book?O.book.bid:O.last*0.999));
     if(mkt2)ck.push([O.mk?0:2,O.mk?"صانع فقط: سيُرفض لأنه سيُنفَّذ فوراً":"سعر الأمر يتجاوز السوق، فسيُنفَّذ فوراً كمنفِّذ (Taker) برسوم أعلى"]);
     else if(O.mk)ck.push([1,"صانع فقط: لن يُنفَّذ إلا إذا جاءك السعر"]);
@@ -1228,7 +1228,7 @@ function oReview(){
   testOrder(buildOrder(O.sym,O.side,r.o,"t"+Date.now().toString(36))).then(function(msg){
     er.innerHTML="";
     if(msg)return bad("بايننس سترفض هذا الأمر: "+esc(msg));
-    T={sym:O.sym,side:O.side,f:O.f,last:O.last,o:r.o,page:1,plan:plan};
+    T={sym:O.sym,side:O.side,f:O.f,last:O.last,o:r.o,page:1,plan:plan,warn:r.warn};
     openSheet('<h3 style="margin:0 0 10px">مراجعة الأمر</h3><div id="tin">'+confirmHtml(r.hc,r.dev)+'</div>');
   });
 }
@@ -1290,19 +1290,18 @@ function checkOrder(sym,side,f,last,p,q,v,opt){
   if(val>capVal())return{e:"القيمة "+usd(val)+" أكبر من سقفك ("+usd(capVal())+"). عدّله من الإعدادات."};
   var dev=(+ps/last-1)*100;
   if(!mkt){
-    if(Math.abs(dev)>15)return{e:"السعر يبعد "+Math.abs(dev).toFixed(1)+"% عن السعر الحالي. تأكد منه."};
     if(side==="SELL"&&f.up&&+ps>last*f.up*0.97)return{e:"السعر فوق الحد الذي تقبله بايننس لهذه العملة (حوالي "+px(last*f.up*0.97)+" حالياً)"};
     if(side==="BUY"&&f.dn&&+ps<last*f.dn*1.03)return{e:"السعر تحت الحد الذي تقبله بايننس (حوالي "+px(last*f.dn*1.03)+" حالياً)"};
     if(ty==="MAKER"&&((side==="BUY"&&+ps>=last)||(side==="SELL"&&+ps<=last)))return{e:"صانع فقط: هذا السعر سيُنفَّذ فوراً فسترفضه بايننس. اجعله أبعد عن السوق أو ألغِ «صانع فقط»."};
   }
   if(side==="BUY"&&snap&&val>freeUsdt()+1e-9)return{e:"السيولة المتاحة "+usd(freeUsdt())+" لا تكفي"+(snap.usdtLocked>0.5?" (محجوز "+usd(snap.usdtLocked)+" في أوامر)":"")};
   if(side==="SELL"){var h=assetOf(sym);if(!h||+qs>freeQ(h)+1e-9)return{e:"الكمية أكبر من المتاح للبيع ("+qt(freeQ(h))+")"+(lockQ(h)>0?"، المحجوز في أوامر أخرى "+qt(lockQ(h)):"")}}
-  return{o:{type:ty,price:ps,qty:qs,val:val,quote:quote||0},hc:hc,dev:dev};
+  return{o:{type:ty,price:ps,qty:qs,val:val,quote:quote||0},hc:hc,dev:dev,warn:(!mkt&&Math.abs(dev)>15)?"السعر يبعد "+Math.abs(dev).toFixed(1)+"% عن السعر الحالي. تأكد منه.":""};
 }
 function confirmHtml(hc,dev){
   var b=T.side==="BUY",o=T.o,mk=o.type==="MARKET";
   var how=mk?'أمر سوق (Market): يُنفَّذ فوراً بأفضل سعر متاح. السعر المعروض تقديري وقد يختلف قليلاً.':o.type==="MAKER"?'أمر Limit صانع فقط (Post-only): يُرفض إن كان سيُنفَّذ فوراً، ويبقى مفتوحاً حتى يُنفَّذ أو تلغيه.':'أمر Limit (GTC): يبقى مفتوحاً حتى يُنفَّذ أو تلغيه.';
-  return (hc.msg?'<div class="warn">'+hc.msg+'</div>':'')+'<div class="sum"><b>'+(b?"شراء":"بيع")+' '+esc(T.sym)+(mk?' · سوق':'')+'</b><br>'+(o.quote?'المبلغ: <b><span class="n">'+usd(o.quote)+'</span></b><br>الكمية التقديرية: <span class="n">'+o.qty+'</span><br>':'الكمية: <span class="n">'+o.qty+'</span><br>')+(mk?'السعر التقديري: <span class="n">'+o.price+'</span><br>':'السعر: <span class="n">'+o.price+'</span> ('+pc(dev)+' عن الحالي)<br>')+(o.quote?'':'القيمة: <b><span class="n">'+usd(o.val)+'</span></b><br>')+'<span class="age">'+how+'</span></div>'+
+  return (hc.msg?'<div class="warn">'+hc.msg+'</div>':'')+(T.warn?'<div class="warn">'+T.warn+'</div>':'')+'<div class="sum"><b>'+(b?"شراء":"بيع")+' '+esc(T.sym)+(mk?' · سوق':'')+'</b><br>'+(o.quote?'المبلغ: <b><span class="n">'+usd(o.quote)+'</span></b><br>الكمية التقديرية: <span class="n">'+o.qty+'</span><br>':'الكمية: <span class="n">'+o.qty+'</span><br>')+(mk?'السعر التقديري: <span class="n">'+o.price+'</span><br>':'السعر: <span class="n">'+o.price+'</span> ('+pc(dev)+' عن الحالي)<br>')+(o.quote?'':'القيمة: <b><span class="n">'+usd(o.val)+'</span></b><br>')+'<span class="age">'+how+'</span></div>'+
    '<div id="terr"></div><div style="display:flex;gap:8px"><button class="'+(b?"buy":"sell")+'" id="tgo">تأكيد '+(b?"الشراء":"البيع")+'</button><button id="tback">'+(T.page?"إغلاق":"رجوع")+'</button></div>';
 }
 function review(){
