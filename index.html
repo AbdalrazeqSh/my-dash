@@ -227,7 +227,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 25</div>
+<div class="note" style="text-align:center" id="foot">النسخة 26</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -408,7 +408,7 @@ function render(){
     if(oi.sn)tg+='<span class="tag ts" style="margin:0">بيع ×'+oi.sn+(oi.sd!=null?' · أقرب '+pc(oi.sd):'')+'</span>';
     if(oi.bn)tg+='<span class="tag tb" style="margin:0">شراء ×'+oi.bn+(oi.bd!=null?' · أقرب '+pc(oi.bd):'')+'</span>';
     var hh=halS(a.sym);if(hh==='no')tg+='<span class="tag s" style="margin:0">ممنوعة</span>';else if(hh==='rev')tg+='<span class="tag g" style="margin:0">مراجعة</span>';else if(!hh&&!STABLE[a.sym])tg+='<span class="tag g" style="margin:0">خارج القائمة</span>';
-    return '<div class="coin"><div class="a"><span class="nm"><span style="color:'+COL[Math.min(i,5)]+'">●</span> '+esc(a.sym)+'<span class="sh">'+share.toFixed(share<10?1:0)+'%</span></span><span class="vl n">'+usd(a.val)+'</span></div>'+
+    return '<div class="coin"><div class="a"><span class="nm" data-cd="'+esc(a.sym)+'" style="cursor:pointer"><span style="color:'+COL[Math.min(i,5)]+'">●</span> '+esc(a.sym)+'<span class="sh">'+share.toFixed(share<10?1:0)+'%</span> <span class="flat">›</span></span><span class="vl n">'+usd(a.val)+'</span></div>'+
       '<div class="b"><span><span class="n">'+qt(a.qty)+'</span> × '+(a.price?'<span class="n">'+px(a.price)+'</span>':'لا يوجد سوق USDT')+'</span>'+
       (a.avg?'<span class="pl n '+cl(pv)+'">'+sg(pv)+' ('+pc(p)+')</span>':'<span class="flat" data-g="'+esc(a.sym)+'" style="text-decoration:underline">احسب الربح</span>')+'</div>'+
       (tg||CAN?'<div class="t">'+tg+(CAN?'<button class="sm" data-t="'+esc(a.sym)+'" style="margin-inline-start:auto">تداول</button>':'')+'</div>':'')+'</div>';
@@ -830,6 +830,89 @@ function jCoin(sym){
   h+='<button id="tclose" style="width:100%;margin-top:12px">إغلاق</button>';
   openSheet(h);
 }
+/* --- coin detail: schematic ladder chart --- */
+var CD={sym:"",zone:null};
+function coinChart(c){
+  var W=360,H=190,top=14,bot=14,x0=6,pw=232,lx=244,P=[c.last];
+  if(c.avg)P.push(c.avg);c.orders.forEach(function(o){P.push(o.price)});if(c.zone){P.push(c.zone.lo);P.push(c.zone.hi)}
+  var mn=Math.min.apply(null,P),mx=Math.max.apply(null,P),lo=mn*0.96,hi=mx*1.04,lg=hi/lo>2.5;
+  function y(p){var t=lg?(Math.log(p)-Math.log(lo))/(Math.log(hi)-Math.log(lo)):(p-lo)/(hi-lo);return top+(1-t)*(H-top-bot)}
+  var yl=y(c.last),o='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="رسم تمثيلي لمواقع أوامرك بالنسبة للسعر" style="direction:ltr;display:block;max-width:420px;margin:auto">';
+  var labs=[];
+  if(c.zone){var yz1=y(c.zone.hi),yz2=y(c.zone.lo),hh=Math.max(6,yz2-yz1);o+='<rect x="'+x0+'" y="'+(yz1-(hh>yz2-yz1?(hh-(yz2-yz1))/2:0))+'" width="'+pw+'" height="'+hh+'" rx="4" style="fill:var(--buybg)"/>'}
+  if(c.avg){var ya=y(c.avg);o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+ya+'" y2="'+ya+'" style="stroke:var(--gold);stroke-width:1.5;stroke-dasharray:2 4"/>';labs.push({y:ya,t:px(c.avg),c:"var(--gold)"})}
+  c.orders.forEach(function(r){var yy=y(r.price),buy=r.side==="BUY",col=buy?"var(--buy)":"var(--sell)",d=(r.price/c.last-1)*100;
+    o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+yy+'" y2="'+yy+'" style="stroke:'+col+';stroke-width:2"/>';
+    labs.push({y:yy,t:px(r.price)+"  "+(d>0?"+":"−")+Math.abs(d).toFixed(1)+"%",c:col})});
+  var d0=c.avg?Math.max(-45,Math.min(45,(y(c.avg)-yl)*0.5)):0,pts=[];
+  for(var i=0;i<=24;i++){var sv=1-i/24,yy2=yl+d0*sv+(Math.sin(i*0.9)*5+Math.sin(i*0.37+1)*8)*sv;pts.push((x0+pw*i/24).toFixed(1)+","+Math.max(top,Math.min(H-bot,yy2)).toFixed(1))}
+  o+='<polyline points="'+pts.join(" ")+'" fill="none" style="stroke:var(--fg);stroke-opacity:.45;stroke-width:2;stroke-linejoin:round;stroke-linecap:round"/>';
+  o+='<circle cx="'+(x0+pw)+'" cy="'+yl+'" r="5" style="fill:var(--bg);stroke:var(--fg);stroke-width:2.5"/>';
+  labs.push({y:yl,t:px(c.last),c:"var(--fg)",b:1});
+  labs.sort(function(a,b){return a.y-b.y});
+  var ly=labs.map(function(l){return l.y});
+  for(i=1;i<ly.length;i++)if(ly[i]-ly[i-1]<13)ly[i]=ly[i-1]+13;
+  if(ly.length&&ly[ly.length-1]>H-4){ly[ly.length-1]=H-4;for(i=ly.length-2;i>=0;i--)if(ly[i+1]-ly[i]<13)ly[i]=ly[i+1]-13}
+  labs.forEach(function(l,k){
+    o+='<polyline points="'+(x0+pw+(l.b?6:0))+','+l.y+' '+(lx-6)+','+l.y+' '+(lx-2)+','+ly[k]+'" fill="none" style="stroke:'+l.c+';stroke-opacity:.5;stroke-width:1"/>';
+    o+='<text x="'+lx+'" y="'+(ly[k]+4)+'" style="fill:'+l.c+';font-size:11px;font-weight:'+(l.b?700:500)+';font-family:inherit">'+esc(l.t)+'</text>'});
+  return o+'</svg>';
+}
+function coinHtml(sym){
+  var a=snap.assets.filter(function(x){return x.sym===sym})[0];if(!a)return '<div class="sub">لا تملك هذه العملة الآن</div>';
+  var k=sym+"USDT",last=a.price||snap.px[k]||0,avg=AVG[sym]?AVG[sym].a:0,eq=equity(),
+    ords=snap.orders.filter(function(o){return o.symbol===k}).sort(function(x,y){return y.price-x.price}),
+    buys=ords.filter(function(o){return o.side==="BUY"}),sells=ords.filter(function(o){return o.side!=="BUY"});
+  var h='<h3 style="margin:0 0 2px">'+esc(sym)+' / USDT</h3><div class="sub" style="margin:0 0 8px">'+(last?'السعر الآن '+N(px(last)):'لا يوجد سوق USDT')+' · '+N(qt(a.qty))+' بقيمة '+N(usd(a.val))+'</div>';
+  if(!last)return h+'<button id="tclose" style="width:100%;margin-top:12px">إغلاق</button>';
+  var z=CD.sym===sym?CD.zone:null;
+  h+=coinChart({last:last,avg:avg,orders:ords,zone:z});
+  h+='<div class="sub" style="text-align:center;margin:2px 0 8px">رسم تمثيلي للمواقع النسبية، وليس تاريخ السعر</div>';
+  h+='<div style="margin-bottom:8px"><span class="tag tb">طلبات شراء</span><span class="tag ts">طلبات بيع</span>'+(avg?'<span class="tag g">متوسط تكلفتك</span>':'')+(z?'<span class="tag tb" style="opacity:.7">منطقة شرائك</span>':'')+'</div>';
+  h+='<div class="sum">';
+  if(avg){var pv=(last-avg)*a.qty;h+=oRow("ربحك غير المحقق",sg(pv)+" · "+pc((last/avg-1)*100),cl(pv));
+    var be=avg*1.002;h+=oRow("نقطة التعادل مع الرسوم",px(be)+" · "+pc((be/last-1)*100))}
+  h+=oRow("وزنها في محفظتك",N((eq?a.val/eq*100:0).toFixed(1)+"%"),"",1);
+  function nearest(arr){return arr.reduce(function(m,r){return !m||Math.abs(r.price-last)<Math.abs(m.price-last)?r:m},null)}
+  var nb=nearest(buys),ns=nearest(sells);
+  h+=oRow("أقرب طلب شراء",nb?px(nb.price)+" · "+pc((nb.price/last-1)*100)+" · "+usd(Math.abs(nb.price-last)*nb.qty)+" فرق":"لا يوجد",nb?"":"flat");
+  h+=oRow("أقرب طلب بيع",ns?px(ns.price)+" · "+pc((ns.price/last-1)*100):"لا يوجد",ns?"":"flat");
+  var sq=sells.reduce(function(t,r){return t+r.qty},0),sv=sells.reduce(function(t,r){return t+r.qty*r.price},0),bv=buys.reduce(function(t,r){return t+r.qty*r.price},0);
+  if(sells.length){h+=oRow("تغطية أوامر البيع",N(Math.round(sq/a.qty*100)+"%")+" من كميتك · "+N(usd(sv)),"",1);
+    if(avg)h+=oRow("ربح اكتمال كل البيع",sg(sv-sq*avg),cl(sv-sq*avg))}
+  if(buys.length)h+=oRow("محجوز لأوامر الشراء",N(usd(bv))+" · سيولتك "+N(usd(snap.usdt)),bv>snap.usdt+1e-9?"down":"",1);
+  if(z){h+=oRow("منطقة شرائك",px(z.lo)+" — "+px(z.hi)+" · متوسط "+px(z.avg));
+    h+=oRow("متوسط عمر مركزك",dur(Date.now()-z.age),"",1)+oRow("آخر شراء",N(dayKey(z.lastT)+" "+hm(z.lastT)),"",1)}
+  h+='</div>';
+  var nt=[];
+  if(!sells.length&&a.qty*last>=5)nt.push("لا يوجد أمر بيع على هذه العملة.");
+  else if(sells.length&&sq/a.qty<0.5)nt.push("أوامر البيع تغطي أقل من نصف كميتك.");
+  if(avg&&ns&&ns.price<avg*1.002)nt.push("أقرب أمر بيع عند "+N(px(ns.price))+" وهو دون نقطة التعادل مع الرسوم.");
+  if(bv>snap.usdt+1e-9)nt.push("أوامر الشراء تحتاج "+N(usd(bv))+" وسيولتك "+N(usd(snap.usdt))+".");
+  [nb,ns].forEach(function(r){if(r&&Math.abs(r.price/last-1)<0.01)nt.push("السعر على بعد أقل من 1% من أمر "+(r.side==="BUY"?"شراء":"بيع")+" "+N(px(r.price))+".")});
+  var hs=halS(sym);if(hs==="no")nt.push("هذه العملة ممنوعة في قائمتك الشرعية.");else if(!hs&&!STABLE[sym])nt.push("هذه العملة خارج قائمتك الشرعية.");
+  if(nt.length)h+='<div style="margin:6px 0">'+nt.map(function(x){return '<div class="warn">'+x+'</div>'}).join("")+'</div>';
+  if(ords.length)h+='<div style="font-weight:600;margin:10px 0 2px">الأوامر المفتوحة</div>'+ords.map(function(r){var buy=r.side==="BUY",d=(r.price/last-1)*100;
+    return '<div class="row"><div class="l"><b><span class="tag '+(buy?"tb":"ts")+'" style="margin:0">'+(buy?"شراء":"بيع")+'</span></b><small><span class="n">'+qt(r.qty)+' × '+px(r.price)+'</span></small></div><div class="r"><b class="n">'+usd(r.qty*r.price)+'</b><br><small class="flat n">'+pc(d)+'</small></div></div>'}).join("");
+  h+='<div style="display:flex;gap:8px;margin-top:12px">'+(CAN?'<button class="buy" data-cgo="'+esc(sym)+'|BUY" style="flex:1">شراء</button><button class="sell" data-cgo="'+esc(sym)+'|SELL" style="flex:1">بيع</button>':'')+'<button id="tclose" style="flex:1">إغلاق</button></div>';
+  return h;
+}
+function coinSheet(sym){
+  if(!snap)return;
+  CD={sym:sym,zone:null};openSheet(coinHtml(sym));
+  if(!CAN)return;
+  call("/api/v3/myTrades",{symbol:sym+"USDT",limit:1000},true).then(function(tr){
+    if(CD.sym!==sym)return;
+    tr.sort(function(x,y){return x.time-y.time});var lots=[];
+    tr.forEach(function(t){var qq=+t.qty;if(t.isBuyer)lots.push({t:t.time,q:qq,p:+t.price});else{var rem=qq;while(rem>1e-12&&lots.length){var u=Math.min(rem,lots[0].q);lots[0].q-=u;rem-=u;if(lots[0].q<=1e-12)lots.shift()}}});
+    var a=snap.assets.filter(function(x){return x.sym===sym})[0];if(!a||!lots.length)return;
+    var need=a.qty,use=[];for(var i=lots.length-1;i>=0&&need>1e-9;i--){var u=Math.min(need,lots[i].q);use.push({t:lots[i].t,q:u,p:lots[i].p});need-=u}
+    if(!use.length)return;
+    var sq=0,sc=0,sa=0,lo=1e18,hi=0,lt=0;use.forEach(function(l){sq+=l.q;sc+=l.q*l.p;sa+=l.q*l.t;if(l.p<lo)lo=l.p;if(l.p>hi)hi=l.p;if(l.t>lt)lt=l.t});
+    CD.zone={lo:lo,hi:hi,avg:sc/sq,age:sa/sq,lastT:lt};
+    if(!$("sheet").hidden&&CD.sym===sym)$("sheetin").innerHTML=coinHtml(sym);
+  },function(){});
+}
 function jLoad(){
   var b=$("jload");if(!snap||b.disabled)return;b.disabled=true;b.textContent="…";
   var seen={};try{seen=JSON.parse(LS.g("tsyms")||"{}")}catch(e){}
@@ -1004,6 +1087,8 @@ function cancelSheet(id,sym){
 }
 document.addEventListener("click",function(ev){
   var t=ev.target;if(!t.closest)return;var el;
+  if((el=t.closest("[data-cd]")))return coinSheet(el.getAttribute("data-cd"));
+  if((el=t.closest("[data-cgo]"))){var cg0=el.getAttribute("data-cgo").split("|");closeSheet();return oOpen(cg0[0],cg0[1])}
   if((el=t.closest("[data-t]")))return oOpen(el.getAttribute("data-t"),"BUY");
   if((el=t.closest("[data-x]")))return cancelSheet(el.getAttribute("data-x"),el.getAttribute("data-xs"));
   if((el=t.closest("[data-tab]")))return setTab(el.getAttribute("data-tab"));
