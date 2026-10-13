@@ -231,7 +231,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 30</div>
+<div class="note" style="text-align:center" id="foot">النسخة 31</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetin"></div></div>
 
@@ -381,9 +381,9 @@ function avgFor(sym,held){
     tr.sort(function(a,b){return a.time-b.time});
     tr.forEach(function(t){
       var qq=+t.qty,pp=+t.price;
-      if(t.isBuyer){q+=qq;cost+=qq*pp}else{var a=q>0?cost/q:0;q-=qq;cost-=qq*a;if(q*pp<5){q=0;cost=0}e.cl=q<=1e-9;}
+      if(t.isBuyer){q+=qq;cost+=qq*pp}else{var a=q>0?cost/q:0;q-=qq;cost-=qq*a;if(q*pp<5){q=0;cost=0}}
     });
-    var avg=q>0?cost/q:0;AVG[sym]={a:avg,t:Date.now()};LS.s("avg",JSON.stringify(AVG));return avg;
+    var avg=q>0?cost/q:0,as=snap&&snap.assets.filter(function(x){return x.sym===sym})[0];AVG[sym]={a:avg,q:as?as.qty:0,t:Date.now()};LS.s("avg",JSON.stringify(AVG));return avg;
   });
 }
 
@@ -493,7 +493,7 @@ function refresh(){
       var px={},k;for(k in have)px[k]=have[k];for(k in extra)px[k]=extra[k];
       var assets=held.map(function(h){var p=STABLE[h.sym]?1:(px[h.sym+"USDT"]||0);return{sym:h.sym,qty:h.qty,free:h.free,locked:h.locked,price:p,val:h.qty*p}});
       snap={t:Date.now(),usdt:usdt,usdtFree:ufree,usdtLocked:ulock,assets:assets,px:px,orders:ords.map(function(o){return{id:o.orderId,symbol:o.symbol,side:o.side,price:+o.price,qty:+o.origQty-+o.executedQty,t:o.type||"LIMIT",sp:+o.stopPrice||0,lid:+o.orderListId>0?+o.orderListId:0,tif:o.timeInForce||""}})};
-      LS.s("snap",JSON.stringify(snap));forceCfg=false;show();render();if(!PERM)checkPerm();autoAvail();
+      LS.s("snap",JSON.stringify(snap));forceCfg=false;show();render();if(!PERM)checkPerm();autoAvail();avgSync();
     });
   }).catch(function(e){
     if(my!==RUN)return;
@@ -1477,6 +1477,15 @@ $("diag").onclick=function(){
   }).then(function(r){out.textContent=r.join("\n")+"\norigin: "+location.protocol+"//"+(location.host||"")+"\nonline: "+navigator.onLine});
 };
 
+var AVB={};
+function avgSync(){
+  if(!snap||!CAN)return;
+  var list=snap.assets.filter(function(a){var v=AVG[a.sym];return v&&a.price>0&&a.val>=1&&!STABLE[a.sym]&&!AVB[a.sym]&&(v.q===undefined||Math.abs(a.qty-v.q)>Math.max(1e-9,a.qty*1e-6))}).map(function(a){return a.sym});
+  if(!list.length)return;var i=0;
+  function next(){if(i>=list.length)return Promise.resolve();var s=list[i++];AVB[s]=1;
+    return avgFor(s).catch(function(){}).then(function(){delete AVB[s];return next()})}
+  next().then(function(){render();if(!$("sheet").hidden&&CD.sym&&$("cchart"))$("sheetin").innerHTML=coinHtml(CD.sym)});
+}
 function avgAll(){
   var b=$("avgall");if(!snap||b.disabled)return;
   var list=snap.assets.filter(function(a){return a.price>0&&!STABLE[a.sym]&&a.val>=1&&!AVG[a.sym]}).map(function(a){return a.sym});
