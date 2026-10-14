@@ -39,6 +39,9 @@ button.sell{background:var(--sell);color:var(--onbs);border-color:transparent;fo
 .seg{display:flex;gap:8px}.seg button{flex:1}.seg button.on{outline:2px solid var(--fg)}.segs{gap:5px}.segs button{padding:8px 2px;font-size:.84rem}
 .subnav{margin-bottom:12px}.subnav button{background:transparent;color:var(--dim)}.subnav button.on{outline:0;background:var(--fg);color:var(--bg);border-color:transparent;font-weight:600}
 .tl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.tl>div{background:var(--s2);border-radius:12px;padding:10px 12px}.tl small{color:var(--dim);font-size:.72rem;display:block;line-height:1.3;margin-bottom:2px}.tl b{font-size:1.1rem}
+.hero2{background:linear-gradient(155deg,var(--s),var(--s2));border:1px solid var(--bd);border-radius:16px;padding:18px 18px 12px}
+.hero2 .hl{font-size:.85rem;color:var(--dim)}.hero2 .hb{font-size:2.5rem;font-weight:700;margin:2px 0}.hero2 .hs{font-size:.88rem;color:var(--dim)}
+.tile{background:var(--s);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;margin-top:10px}.tile small{display:block;font-size:.76rem;color:var(--dim)}.tile b{display:block;font-size:1.35rem;margin-top:1px}.tile i{display:block;font-style:normal;font-size:.74rem;color:var(--dimmer);margin-top:2px}
 #trf{width:100%;border:0;display:block;min-height:600px;background:transparent}
 .bs{display:flex;gap:10px;margin:12px 0 8px}
 .bsb{flex:1;min-height:56px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:1rem;border:1.5px solid transparent;padding:6px 4px}
@@ -113,13 +116,11 @@ h3.plain{margin-bottom:6px}
 <div id="hload" class="sub" hidden>جارٍ التحميل…</div>
 <div id="subnav" class="seg subnav" hidden></div>
 <div id="hm" hidden>
-  <div style="font-size:.82rem;color:var(--dim)">الرصيد الآن</div>
-  <div class="big"><span class="n" id="tot">$0</span></div>
-  <div class="sub" id="totsub"></div>
-  <div class="sub" id="gline" style="margin:2px 0 0"></div>
-  <svg id="hspark" viewBox="0 0 340 84" style="width:100%;height:84px;display:block;margin:8px 0 0" role="img" aria-label="تطور الرصيد"></svg>
-  <div class="tl" id="htiles"></div>
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span class="sub" id="tksub" style="margin:0"></span><button class="sm" id="tksync">مزامنة</button></div>
+  <div class="hero2"><div class="hl">الرصيد الحالي</div><div class="hb"><span class="n" id="tot">$0</span></div><div class="hs" id="gline"></div>
+    <div id="hsw" style="margin-top:10px;height:110px"><svg id="hspark" style="width:100%;height:100%;display:block;overflow:visible" role="img" aria-label="تطور الرصيد"></svg></div></div>
+  <div id="htiles"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px"><span class="sub" id="tksub" style="margin:0"></span><button class="sm" id="tksync">مزامنة</button></div>
+  <div class="sub" id="totsub" style="margin-top:6px"></div>
   <div class="bar" id="bar" hidden></div>
   <div class="sec">يحتاج انتباهك</div><div id="hattn"></div>
   <div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span>العملات</span><button class="sm" id="allc">كل العملات</button></div>
@@ -249,7 +250,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 34</div>
+<div class="note" style="text-align:center" id="foot">النسخة 35</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -527,35 +528,41 @@ function refresh(){
 /* --- home --- */
 /* --- tracker data (kept in this phone only; shared with tracker.html through localStorage "trk") --- */
 function TK(){try{var d=JSON.parse(LS.g("trk")||"{}");return d&&typeof d==="object"?d:{}}catch(e){return {}}}
-function TKcalc(live){
-  var d=TK(),st=(d.meta&&d.meta.settings)||{},start=+st.start>=0&&st.start!==undefined?+st.start:1000,goal=+st.goal>0?+st.goal:30000,today=dayKey(Date.now());
+function TKcalc(){
+  var d=TK(),st=(d.meta&&d.meta.settings)||{},start=(st.start!==undefined&&+st.start>=0)?+st.start:1000,goal=+st.goal>0?+st.goal:30000;
   var ent=Object.keys(d.entries||{}).sort().map(function(k){return{date:k,balance:+d.entries[k].balance,cashflow:+d.entries[k].cashflow||0}});
-  if(live>0){var t=ent.filter(function(e){return e.date===today})[0];if(t)t.balance=live;else ent.push({date:today,balance:live,cashflow:0})}
   var cfs=Object.keys(d.cashflows||{}).map(function(k){return{date:d.cashflows[k].date,amount:+d.cashflows[k].amount||0}}).sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0});
   var rows=[],prev=start,cum=1,net=0,ci=0;
   ent.forEach(function(e){
     var pc=e.cashflow;while(ci<cfs.length&&cfs[ci].date<=e.date){pc+=cfs[ci].amount;ci++}
     net+=pc;var base=e.balance-pc,dp=prev>0?(base-prev)/prev*100:0;cum*=1+dp/100;
-    rows.push({date:e.date,balance:e.balance,cumPct:(cum-1)*100,dailyPct:dp});prev=e.balance;
+    rows.push({date:e.date,balance:e.balance,cashflow:pc,cumPct:(cum-1)*100,dailyPct:dp,net:net});prev=e.balance;
   });
   var tot=cfs.reduce(function(t,c){return t+c.amount},0)+ent.reduce(function(t,e){return t+e.cashflow},0);
   return{start:start,goal:goal,rows:rows,totalCf:tot};
 }
 function tkSync(manual){
-  if(!snap)return false;var d=TK(),bal=Math.round(equity()*100)/100,now=Date.now(),t=dayKey(now),y=dayKey(now-864e5);d.entries=d.entries||{};
-  if(manual){d.entries[t]={balance:bal,ts:new Date(now).toISOString(),src:"a"};LS.s("trk",JSON.stringify(d));LS.s("tksync",String(now));return true}
-  var last=LS.g("tkday");LS.s("tkday",t);
-  if(!last||last===t)return false;
-  var e=d.entries[y];if(e&&e.src!=="a")return false;
-  d.entries[y]={balance:bal,ts:new Date(now).toISOString(),src:"a"};LS.s("trk",JSON.stringify(d));LS.s("tksync",String(now));return true;
+  if(!snap)return false;var d=TK(),bal=Math.round(equity()*100)/100,now=Date.now(),t=dayKey(now),y=dayKey(now-864e5),ch=false,iso=new Date(now).toISOString();d.entries=d.entries||{};
+  var rec=function(){return{balance:bal,ts:iso,src:"a"}};
+  if(manual){d.entries[t]=rec();ch=true}
+  else{
+    var last=LS.g("tkday");LS.s("tkday",t);
+    var md=new Date(now);md.setHours(0,0,0,0);
+    if(last===y&&now-md.getTime()<18e5){var ey=d.entries[y];if(!ey||ey.src==="a"){d.entries[y]=rec();ch=true}}
+    var et=d.entries[t];if(!et||(et.src==="a"&&Math.abs(et.balance-bal)>=0.005)){d.entries[t]=rec();ch=true}
+  }
+  if(ch){LS.s("trk",JSON.stringify(d));LS.s("tksync",String(now))}
+  return ch;
 }
 function tkSpark(rows){
-  var el=$("hspark");if(!rows||rows.length<2){el.innerHTML="";return}
-  var W=340,H=84,v=rows.map(function(r){return r.balance}),mn=Math.min.apply(null,v),mx=Math.max.apply(null,v);if(mx===mn)mx=mn+1;var sp=mx-mn;mn-=sp*.1;mx+=sp*.1;
-  var pts=rows.map(function(r,i){return[4+i/(rows.length-1)*(W-8),6+(1-(r.balance-mn)/(mx-mn))*(H-12)]});
+  var el=$("hspark"),wr=$("hsw");if(!rows||rows.length<2){el.innerHTML="";return}
+  var W=wr.clientWidth||320,H=wr.clientHeight||110,v=rows.map(function(r){return r.balance}),mn=Math.min.apply(null,v),mx=Math.max.apply(null,v);if(mx===mn)mx=mn+1;var sp=mx-mn;mn-=sp*.1;mx+=sp*.1;
+  el.setAttribute("viewBox","0 0 "+W+" "+H);
+  var pts=rows.map(function(r,i){return[4+i/(rows.length-1)*(W-8),10+(1-(r.balance-mn)/(mx-mn))*(H-16)]});
   var dd="M"+pts[0][0].toFixed(1)+","+pts[0][1].toFixed(1);for(var i=1;i<pts.length;i++){var cx=(pts[i-1][0]+pts[i][0])/2;dd+=" C"+cx.toFixed(1)+","+pts[i-1][1].toFixed(1)+" "+cx.toFixed(1)+","+pts[i][1].toFixed(1)+" "+pts[i][0].toFixed(1)+","+pts[i][1].toFixed(1)}
-  var l=pts[pts.length-1];
-  el.innerHTML='<defs><linearGradient id="hsg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--up);stop-opacity:.28"/><stop offset="1" style="stop-color:var(--up);stop-opacity:0"/></linearGradient></defs><path d="'+dd+' L'+l[0]+','+H+' L'+pts[0][0]+','+H+' Z" fill="url(#hsg)"/><path d="'+dd+'" fill="none" style="stroke:var(--up);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"/><circle cx="'+l[0]+'" cy="'+l[1]+'" r="4.5" style="fill:var(--up);stroke:var(--bg);stroke-width:2"/>';
+  var l=pts[pts.length-1],h='<defs><linearGradient id="hsg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--up);stop-opacity:.28"/><stop offset="1" style="stop-color:var(--up);stop-opacity:0"/></linearGradient></defs><path d="'+dd+' L'+l[0].toFixed(1)+','+H+' L'+pts[0][0].toFixed(1)+','+H+' Z" fill="url(#hsg)"/><path d="'+dd+'" fill="none" style="stroke:var(--up);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"/>';
+  rows.forEach(function(r,i){if(r.cashflow)h+='<circle cx="'+pts[i][0].toFixed(1)+'" cy="'+pts[i][1].toFixed(1)+'" r="3" style="fill:var(--s);stroke:var(--dimmer);stroke-width:1.5"/>'});
+  el.innerHTML=h+'<circle cx="'+l[0].toFixed(1)+'" cy="'+l[1].toFixed(1)+'" r="9" style="fill:var(--up);fill-opacity:.18"/><circle cx="'+l[0].toFixed(1)+'" cy="'+l[1].toFixed(1)+'" r="4.5" style="fill:var(--up);stroke:var(--s);stroke-width:2"/>';
 }
 function trFit(){var f=$("trf");try{var h=f.contentDocument.documentElement.scrollHeight;if(h>100)f.style.height=h+"px"}catch(e){}}
 setInterval(function(){if(!$("tr").hidden)trFit()},700);
@@ -563,10 +570,16 @@ $("trf").addEventListener("load",trFit);
 window.addEventListener("storage",function(ev){if(ev.key==="trk"&&snap)render()});
 var ICW='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v5M12 18v.5"/></svg>',ICC='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--up)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 function renderHome(as,tot){
-  var k=TKcalc(tot),inv=k.start+k.totalCf,pr=tot-inv,sp=inv>0?pr/inv*100:0,last=k.rows.length?k.rows[k.rows.length-1]:null,cum=last?last.cumPct:0;
-  $("gline").innerHTML=pr>=0?'أنجزت <span class="n">'+(pr/k.goal*100).toFixed(1)+'%</span> من '+N(usd(k.goal,0))+' · باقٍ <span class="n">'+usd(Math.max(0,k.goal-pr),0)+'</span>':'أنت تحت رأس مالك بـ <span class="n down">'+usd(-pr,0)+'</span>';
-  tkSpark(k.rows);
-  $("htiles").innerHTML='<div><small>رأس المال الخارجي</small><b class="n">'+usd(inv,0)+'</b></div><div><small>الربح بالدولار</small><b class="n '+cl(pr)+'">'+sg(pr)+'</b></div><div><small>نسبة الربح</small><b class="n '+cl(sp)+'">'+pc(sp)+'</b></div><div><small>الربح التراكمي</small><b class="n '+cl(cum)+'">'+pc(cum)+'</b></div>';
+  var k=TKcalc(),rows=k.rows,la=rows.length?rows[rows.length-1]:null,f$=function(n){return "$"+Number(n).toLocaleString("en-US",{maximumFractionDigits:2})},fs$=function(n){return (n>=0?"+":"-")+"$"+Math.abs(Number(n)).toLocaleString("en-US",{maximumFractionDigits:2})};
+  var bal=la?la.balance:k.start,refl=la?la.net:0,profit=la?bal-k.start-refl:0,ext=k.start+k.totalCf,pend=k.totalCf-refl,inv=k.start+refl,sp=inv>0?profit/inv*100:0,cum=la?la.cumPct:0;
+  $("tot").textContent=f$(bal);
+  $("gline").innerHTML=la?'<span class="n">'+Math.min(100,Math.max(0,profit/k.goal*100)).toFixed(1)+'%</span> من هدف الربح ('+N(f$(k.goal))+') — الربح الحالي '+N(fs$(profit)):'0% من هدف الربح — ابدأ بتسجيل أول رصيد';
+  tkSpark(rows);
+  var tile=function(l,v,c,note){return '<div class="tile"><small>'+l+'</small><b class="n '+(c||"")+'">'+v+'</b>'+(note?'<i>'+note+'</i>':'')+'</div>'};
+  $("htiles").innerHTML=tile("رأس المال الخارجي (الابتدائي + الإضافات − السحوبات)",f$(ext),"",Math.abs(pend)>0.004?'منها '+N(fs$(pend))+' لم تنعكس على الرصيد بعد':'')
+    +tile("الربح بالدولار (بعد الإضافات)",fs$(profit),cl(profit),la?"الرصيد − رأس المال الخارجي":"")
+    +tile("نسبة الربح العادية (غير مركّبة)",(sp>=0?"+":"")+sp.toFixed(2)+"%",cl(sp),la?'الربح ÷ إجمالي رأس المال المودع ('+N(f$(inv))+')':"")
+    +tile("الربح التراكمي (مركّب)",(cum>=0?"+":"")+cum.toFixed(2)+"%",cl(cum),"");
   var ts=+LS.g("tksync")||0;$("tksub").innerHTML=ts?'آخر مزامنة '+N(dayKey(ts).slice(5)+" "+hm(ts)):'لم تتم مزامنة بعد';
   var rc=rcap(),at=[],cash=snap.usdt+as.filter(function(a){return STABLE[a.sym]}).reduce(function(t,a){return t+a.val},0);
   as.forEach(function(a){if(STABLE[a.sym])return;var sh=tot>0?a.val/tot*100:0;if(sh>rc)at.push(ICW+'<div>'+esc(a.sym)+' وحدها <span class="n">'+sh.toFixed(0)+'%</span> من محفظتك، فوق أقصى وزن</div>')});
@@ -1095,7 +1108,7 @@ function chOpen(st,sym){st.sym=sym;st.tf=CHTF;st.k=null;st.cr=null;st.err=false;
 function chHtml(st){
   var id=st.id,o='<div class="chw" id="'+id+'"><div class="chc"><select class="chsel" data-chtf="'+id+'" aria-label="الفريم">';
   TFS.forEach(function(x){o+='<option value="'+x+'"'+(x===st.tf?' selected':'')+'>'+x+'</option>'});
-  return o+'</select><span class="chip" data-chrf="'+id+'" id="'+id+'_rf" style="margin:0">↻</span><span class="sub" id="'+id+'_t" style="margin:0"></span></div><div id="'+id+'_s" data-chs="'+id+'" class="chs">'+chSvg(st)+'</div><div id="'+id+'_i">'+chInfo(st)+'</div><div class="sub" id="'+id+'_cap" style="text-align:center;margin:2px 0 6px">'+chCap(st)+'</div></div>';
+  return o+'</select><span class="chip" data-chrf="'+id+'" id="'+id+'_rf" style="margin:0">↻</span><span class="sub" id="'+id+'_t" style="margin:0"></span></div><div style="position:relative"><div id="'+id+'_s" data-chs="'+id+'" class="chs">'+chSvg(st)+'</div><div id="'+id+'_i" style="position:absolute;left:10px;right:10px;bottom:26px;pointer-events:none">'+chInfo(st)+'</div></div><div class="sub" id="'+id+'_cap" style="text-align:center;margin:2px 0 6px">'+chCap(st)+'</div></div>';
 }
 function chDraw(st){
   var g=function(x){return document.getElementById(st.id+x)};if(!g("_s"))return;
@@ -1111,15 +1124,10 @@ function chCap(st){
   return 'النطاق المعروض: '+N(pc(ch))+' · أعلى '+N(px(hi))+' · أدنى '+N(px(lo))+(st.err?' · تعذّر التحديث':'');
 }
 function chInfo(st){
-  var c=st.cr,k=st.k;if(!c||!k)return '';
-  var i=Math.max(0,Math.min(k.length-1,Math.round(c.i))),t=k[i][0],cl=k[i][1],cx=st.ctx(),last=cx.last||k[k.length-1][1];
-  var h='<div class="sum" style="margin:4px 0;padding:6px 10px"><div style="display:flex;justify-content:flex-end"><span class="chip" data-chx="'+st.id+'" style="margin:0">✕</span></div>';
-  h+=oRow("الوقت",N(dayKey(t).slice(5)+" "+hm(t)),"",1)+oRow("إغلاق الشمعة",N(px(cl)),"",1);
-  h+=oRow("المستوى المحدد",N(px(c.p))+" · "+N(pc((c.p/last-1)*100)),"",1);
-  var P=c.p;
-  if(st.pick==="one")h+='<div style="margin-top:6px"><button class="sm go" data-chuse="'+P+'" style="width:100%">اجعله سعر الأمر</button></div>';
-  else if(st.pick==="two"&&CAN)h+='<div style="display:flex;gap:8px;margin-top:6px"><button class="sm bsb buy" data-chgo="BUY|'+P+'" style="flex:1;min-height:36px">شراء عند '+px(P)+'</button><button class="sm bsb sell" data-chgo="SELL|'+P+'" style="flex:1;min-height:36px">بيع عند '+px(P)+'</button></div>';
-  return h+'</div>';
+  var c=st.cr,k=st.k;if(!c||!k||!c.keep)return '';var P=c.p;
+  if(st.pick==="one")return '<div style="text-align:center"><button class="sm go" data-chuse="'+P+'" style="pointer-events:auto;box-shadow:0 2px 8px rgba(0,0,0,.25)">اجعله سعر الأمر</button></div>';
+  if(st.pick==="two"&&CAN)return '<div style="display:flex;gap:8px"><button class="sm bsb buy" data-chgo="BUY|'+P+'" style="pointer-events:auto;flex:1;min-height:34px;flex-direction:row">شراء عند '+px(P)+'</button><button class="sm bsb sell" data-chgo="SELL|'+P+'" style="pointer-events:auto;flex:1;min-height:34px;flex-direction:row">بيع عند '+px(P)+'</button></div>';
+  return '';
 }
 function chSvg(st){
   var W=360,H=210,top=14,bot=22,x0=4,pw=346,lx=x0+pw-4,k=st.k,o='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="شارت خطي لسعر العملة مع أوامرك" style="direction:ltr;display:block;max-width:640px;margin:auto">';
@@ -1170,52 +1178,57 @@ function chSvg(st){
     if(cxp>=x0&&cxp<=x0+pw&&inr(st.cr.p)){var cyp=y(st.cr.p),cyc=y(k[ci][1]),txt=px(st.cr.p),tw=txt.length*6.6+10;
       o+='<line x1="'+cxp+'" x2="'+cxp+'" y1="'+top+'" y2="'+yb+'" style="stroke:var(--dim);stroke-width:1;stroke-dasharray:3 3"/><line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+cyp+'" y2="'+cyp+'" style="stroke:var(--dim);stroke-width:1;stroke-dasharray:3 3"/>';
       o+='<circle cx="'+cxp+'" cy="'+cyc+'" r="3.5" style="fill:var(--fg)"/>';
+      var itx=dayKey(k[ci][0]).slice(5)+" "+hm(k[ci][0])+"   "+px(k[ci][1])+"   "+pc((k[ci][1]/last-1)*100);
+      o+='<text x="'+(x0+2)+'" y="10" style="fill:var(--fg);font-size:11px;font-weight:600;font-family:inherit;stroke:var(--s);stroke-width:3.5px;paint-order:stroke;stroke-linejoin:round">'+esc(itx)+'</text>';
       o+='<rect x="'+(x0+pw-tw)+'" y="'+(cyp-9)+'" width="'+tw+'" height="18" rx="4" style="fill:var(--fg)"/><text x="'+(x0+pw-tw/2)+'" y="'+(cyp+4)+'" text-anchor="middle" style="fill:var(--bg);font-size:11px;font-weight:700;font-family:inherit">'+esc(txt)+'</text>'}}
   return o+'</svg>';
 }
-/* chart gestures: drag = pan, two fingers/wheel = zoom, tap = pick level */
+/* chart gestures: drag = pan, two fingers/wheel = zoom, tap = persistent crosshair, long-press = crosshair that follows the finger */
 var CP={};
 function chOf(el){var w=el.closest&&el.closest("[data-chs]");return w?{w:w,st:CHS[w.getAttribute("data-chs")]}:null}
 function chFrac(st,w,cx){var r=w.getBoundingClientRect(),g=st.rg;if(!g||!r.width)return null;var vx=(cx-r.left)/r.width*g.W;return {f:(vx-g.x0)/g.pw,vx:vx,r:r}}
-function chZoom(st,fac,frac){
-  var sp=st.v1-st.v0,ns=sp*fac,c=st.v0+sp*frac;st.v0=c-ns*frac;st.v1=st.v0+ns;chClamp(st);
+function chZoom(st,fac,frac){var sp=st.v1-st.v0,ns=sp*fac,c=st.v0+sp*frac;st.v0=c-ns*frac;st.v1=st.v0+ns;chClamp(st)}
+function chCross(st,w,cx,cy,keep){
+  var fr=chFrac(st,w,cx),g=st.rg;if(!fr||!g)return false;
+  var vy=(cy-fr.r.top)/fr.r.height*g.H,f=Math.max(0,Math.min(1,fr.f));
+  var i=Math.max(0,Math.min(st.k.length-1,Math.round(st.v0+f*(st.v1-st.v0)))),pr=g.lo+(1-Math.max(0,Math.min(1,(vy-g.top)/(g.H-g.top-g.bot))))*(g.hi-g.lo);
+  st.cr={i:i,p:pr,keep:!!keep,x:cx,y:cy};chDraw(st);return true;
 }
 document.addEventListener("pointerdown",function(ev){
   var c=chOf(ev.target);if(!c||!c.st||!c.st.k)return;
-  CP[ev.pointerId]={x:ev.clientX,sx:ev.clientX,sy:ev.clientY,st:c.st,w:c.w,t:Date.now(),moved:false};
+  var p=CP[ev.pointerId]={x:ev.clientX,sx:ev.clientX,sy:ev.clientY,st:c.st,w:c.w,t:Date.now(),moved:false,holding:false};
   try{c.w.setPointerCapture(ev.pointerId)}catch(e){}
   var ids=Object.keys(CP).filter(function(i){return CP[i].st===c.st});
-  if(ids.length>=2){var a=CP[ids[0]],b=CP[ids[1]];c.st.pz={d:Math.max(8,Math.abs(a.x-b.x)),v0:c.st.v0,v1:c.st.v1,cx:(a.x+b.x)/2};c.st.pinched=true}
+  if(ids.length>=2){var a=CP[ids[0]],b=CP[ids[1]];c.st.pz={d:Math.max(8,Math.abs(a.x-b.x)),v0:c.st.v0,v1:c.st.v1,cx:(a.x+b.x)/2};c.st.pinched=true;ids.forEach(function(i){clearTimeout(CP[i].tm);CP[i].holding=false});if(c.st.cr&&!c.st.cr.keep){c.st.cr=null}return}
+  p.tm=setTimeout(function(){if(CP[ev.pointerId]===p&&!p.moved&&!c.st.pinched){p.holding=true;try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}chCross(c.st,c.w,p.sx,p.sy,false)}},260);
 });
 document.addEventListener("pointermove",function(ev){
   var p=CP[ev.pointerId];if(!p)return;var st=p.st,ids=Object.keys(CP).filter(function(i){return CP[i].st===st});
+  if(p.holding){chCross(st,p.w,ev.clientX,ev.clientY,false);return}
   if(ids.length>=2&&st.pz){
-    CP[ev.pointerId].x=ev.clientX;var a=CP[ids[0]],b=CP[ids[1]],d=Math.max(8,Math.abs(a.x-b.x)),fr=chFrac(st,p.w,(a.x+b.x)/2);if(!fr)return;
-    var z=st.pz,sp0=z.v1-z.v0,ns=sp0*z.d/d,fz=chFrac(st,p.w,z.cx),f=Math.max(0,Math.min(1,fz.f)),c=z.v0+sp0*f;
-    st.v0=c-ns*f;st.v1=st.v0+ns;chClamp(st);chDraw(st);p.moved=true;return;
+    p.x=ev.clientX;var a=CP[ids[0]],b=CP[ids[1]],d=Math.max(8,Math.abs(a.x-b.x)),z=st.pz,sp0=z.v1-z.v0,ns=sp0*z.d/d,fz=chFrac(st,p.w,z.cx);if(!fz)return;
+    var f=Math.max(0,Math.min(1,fz.f)),c=z.v0+sp0*f;st.v0=c-ns*f;st.v1=st.v0+ns;chClamp(st);chDraw(st);p.moved=true;return;
   }
-  if(Math.abs(ev.clientX-p.sx)>6)p.moved=true;
+  if(!p.moved&&(Math.abs(ev.clientX-p.sx)>8||Math.abs(ev.clientY-p.sy)>8)){p.moved=true;clearTimeout(p.tm)}
   if(p.moved&&!st.pinched){
     var r=p.w.getBoundingClientRect(),g=st.rg;if(!g)return;var sp=st.v1-st.v0,di=(ev.clientX-p.x)/(r.width*g.pw/g.W)*sp;
-    p.x=ev.clientX;st.v0-=di;st.v1-=di;chClamp(st);chDraw(st);
+    p.x=ev.clientX;st.v0-=di;st.v1-=di;chClamp(st);if(st.cr)st.cr=null;chDraw(st);
   }
 });
+document.addEventListener("touchmove",function(ev){for(var i in CP)if(CP[i].holding){ev.preventDefault();return}},{passive:false});
 function chEnd(ev){
-  var p=CP[ev.pointerId];if(!p)return;delete CP[ev.pointerId];var st=p.st;
+  var p=CP[ev.pointerId];if(!p)return;clearTimeout(p.tm);delete CP[ev.pointerId];var st=p.st;
   var left=Object.keys(CP).filter(function(i){return CP[i].st===st}).length;
   if(left===0){var pinched=st.pinched;st.pinched=false;st.pz=null;
-    if(ev.type==="pointerup"&&!p.moved&&!pinched&&Date.now()-p.t<700)chTap(st,p.w,p.sx,p.sy)}
+    if(p.holding){if(st.cr&&!st.cr.keep){st.cr=null;chDraw(st)}}
+    else if(ev.type==="pointerup"&&!p.moved&&!pinched&&Date.now()-p.t<700)chTap(st,p.w,p.sx,p.sy)}
   else if(left===1)st.pz=null;
 }
 document.addEventListener("pointerup",chEnd);document.addEventListener("pointercancel",chEnd);
 function chTap(st,w,cx,cy){
   var fr=chFrac(st,w,cx),g=st.rg;if(!fr||!g)return;
-  var vy=(cy-fr.r.top)/fr.r.height*g.H;
-  if(fr.f<0||fr.f>1||vy<g.top-8||vy>g.H-g.bot+8){st.cr=null;return chDraw(st)}
-  var i=Math.round(st.v0+fr.f*(st.v1-st.v0)),pr=g.lo+(1-(vy-g.top)/(g.H-g.top-g.bot))*(g.hi-g.lo);
-  if(i<0||i>st.k.length-1){st.cr=null;return chDraw(st)}
-  if(st.cr&&Math.abs(st.cr.i-i)<1&&Math.abs(st.cr.p/pr-1)<0.002){st.cr=null}else st.cr={i:i,p:pr};
-  chDraw(st);
+  if(st.cr&&st.cr.keep&&Math.abs(st.cr.x-cx)<14&&Math.abs(st.cr.y-cy)<14){st.cr=null;return chDraw(st)}
+  chCross(st,w,cx,cy,true);
 }
 document.addEventListener("wheel",function(ev){
   var c=chOf(ev.target);if(!c||!c.st||!c.st.k)return;var fr=chFrac(c.st,c.w,ev.clientX);if(!fr)return;
