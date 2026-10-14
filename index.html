@@ -116,9 +116,12 @@ h3.plain{margin-bottom:6px}
 <div id="hload" class="sub" hidden>جارٍ التحميل…</div>
 <div id="subnav" class="seg subnav" hidden></div>
 <div id="hm" hidden>
+  <div id="tkflow"></div>
   <div class="hero2"><div class="hl">الرصيد الحالي</div><div class="hb"><span class="n" id="tot">$0</span></div><div class="hs" id="gline"></div>
     <div id="hsw" style="margin-top:10px;height:110px"><svg id="hspark" style="width:100%;height:100%;display:block;overflow:visible" role="img" aria-label="تطور الرصيد"></svg></div></div>
   <div id="htiles"></div>
+  <div class="c" style="margin-top:10px"><h3 class="plain">المسار نحو هدف الربح</h3><svg id="hroad" viewBox="0 0 600 170" style="width:100%;height:auto;display:block" role="img" aria-label="المسار نحو الهدف"></svg><div dir="ltr" style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--dimmer);margin-top:4px"><span class="n">$0</span><span class="n" id="hgoal"></span></div></div>
+  <div class="c" style="margin-top:10px"><h3 class="plain">الوقت المتوقع للهدف</h3><div class="n" id="heta" style="font-size:1.5rem;font-weight:700;color:var(--gold);line-height:1.3">—</div><div class="sub" id="hetan" style="margin:6px 0 0"></div></div>
   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px"><span class="sub" id="tksub" style="margin:0"></span><button class="sm" id="tksync">مزامنة</button></div>
   <div class="sub" id="totsub" style="margin-top:6px"></div>
   <div class="bar" id="bar" hidden></div>
@@ -250,7 +253,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 35</div>
+<div class="note" style="text-align:center" id="foot">النسخة 36</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -511,8 +514,8 @@ function refresh(){
     return (need.length?priceMap(need):Promise.resolve({})).then(function(extra){
       var px={},k;for(k in have)px[k]=have[k];for(k in extra)px[k]=extra[k];
       var assets=held.map(function(h){var p=STABLE[h.sym]?1:(px[h.sym+"USDT"]||0);return{sym:h.sym,qty:h.qty,free:h.free,locked:h.locked,price:p,val:h.qty*p}});
-      snap={t:Date.now(),usdt:usdt,usdtFree:ufree,usdtLocked:ulock,assets:assets,px:px,orders:ords.map(function(o){return{id:o.orderId,symbol:o.symbol,side:o.side,price:+o.price,qty:+o.origQty-+o.executedQty,t:o.type||"LIMIT",sp:+o.stopPrice||0,lid:+o.orderListId>0?+o.orderListId:0,tif:o.timeInForce||""}})};
-      LS.s("snap",JSON.stringify(snap));forceCfg=false;show();render();if(!PERM)checkPerm();autoAvail();avgSync();if(tkSync(false))render();
+      var oldSnap=snap;snap={t:Date.now(),usdt:usdt,usdtFree:ufree,usdtLocked:ulock,assets:assets,px:px,orders:ords.map(function(o){return{id:o.orderId,symbol:o.symbol,side:o.side,price:+o.price,qty:+o.origQty-+o.executedQty,t:o.type||"LIMIT",sp:+o.stopPrice||0,lid:+o.orderListId>0?+o.orderListId:0,tif:o.timeInForce||""}})};
+      tkFlow(oldSnap,snap);LS.s("snap",JSON.stringify(snap));forceCfg=false;show();render();if(!PERM)checkPerm();autoAvail();avgSync();if(tkSync(false))render();
     });
   }).catch(function(e){
     if(my!==RUN)return;
@@ -554,6 +557,46 @@ function tkSync(manual){
   if(ch){LS.s("trk",JSON.stringify(d));LS.s("tksync",String(now))}
   return ch;
 }
+function tkFlow(o,n){
+  try{
+    if(!o||!n||!o.assets)return;var dt=n.t-o.t;if(dt<0||dt>216e5)return;
+    var eq=function(x){return x.usdt+x.assets.reduce(function(t,a){return t+a.val},0)},pnl=0;
+    o.assets.forEach(function(a){if(STABLE[a.sym]||!a.price)return;var pn=n.px[a.sym+"USDT"];if(pn)pnl+=a.qty*(pn-a.price)});
+    var flow=eq(n)-eq(o)-pnl;
+    if(Math.abs(flow)>=(dt>1.2e6?Math.max(30,eq(o)*0.015):Math.max(15,eq(o)*0.004))){var pend=[];try{pend=JSON.parse(LS.g("tkpend")||"[]")}catch(e){}pend.push({t:n.t,a:Math.round(flow*100)/100});LS.s("tkpend",JSON.stringify(pend.slice(-5)))}
+  }catch(e){}
+}
+function tkFlowHtml(){
+  var pend=[];try{pend=JSON.parse(LS.g("tkpend")||"[]")}catch(e){}
+  if(!pend.length)return "";var p=pend[0],dep=p.a>0;
+  return '<div class="warn" style="margin-bottom:10px"><div style="margin-bottom:6px">'+(dep?'زاد رصيدك':'نقص رصيدك')+' بمقدار <span class="n">'+usd(Math.abs(p.a))+'</span> لا تفسّره تحرّكات الأسعار. هل هو '+(dep?'إيداع':'سحب')+'؟</div><div style="display:flex;gap:8px"><button class="sm go" data-tkf="y" style="flex:2">سجّله كـ'+(dep?'إيداع':'سحب')+'</button><button class="sm" data-tkf="n" style="flex:1">ليس كذلك</button></div></div>';
+}
+function tkRoad(profit,goal){
+  var steps=[0,1000,2500,5000,10000,20000].filter(function(v){return v<goal}),ms=steps.concat([goal]);
+  function tOf(v){return goal<=0?0:Math.sqrt(Math.max(0,Math.min(1,v/goal)))}
+  var x0=30,x1=570,y0=145,y1=25,xy=function(t){return[x0+t*(x1-x0),y0+t*(y1-y0)]},f$=function(n){return "$"+Number(n).toLocaleString("en-US",{maximumFractionDigits:2})};
+  var h='<line x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+y1+'" style="stroke:var(--bd);stroke-width:3;stroke-linecap:round"/>',cur=xy(tOf(profit));
+  h+='<line x1="'+x0+'" y1="'+y0+'" x2="'+cur[0]+'" y2="'+cur[1]+'" style="stroke:var(--up);stroke-width:3;stroke-linecap:round"/>';
+  ms.forEach(function(v){var p=xy(tOf(v)),ps=profit>=v&&v>0;
+    h+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="5" style="fill:'+(ps?"var(--up)":"var(--s2)")+';stroke:'+(ps?"var(--up)":"var(--bd)")+';stroke-width:2"/><text x="'+p[0]+'" y="'+(p[1]-10)+'" font-size="10" text-anchor="middle" style="fill:var(--dimmer)">'+f$(v)+'</text>'});
+  h+='<circle cx="'+cur[0]+'" cy="'+cur[1]+'" r="8" style="fill:var(--gold);stroke:var(--bg);stroke-width:2"/>';
+  var lbl=(profit>=0?"+":"-")+"$"+Math.abs(profit).toLocaleString("en-US",{maximumFractionDigits:2}),lw=14+lbl.length*7.2,lx=cur[0]>430?cur[0]-lw-12:cur[0]+14,ly=Math.min(y0+12,cur[1]+8),neg=profit<0;
+  h+='<rect x="'+lx+'" y="'+ly+'" width="'+lw+'" height="20" rx="10" style="fill:'+(neg?"var(--downbg)":"var(--goldbg)")+';stroke:'+(neg?"var(--down)":"var(--gold)")+';stroke-width:1"/><text x="'+(lx+lw/2)+'" y="'+(ly+14)+'" font-size="12" font-weight="700" text-anchor="middle" style="fill:'+(neg?"var(--down)":"var(--gold)")+'">'+lbl+'</text>';
+  $("hroad").innerHTML=h;$("hgoal").textContent=f$(goal);
+}
+function tkAr(n,a,b,c,d){return n===1?a:n===2?b:(n>=3&&n<=10)?'<span class="n">'+n+'</span> '+c:'<span class="n">'+n+'</span> '+d}
+function tkDur(t){var m=Math.floor(t/30),r=t-m*30,p;
+  if(m===0)p=tkAr(t,"يوم واحد","يومان","أيام","يوماً");else{var ms=tkAr(m,"شهر","شهران","أشهر","شهراً");p=r===0?ms:ms+" و"+tkAr(r,"يوم","يومان","أيام","يوماً")}
+  return '<span dir="rtl" style="unicode-bidi:isolate">'+p+'</span>'}
+function tkEta(rows,bal,profit,goal){
+  var d=$("heta"),nt=$("hetan"),f$=function(n){return "$"+Number(n).toLocaleString("en-US",{maximumFractionDigits:2})};
+  if(profit>=goal){d.textContent="🎯";nt.textContent="تم الوصول إلى هدف الربح!";return}
+  if(rows.length<2){d.textContent="—";nt.textContent="سجّل رصيدين على الأقل لحساب التقدير";return}
+  var n=Math.min(14,rows.length-1),rec=rows.slice(-n),prod=rec.reduce(function(p,r){return p*(1+r.dailyPct/100)},1),g=Math.pow(prod,1/rec.length)-1;
+  if(g<=0){d.textContent="—";nt.textContent="الأداء الأخير (آخر "+n+" يوم تسجيل) غير كافٍ للوصول لهدف الربح";return}
+  var rem=goal-profit,days=Math.ceil(Math.log((bal+rem)/bal)/Math.log(1+g)),pd=new Date();pd.setDate(pd.getDate()+days);
+  d.innerHTML=tkDur(days);nt.innerHTML='الربح المتبقي '+N(f$(rem))+' — بنمو يومي ~'+N((g*100).toFixed(2)+'%')+' على رصيدك الحالي ('+N(f$(bal))+') — تاريخ متوقع: '+N(pd.toLocaleDateString("ar-u-nu-latn",{year:"numeric",month:"long",day:"numeric"}));
+}
 function tkSpark(rows){
   var el=$("hspark"),wr=$("hsw");if(!rows||rows.length<2){el.innerHTML="";return}
   var W=wr.clientWidth||320,H=wr.clientHeight||110,v=rows.map(function(r){return r.balance}),mn=Math.min.apply(null,v),mx=Math.max.apply(null,v);if(mx===mn)mx=mn+1;var sp=mx-mn;mn-=sp*.1;mx+=sp*.1;
@@ -580,6 +623,7 @@ function renderHome(as,tot){
     +tile("الربح بالدولار (بعد الإضافات)",fs$(profit),cl(profit),la?"الرصيد − رأس المال الخارجي":"")
     +tile("نسبة الربح العادية (غير مركّبة)",(sp>=0?"+":"")+sp.toFixed(2)+"%",cl(sp),la?'الربح ÷ إجمالي رأس المال المودع ('+N(f$(inv))+')':"")
     +tile("الربح التراكمي (مركّب)",(cum>=0?"+":"")+cum.toFixed(2)+"%",cl(cum),"");
+  $("tkflow").innerHTML=tkFlowHtml();tkRoad(profit,k.goal);tkEta(rows,bal,profit,k.goal);
   var ts=+LS.g("tksync")||0;$("tksub").innerHTML=ts?'آخر مزامنة '+N(dayKey(ts).slice(5)+" "+hm(ts)):'لم تتم مزامنة بعد';
   var rc=rcap(),at=[],cash=snap.usdt+as.filter(function(a){return STABLE[a.sym]}).reduce(function(t,a){return t+a.val},0);
   as.forEach(function(a){if(STABLE[a.sym])return;var sh=tot>0?a.val/tot*100:0;if(sh>rc)at.push(ICW+'<div>'+esc(a.sym)+' وحدها <span class="n">'+sh.toFixed(0)+'%</span> من محفظتك، فوق أقصى وزن</div>')});
@@ -1676,6 +1720,10 @@ document.addEventListener("click",function(ev){
   if(t.closest("textarea"))return;
   if((el=t.closest("[data-jc]")))return jCoin(el.getAttribute("data-jc"));
   if((el=t.closest("[data-jk]"))){var jk=el.getAttribute("data-jk");openJ[jk]=!openJ[jk];renderJournal();return}
+  if((el=t.closest("[data-tkf]"))){
+    var pend=[];try{pend=JSON.parse(LS.g("tkpend")||"[]")}catch(e){}var p0=pend.shift();LS.s("tkpend",JSON.stringify(pend));
+    if(p0&&el.getAttribute("data-tkf")==="y"){var d0=TK();d0.cashflows=d0.cashflows||{};var now0=new Date(p0.t);d0.cashflows[dayKey(p0.t)+"_"+Math.random().toString(36).slice(2,8)]={date:dayKey(p0.t),amount:p0.a,ts:now0.toISOString()};LS.s("trk",JSON.stringify(d0))}
+    render();return}
   if(t.id==="tksync"){if(tkSync(true)){render();$("tksub").textContent="تمت المزامنة ✓"}return}
   if(t.id==="tkexp"){$("tkjs").value=LS.g("trk")||"{}";return}
   if(t.id==="tkimp"){
