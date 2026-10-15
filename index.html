@@ -43,6 +43,9 @@ button.sell{background:var(--sell);color:var(--onbs);border-color:transparent;fo
 .hero2 .hl{font-size:.85rem;color:var(--dim)}.hero2 .hb{font-size:2.6rem;font-weight:700;margin:4px 0 2px}.hero2 .n,.tile b.n{font-family:"IBM Plex Mono",ui-monospace,monospace}.hero2 .hs{font-size:.88rem;color:var(--dim)}
 #htiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}#htiles .tile{margin-top:0;padding:10px 12px}#htiles .tile b{font-size:1.15rem}#htiles .tile i{font-size:.82rem;margin-top:0}.tile{background:var(--s);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;margin-top:10px}.tile small{display:block;font-size:.76rem;color:var(--dim)}.tile b{display:block;font-size:1.35rem;margin-top:1px}.tile i{display:block;font-style:normal;font-size:.74rem;color:var(--dimmer);margin-top:2px}
 #trf{width:100%;border:0;display:block;min-height:600px;background:transparent}
+.mkh{display:flex;align-items:center;gap:8px;margin-bottom:6px}.mkh b{font-size:1rem}.mkh small{color:var(--dim);margin-inline-start:auto}
+.mkr{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--bd)}.mkr b{min-width:42px}.mkr .p{flex:1}.mkr svg{width:74px;height:24px;flex:none}
+.mkf{border-top:1px solid var(--bd);padding-top:8px;margin-top:2px;font-size:.84rem;color:var(--dim)}
 .nochart #ochart,.nochart #lchart{display:none}
 .stp{display:flex;align-items:center;gap:6px;margin:4px 0}.stp button{width:42px;height:38px;font-size:1.25rem;line-height:1;padding:0}.stp input{width:84px;text-align:center;direction:ltr}.stp span{color:var(--dim)}.stp small{color:var(--dim);margin-inline-start:6px;font-size:.78rem}
 .bs{display:flex;gap:10px;margin:12px 0 8px}
@@ -124,6 +127,7 @@ h3.plain{margin-bottom:6px}
   <div class="hero2"><div class="hl">الرصيد الحالي</div><div class="hb"><span class="n" id="tot">$0</span></div><div class="hs" id="gline"></div>
     <div id="hsw" style="margin-top:14px;height:150px"><svg id="hspark" style="width:100%;height:100%;display:block;overflow:visible" role="img" aria-label="تطور الرصيد"></svg></div></div>
   <div id="htiles"></div>
+  <div class="c" id="mkt" style="margin-top:10px"></div>
   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px"><span class="sub" id="tksub" style="margin:0"></span><button class="sm" id="tksync">مزامنة</button></div>
   <div class="sub" id="totsub" style="margin-top:6px"></div>
   <div class="bar" id="bar" hidden></div>
@@ -255,7 +259,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 46</div>
+<div class="note" style="text-align:center" id="foot">النسخة 47</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -354,7 +358,7 @@ function wsReq(method,params,signed,retry){
     throw e;
   });
 }
-var PUBM={"/api/v3/klines":"klines","/api/v3/ticker/price":"ticker.price","/api/v3/exchangeInfo":"exchangeInfo","/api/v3/depth":"depth"};
+var PUBM={"/api/v3/klines":"klines","/api/v3/ticker/price":"ticker.price","/api/v3/exchangeInfo":"exchangeInfo","/api/v3/depth":"depth","/api/v3/ticker/24hr":"ticker.24hr"};
 function restCall(path,params,hi){
   hi=hi||0;var q=[];
   for(var k in params)q.push(k+"="+encodeURIComponent(typeof params[k]==="object"?JSON.stringify(params[k]):params[k]));
@@ -524,7 +528,7 @@ function refresh(){
       var px={},k;for(k in have)px[k]=have[k];for(k in extra)px[k]=extra[k];
       var assets=held.map(function(h){var p=STABLE[h.sym]?1:(px[h.sym+"USDT"]||0);return{sym:h.sym,qty:h.qty,free:h.free,locked:h.locked,price:p,val:h.qty*p}});
       var oldSnap=snap;snap={t:Date.now(),usdt:usdt,usdtFree:ufree,usdtLocked:ulock,assets:assets,px:px,orders:ords.map(function(o){return{id:o.orderId,symbol:o.symbol,side:o.side,price:+o.price,qty:+o.origQty-+o.executedQty,t:o.type||"LIMIT",sp:+o.stopPrice||0,lid:+o.orderListId>0?+o.orderListId:0,tif:o.timeInForce||""}})};
-      tkFlow(oldSnap,snap);LS.s("snap",JSON.stringify(snap));forceCfg=false;show();render();if(!PERM)checkPerm();autoAvail();avgSync();if(tkSync(false))render();
+      tkFlow(oldSnap,snap);mkLoad(true);LS.s("snap",JSON.stringify(snap));forceCfg=false;show();render();if(!PERM)checkPerm();autoAvail();avgSync();if(tkSync(false))render();
     });
   }).catch(function(e){
     if(my!==RUN)return;
@@ -536,6 +540,49 @@ function refresh(){
   }).then(function(){clearTimeout(wd);if(my===RUN){busy=false;$("rf").classList.remove("spin")}});
 }
 
+
+
+/* --- market overview (BTC, ETH, breadth, my 24h vs BTC) --- */
+var MK={t:0,d:null,busy:false,err:false};
+function mkLoad(force){
+  if(!snap||MK.busy)return;var age=Date.now()-MK.t;
+  if(MK.d&&(force?age<6e4:age<3e5))return;
+  MK.busy=true;
+  var held=snap.assets.filter(function(a){return !STABLE[a.sym]&&a.price>0&&a.val>=1}).map(function(a){return a.sym+"USDT"}),syms=["BTCUSDT","ETHUSDT"];
+  held.forEach(function(h){if(syms.indexOf(h)<0)syms.push(h)});
+  Promise.all([
+    call("/api/v3/ticker/24hr",{symbols:JSON.stringify(syms),type:"MINI"},false),
+    call("/api/v3/ticker/24hr",{type:"MINI"},false).catch(function(){return null}),
+    call("/api/v3/klines",{symbol:"BTCUSDT",interval:"1d",limit:30},false),
+    call("/api/v3/klines",{symbol:"ETHUSDT",interval:"1d",limit:30},false)
+  ]).then(function(r){
+    var ch={};(r[0]||[]).forEach(function(t){var o=+t.openPrice,l=+t.lastPrice;if(o>0&&l>0)ch[t.symbol]={p:l,c:(l/o-1)*100}});
+    var br=null;
+    if(Array.isArray(r[1])){var up=0,dn=0;r[1].forEach(function(t){if(!/USDT$/.test(t.symbol)||STABLE[t.symbol.replace(/USDT$/,"")]||+t.quoteVolume<1e6)return;var o=+t.openPrice,l=+t.lastPrice;if(!(o>0))return;var c=l/o-1;if(c>0.0005)up++;else if(c<-0.0005)dn++});if(up+dn>=30)br=up/(up+dn)*100}
+    var cl_=function(k){return Array.isArray(k)?k.map(function(x){return +x[4]}):[]};
+    MK.d={ch:ch,br:br,btc:cl_(r[2]),eth:cl_(r[3])};MK.t=Date.now();MK.err=false;
+  }).catch(function(){MK.err=true}).then(function(){MK.busy=false;mkRender()});
+}
+function mkSpark(a){
+  if(!a||a.length<2)return "";var w=74,h=24,mn=Math.min.apply(null,a),mx=Math.max.apply(null,a);if(mx===mn)mx=mn+1;
+  var pts=a.map(function(v,i){return (i/(a.length-1)*(w-4)+2).toFixed(1)+","+(2+(1-(v-mn)/(mx-mn))*(h-4)).toFixed(1)}).join(" ");
+  return '<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true"><polyline points="'+pts+'" fill="none" style="stroke:var('+(a[a.length-1]>=a[0]?"--up":"--down")+');stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round"/></svg>';
+}
+function mkRender(){
+  var el=$("mkt");if(!el)return;
+  var d=MK.d;
+  if(!d){el.innerHTML='<div class="mkh"><b>السوق</b></div><div class="sub" style="margin:0">'+(MK.err?"تعذّر تحميل بيانات السوق":"جارٍ التحميل…")+'</div>';return}
+  var b=d.ch.BTCUSDT,e=d.ch.ETHUSDT;if(!b){el.innerHTML='<div class="mkh"><b>السوق</b></div><div class="sub" style="margin:0">تعذّر تحميل بيانات السوق</div>';return}
+  var c20=d.btc.slice(-20),ma=c20.length>=20?c20.reduce(function(t,x){return t+x},0)/20:0,sc=(ma?(b.p>ma?1:-1):0)+(d.br==null?0:(d.br>=55?1:d.br<=45?-1:0)),
+    st=sc>=1?["صاعد","b","up"]:sc<=-1?["هابط","s","down"]:["جانبي","g",""];
+  var row=function(n,t,sp){return t?'<div class="mkr"'+(CAN?' data-t="'+n+'" style="cursor:pointer"':'')+'><b>'+n+'</b><span class="p n">$'+px(t.p)+'</span><span class="n '+cl(t.c)+'">'+pc(t.c)+'</span>'+mkSpark(sp)+'</div>':''};
+  var h='<div class="mkh"><b>السوق</b><span class="tag '+st[1]+'" style="margin:0">'+st[0]+'</span>'+(d.br!=null?'<small>'+N(Math.round(d.br)+"%")+' من العملات صاعدة</small>':'')+'</div>'+row("BTC",b,d.btc.slice(-8))+row("ETH",e,d.eth.slice(-8));
+  var tot=equity(),prev=snap.usdt;
+  snap.assets.forEach(function(a){var c=d.ch[a.sym+"USDT"];prev+=STABLE[a.sym]||!c?a.val:a.val/(1+c.c/100)});
+  if(tot>0&&prev>0){var pf=(tot/prev-1)*100,df=pf-b.c;
+    h+='<div class="mkf">أدائي في 24 ساعة <b class="n '+cl(pf)+'">'+pc(pf)+'</b> · BTC <b class="n '+cl(b.c)+'">'+pc(b.c)+'</b> · '+(Math.abs(df)<0.05?"مثل BTC":(df>0?"أفضل من BTC بـ ":"أقل من BTC بـ ")+N(Math.abs(df).toFixed(2)+"%"))+'</div>'}
+  el.innerHTML=h;
+}
 
 /* --- home --- */
 /* --- tracker data (kept in this phone only; shared with tracker.html through localStorage "trk") --- */
@@ -652,7 +699,7 @@ function renderHome(as,tot){
   var tile=function(l,v,p){return '<div class="tile"><small>'+l+'</small><b class="n '+cl(v)+'">'+fs$(v)+'</b><i class="n '+cl(p)+'">'+(p>=0?"+":"")+p.toFixed(2)+'%</i></div>'};
   $("htiles").innerHTML=tile("ربح اليوم",tp,tpp)+tile("الربح الكلي",profit,sp);
   }
-  $("tkflow").innerHTML=tkFlowHtml();$("swbn").innerHTML=swBanner();
+  $("tkflow").innerHTML=tkFlowHtml();$("swbn").innerHTML=swBanner();mkRender();mkLoad(false);
   var ts=+LS.g("tksync")||0;$("tksub").innerHTML=ts?'آخر مزامنة للمتتبع '+N(dayKey(ts).slice(5)+" "+hm(ts)):'لم تتم مزامنة بعد';
   var rc=rcap(),at=[],cash=snap.usdt+as.filter(function(a){return STABLE[a.sym]}).reduce(function(t,a){return t+a.val},0);
   as.forEach(function(a){if(STABLE[a.sym])return;var sh=tot>0?a.val/tot*100:0;if(sh>rc)at.push(ICW+'<div>'+esc(a.sym)+' وحدها <span class="n">'+sh.toFixed(0)+'%</span> من محفظتك، فوق أقصى وزن</div>')});
