@@ -254,7 +254,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 43</div>
+<div class="note" style="text-align:center" id="foot">النسخة 44</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -2012,7 +2012,12 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-hdel]"))){delete HAL[el.getAttribute("data-hdel")];halSave();renderHal();render();return}
   if(t.id==="hav"){t.textContent="…";call("/api/v3/ticker/price",{},false).then(function(r){if(!Array.isArray(r))throw new Error("رد غير متوقع");var m={};r.forEach(function(x){m[x.symbol]=1});var av=Object.keys(BASE).filter(function(b){return m[b+"USDT"]}).sort();LS.s("avail",JSON.stringify(av));t.textContent="تحقق من المتاح في بايننس";renderHal()}).catch(function(e){t.textContent="تحقق من المتاح في بايننس";err("تعذّر: "+e.message)});return}
   if(t.id==="havl"){var o=$("havout");o.hidden=!o.hidden;if(!o.hidden){var av=[];try{av=JSON.parse(LS.g("avail")||"[]")}catch(e){}o.innerHTML=av.length?av.map(function(c){return '<span class="chip" data-hpick="'+c+'">'+c+'</span>'}).join(""):'<div class="sub">اضغط «تحقق» أولاً</div>'}return}
-  if((el=t.closest("[data-sub]"))){SUB[TAB]=el.getAttribute("data-sub");LS.s("sub",JSON.stringify(SUB));return enter()}
+  if((el=t.closest("[data-sub]"))){var sbo=SUB[TAB],sbn=el.getAttribute("data-sub");SUB[TAB]=sbn;LS.s("sub",JSON.stringify(SUB));
+    if(TAB==="trd"&&sbo!==sbn){
+      if(sbn==="lad"){var sy1=$("os").value.trim();if(sy1){$("ls").value=sy1;L.side=O.side;enter();return lLoad()}}
+      else{var sy2=$("ls").value.trim();if(sy2){$("os").value=sy2;O.side=L.side;enter();oChips();oLoad();return}}
+    }
+    return enter()}
   if((el=t.closest("[data-th]"))){LS.s("theme",el.getAttribute("data-th"));return applyTheme()}
   if(t.id==="allc")return setTab("wal");
   if((el=t.closest("[data-os]"))){O.side=el.getAttribute("data-os");oChips();oSync();return oCalc()}
