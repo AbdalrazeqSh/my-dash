@@ -3,9 +3,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light"><meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E9DE"><meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F1A14"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@500;600&display=swap"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="حسابي"><title>حسابي</title>
 <style>
-:root{--bg:#E4E9DE;--s:#EEF2E9;--s2:#D9E0D1;--fg:#1B2820;--dim:#55655A;--dimmer:#7C8A7F;--up:#3F6B4F;--cu:#3F6B4F;--cd:#8C3B4E;--down:#A5483B;--gold:#9A6A1C;--buy:#2F5F7F;--sell:#7B4A72;--onbs:#fff;--buybg:rgba(47,95,127,.14);--sellbg:rgba(123,74,114,.14);--bd:rgba(27,40,32,.14);--onup:#fff;--ondown:#fff;--upbg:rgba(63,107,79,.14);--downbg:rgba(165,72,59,.12);--goldbg:rgba(176,122,34,.16);color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--cu:#6FB087;--cd:#D27A8C;--down:#E0806F;--gold:#E0AE4F;--buy:#8DBAD8;--sell:#CFA0C6;--onbs:#0E1620;--buybg:rgba(141,186,216,.16);--sellbg:rgba(207,160,198,.16);--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}}
-:root[data-theme=dark]{--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--cu:#6FB087;--cd:#D27A8C;--down:#E0806F;--gold:#E0AE4F;--buy:#8DBAD8;--sell:#CFA0C6;--onbs:#0E1620;--buybg:rgba(141,186,216,.16);--sellbg:rgba(207,160,198,.16);--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}
+:root{--bg:#E4E9DE;--s:#EEF2E9;--s2:#D9E0D1;--fg:#1B2820;--dim:#55655A;--dimmer:#7C8A7F;--up:#3F6B4F;--cu:#3F6B4F;--tabon:rgba(63,107,79,.22);--cd:#8C3B4E;--down:#A5483B;--gold:#9A6A1C;--buy:#2F5F7F;--sell:#7B4A72;--onbs:#fff;--buybg:rgba(47,95,127,.14);--sellbg:rgba(123,74,114,.14);--bd:rgba(27,40,32,.14);--onup:#fff;--ondown:#fff;--upbg:rgba(63,107,79,.14);--downbg:rgba(165,72,59,.12);--goldbg:rgba(176,122,34,.16);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--cu:#6FB087;--tabon:rgba(111,176,135,.24);--cd:#D27A8C;--down:#E0806F;--gold:#E0AE4F;--buy:#8DBAD8;--sell:#CFA0C6;--onbs:#0E1620;--buybg:rgba(141,186,216,.16);--sellbg:rgba(207,160,198,.16);--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--cu:#6FB087;--tabon:rgba(111,176,135,.24);--cd:#D27A8C;--down:#E0806F;--gold:#E0AE4F;--buy:#8DBAD8;--sell:#CFA0C6;--onbs:#0E1620;--buybg:rgba(141,186,216,.16);--sellbg:rgba(207,160,198,.16);--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "Readex Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:18px 20px calc(88px + env(safe-area-inset-bottom));max-width:640px;margin-inline:auto}
 .n{direction:ltr;unicode-bidi:isolate;display:inline-block;font-variant-numeric:tabular-nums}
@@ -93,9 +93,9 @@ h3.plain{margin-bottom:6px}
 .tabs{position:fixed;bottom:0;inset-inline:0;background:var(--bg);border-top:1px solid var(--bd);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:5}
 .tabs div{display:flex;width:100%;max-width:640px}
 .tabs button{flex:1;border:0;border-radius:0;background:transparent;color:var(--dim);padding:8px 2px;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:.7rem}
-.tabs button svg{box-sizing:content-box;padding:4px 16px;border-radius:99px;transition:background .15s}
-.tabs button.on{color:var(--fg);font-weight:700}
-.tabs button.on svg{stroke:var(--up);background:var(--upbg)}
+.tabs button{border-radius:14px!important;margin:4px 3px;min-height:52px!important;transition:background .15s}
+.tabs button.on{color:var(--fg);font-weight:700;background:var(--tabon)}
+.tabs button.on svg{stroke:var(--up)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 .cbar{height:6px;border-radius:4px;background:var(--s2);margin-top:5px;overflow:hidden}.cbar i{display:block;height:100%}
 .upd{position:fixed;top:8px;inset-inline:16px;max-width:608px;margin-inline:auto;background:var(--up);color:var(--onup);border-radius:12px;padding:10px 14px;font-weight:600;z-index:20;text-align:center;cursor:pointer}
@@ -201,6 +201,7 @@ h3.plain{margin-bottom:6px}
         <div id="lst" style="padding-bottom:9px;min-width:84px"></div>
       </div>
       <div class="sub" id="lpxl"></div>
+      <div id="lchart"></div>
       <div class="bs"><button class="bsb buy on" data-ls="BUY"><b>شراء <span id="lsn1"></span></b></button><button class="bsb sell" data-ls="SELL"><b>بيع <span id="lsn2"></span></b></button></div>
       <div class="g2">
         <div><label for="lp1">أول مستوى (الأقرب للسوق)</label><input id="lp1" inputmode="decimal"></div>
@@ -253,7 +254,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 42</div>
+<div class="note" style="text-align:center" id="foot">النسخة 43</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -754,6 +755,8 @@ function ladHint(){
   b=document.querySelectorAll("[data-ld]");for(i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-ld")===L.dist);
   $("lcw").hidden=L.dist!=="cus";
   ladSync();ladLive();
+  var lvp=ladLevels(),lj=JSON.stringify([lvp&&L.f?lvp.p:[],L.side]);
+  if(CHS.ld._lj!==lj){CHS.ld._lj=lj;CHS.ld.levels=lvp&&L.f?lvp.p:[];chDraw(CHS.ld)}
 }
 function lFill(){
   if(!L.f||!L.last)return;var b=L.side==="BUY";
@@ -768,7 +771,7 @@ function lChips(){
 }
 function lLoad(force){
   var sym=$("ls").value.trim().toUpperCase();
-  if(!sym){L.cs="";L.f=null;L.last=0;$("lpxl").textContent="";ladHint();return}
+  if(!sym){L.cs="";L.f=null;L.last=0;$("lpxl").textContent="";chSetSym(CHS.ld,"");ladHint();return}
   if(!force&&L.cs===sym&&L.f)return;
   L.cs=sym;L.f=null;$("lpxl").textContent="جارٍ جلب السعر…";
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false)]).then(function(r){
@@ -778,6 +781,7 @@ function lLoad(force){
     L.last=+r[1].price;
     $("lpxl").innerHTML='السعر الحالي <span class="n">'+px(L.last)+'</span> · <span style="text-decoration:underline;cursor:pointer" data-lrf="1">تحديث</span>';
     if(force||L.auto||!(parseFloat($("lp1").value)>0))lFill();
+    chSetSym(CHS.ld,sym);fillsLoad(sym,function(){if(L.cs===sym)chDraw(CHS.ld)});
     ladHint();
   },function(e){if(L.cs===sym)$("lpxl").textContent="تعذّر: "+e.message});
 }
@@ -1414,7 +1418,7 @@ function chSvg(st){
   for(i=i0;i<=i1;i++){if(cdl){P.push(k[i][3]);P.push(k[i][4])}else P.push(k[i][1])}
   var last=cx.last||k[n-1][1],atEnd=v1>=n-1.01;if(atEnd)P.push(last);
   var cmn=Math.min.apply(null,P),cmx=Math.max.apply(null,P),rg=Math.max(cmx-cmn,cmx*0.002);
-  var ov=[];if(cx.avg)ov.push(cx.avg);cx.orders.forEach(function(r){ov.push(opx(r))});if(cx.zone){ov.push(cx.zone.lo);ov.push(cx.zone.hi)}if(cx.draft)ov.push(cx.draft);
+  var ov=[];if(cx.avg)ov.push(cx.avg);cx.orders.forEach(function(r){ov.push(opx(r))});if(cx.zone){ov.push(cx.zone.lo);ov.push(cx.zone.hi)}if(cx.draft)ov.push(cx.draft);if(cx.levels)cx.levels.forEach(function(p){ov.push(p)});
   ov.forEach(function(p){if(p>=cmn-rg*1.2&&p<=cmx+rg*1.2)P.push(p)});
   var mn=Math.min.apply(null,P),mx=Math.max.apply(null,P),pad=(mx-mn||mx*0.01)*0.08,lo=mn-pad,hi=mx+pad,yb=H-bot;
   st.rg={lo:lo,hi:hi,top:top,bot:bot,x0:x0,pw:pw,W:W,H:H};
@@ -1436,6 +1440,7 @@ function chSvg(st){
   if(cx.draft){var dp=cx.draft,idr=inr(dp),dy=idr?y(dp):edge(dp).y,dcol=cx.side==="SELL"?"var(--sell)":"var(--buy)";
     if(idr)o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+dy+'" y2="'+dy+'" style="stroke:'+dcol+';stroke-width:2;stroke-dasharray:1 4;stroke-linecap:round"/>';
     labs.push({y:dy,t:(idr?"":edge(dp).a)+px(dp),c:dcol,b:1})}
+  if(cx.levels&&cx.levels.length){var lcol=cx.side==='SELL'?'var(--sell)':'var(--buy)';cx.levels.forEach(function(p){var il=inr(p),ly2=il?y(p):edge(p).y;if(il)o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+ly2+'" y2="'+ly2+'" style="stroke:'+lcol+';stroke-width:1.6;stroke-dasharray:1 4;stroke-linecap:round"/>';labs.push({y:ly2,t:(il?"":edge(p).a)+px(p)+"  "+(p>last?"+":"−")+Math.abs((p/last-1)*100).toFixed(1)+"%",c:lcol})})}
   if(cdl){
     var bw=Math.max(1,pw/sp*0.66),pu="",pd="",xc,yo,yc,yt,yb2,yh,yl2;
     for(i=i0;i<=i1;i++){var kk=k[i];xc=x(i);yo=y(kk[2]);yc=y(kk[1]);yh=y(kk[3]);yl2=y(kk[4]);yt=Math.min(yo,yc);yb2=Math.max(yo,yc);if(yb2-yt<1){yt-=.5;yb2+=.5}
@@ -1580,6 +1585,9 @@ chNew("cd","",function(){var sym=CHS.cd.sym,a=snap&&snap.assets.filter(function(
 chNew("od","ochart",function(){var sym=CHS.od.sym,k=sym+"USDT";
   return {last:O.last||(snap&&snap.px[k])||0,avg:AVG[sym]?AVG[sym].a:0,orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:null,draft:CHS.od.draft,side:O.side,fills:fillsGet(sym)}},
   function(){return TAB==="trd"&&SUB.trd==="ord"},"one");
+chNew("ld","lchart",function(){var sym=CHS.ld.sym,k=sym+"USDT";
+  return {last:L.last||(snap&&snap.px[k])||0,avg:AVG[sym]?AVG[sym].a:0,orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:null,draft:0,levels:CHS.ld.levels||[],side:L.side,fills:fillsGet(sym)}},
+  function(){return TAB==="trd"&&SUB.trd==="lad"},"");
 setInterval(function(){if(document.hidden)return;for(var id in CHS){var st=CHS[id];if(st.sym&&st.vis())chLoad(st)}},6e4);
 function coinHtml(sym){
   var a=snap.assets.filter(function(x){return x.sym===sym})[0];if(!a)return '<div class="sub">لا تملك هذه العملة الآن</div>';
