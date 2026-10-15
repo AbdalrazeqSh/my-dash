@@ -140,7 +140,7 @@ h3.plain{margin-bottom:6px}
   <div id="ordp" hidden>
     <div style="display:flex;gap:10px;align-items:flex-end">
       <div style="flex:1"><label for="os" style="margin-top:0">العملة</label><input id="os" autocapitalize="characters" autocomplete="off" placeholder="مثل REQ"></div>
-      <div id="ost" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1" style="margin:0 0 9px">الشارت</span>
+      <div id="ost" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1" style="margin:0 0 9px">الرسم البياني</span>
     </div>
     <div id="osyms" style="margin:6px 0 2px"></div>
     <div id="ochart"></div>
@@ -199,7 +199,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">أوامر متدرجة (Scaled)</h3>
       <div style="display:flex;gap:10px;align-items:flex-end">
         <div style="flex:1"><label for="ls" style="margin-top:0">العملة</label><input id="ls" autocapitalize="characters" autocomplete="off" placeholder="مثل REQ"></div>
-        <div id="lst" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1" style="margin:0 0 9px">الشارت</span>
+        <div id="lst" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1" style="margin:0 0 9px">الرسم البياني</span>
       </div>
       <div class="sub" id="lpxl"></div>
       <div id="lchart"></div>
@@ -255,7 +255,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 45</div>
+<div class="note" style="text-align:center" id="foot">النسخة 46</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1390,7 +1390,7 @@ function chApply(st,d,t){
 function chSetSym(st,sym){
   if(st.sym===sym)return;
   st.sym=sym;st.tf=CHTF;st.k=null;st.cr=null;st.err=false;st.v0=st.v1=0;st.rq++;st.busy=false;
-  var h=document.getElementById(st.host);if(h)h.innerHTML=sym?chHtml(st):'<div class="sub" style="text-align:center;margin:10px 0">اختر عملة ليظهر شارتها هنا</div>';
+  var h=document.getElementById(st.host);if(h)h.innerHTML=sym?chHtml(st):'<div class="sub" style="text-align:center;margin:10px 0">اختر عملة ليظهر رسمها البياني هنا</div>';
   if(sym)chLoad(st);
 }
 function chOpen(st,sym){st.sym=sym;st.tf=CHTF;st.k=null;st.cr=null;st.err=false;st.v0=st.v1=0;st.rq++;st.busy=false}
@@ -1407,7 +1407,7 @@ function chDraw(st){
   var sel=document.querySelector('[data-chtf="'+st.id+'"]');if(sel&&sel.value!==st.tf)sel.value=st.tf;
 }
 function chCap(st){
-  var k=st.k;if(!k)return st.busy?'جارٍ جلب الشارت…':(st.err?'تعذّر جلب الشارت، اضغط ↻ للمحاولة':'');
+  var k=st.k;if(!k)return st.busy?'جارٍ جلب الرسم البياني…':(st.err?'تعذّر جلب الرسم البياني، اضغط ↻ للمحاولة':'');
   var i0=Math.max(0,Math.floor(st.v0)),i1=Math.min(k.length-1,Math.ceil(st.v1)),hi=-1e99,lo=1e99;
   for(var i=i0;i<=i1;i++){var ch_=k[i][3]||k[i][1],cl_=k[i][4]||k[i][1];if(ch_>hi)hi=ch_;if(cl_<lo)lo=cl_}
   var ch=(k[i1][1]/k[i0][1]-1)*100;
@@ -1420,8 +1420,8 @@ function chInfo(st){
   return '';
 }
 function chSvg(st){
-  var W=360,H=210,top=14,bot=22,x0=4,pw=346,lx=x0+pw-4,k=st.k,o='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="شارت خطي لسعر العملة مع أوامرك" style="direction:ltr;display:block;max-width:640px;margin:auto">';
-  if(!k){st.rg=null;return o+'<text x="'+(W/2)+'" y="'+(H/2)+'" text-anchor="middle" style="fill:var(--dim);font-size:12px;font-family:inherit">'+(st.busy?'…':(st.err?'تعذّر جلب الشارت':''))+'</text></svg>'}
+  var W=360,H=210,top=14,bot=22,x0=4,pw=346,lx=x0+pw-4,k=st.k,o='<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="رسم بياني لسعر العملة مع أوامرك" style="direction:ltr;display:block;max-width:640px;margin:auto">';
+  if(!k){st.rg=null;return o+'<text x="'+(W/2)+'" y="'+(H/2)+'" text-anchor="middle" style="fill:var(--dim);font-size:12px;font-family:inherit">'+(st.busy?'…':(st.err?'تعذّر جلب الرسم البياني':''))+'</text></svg>'}
   var cx=st.ctx(),n=k.length,v0=st.v0,v1=st.v1,sp=v1-v0||1,i0=Math.max(0,Math.floor(v0)),i1=Math.min(n-1,Math.ceil(v1)),P=[],i;
   var cdl=CHTY==="c"&&k[0].length>=5&&pw/sp>=1.4;
   for(i=i0;i<=i1;i++){if(cdl){P.push(k[i][3]);P.push(k[i][4])}else P.push(k[i][1])}
