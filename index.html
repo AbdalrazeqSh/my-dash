@@ -43,6 +43,7 @@ button.sell{background:var(--sell);color:var(--onbs);border-color:transparent;fo
 .hero2 .hl{font-size:.85rem;color:var(--dim)}.hero2 .hb{font-size:2.6rem;font-weight:700;margin:4px 0 2px}.hero2 .n,.tile b.n{font-family:"IBM Plex Mono",ui-monospace,monospace}.hero2 .hs{font-size:.88rem;color:var(--dim)}
 #htiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}#htiles .tile{margin-top:0;padding:10px 12px}#htiles .tile b{font-size:1.15rem}#htiles .tile i{font-size:.82rem;margin-top:0}.tile{background:var(--s);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;margin-top:10px}.tile small{display:block;font-size:.76rem;color:var(--dim)}.tile b{display:block;font-size:1.35rem;margin-top:1px}.tile i{display:block;font-style:normal;font-size:.74rem;color:var(--dimmer);margin-top:2px}
 #trf{width:100%;border:0;display:block;min-height:600px;background:transparent}
+.stp{display:flex;align-items:center;gap:6px;margin:4px 0}.stp button{width:42px;height:38px;font-size:1.25rem;line-height:1;padding:0}.stp input{width:84px;text-align:center;direction:ltr}.stp span{color:var(--dim)}.stp small{color:var(--dim);margin-inline-start:6px;font-size:.78rem}
 .bs{display:flex;gap:10px;margin:12px 0 8px}
 .bsb{flex:1;min-height:56px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:1rem;border:1.5px solid transparent;padding:6px 4px}
 .bsb small{font-size:.7rem;font-weight:400;opacity:.9}
@@ -92,8 +93,9 @@ h3.plain{margin-bottom:6px}
 .tabs{position:fixed;bottom:0;inset-inline:0;background:var(--bg);border-top:1px solid var(--bd);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:5}
 .tabs div{display:flex;width:100%;max-width:640px}
 .tabs button{flex:1;border:0;border-radius:0;background:transparent;color:var(--dim);padding:8px 2px;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:.7rem}
-.tabs button.on{color:var(--fg);font-weight:600}
-.tabs button.on svg{stroke:var(--up)}
+.tabs button svg{box-sizing:content-box;padding:4px 16px;border-radius:99px;transition:background .15s}
+.tabs button.on{color:var(--fg);font-weight:700}
+.tabs button.on svg{stroke:var(--up);background:var(--upbg)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 .cbar{height:6px;border-radius:4px;background:var(--s2);margin-top:5px;overflow:hidden}.cbar i{display:block;height:100%}
 .upd{position:fixed;top:8px;inset-inline:16px;max-width:608px;margin-inline:auto;background:var(--up);color:var(--onup);border-radius:12px;padding:10px 14px;font-weight:600;z-index:20;text-align:center;cursor:pointer}
@@ -105,6 +107,7 @@ h3.plain{margin-bottom:6px}
 <div class="top"><div><b>حسابي</b><div class="age"><span id="age"></span> <span class="badge" id="perm" hidden></span></div></div><div><button id="rf" hidden><span id="rfi" style="display:inline-block">↻</span> تحديث</button></div></div>
 <div id="err" class="err" hidden></div>
 
+<div id="subnav" class="seg subnav" hidden></div>
 <div id="setup" class="c" hidden>
   <h3>ربط الحساب</h3>
   <div class="sub" style="margin:0 0 6px">مفتاح بايننس: <b>قراءة</b> + <b>تداول Spot</b>. <b>السحب مغلق</b>. يُحفظ في هذا الجوال فقط.</div>
@@ -114,7 +117,6 @@ h3.plain{margin-bottom:6px}
 </div>
 
 <div id="hload" class="sub" hidden>جارٍ التحميل…</div>
-<div id="subnav" class="seg subnav" hidden></div>
 <div id="hm" hidden>
   <div id="swbn"></div>
   <div id="tkflow"></div>
@@ -129,7 +131,7 @@ h3.plain{margin-bottom:6px}
   <div id="hcoins"></div>
 </div>
 <div id="main" hidden>
-  <div class="c"><h3 class="plain">العملات</h3><div style="margin-bottom:4px"><button class="sm" id="avgall">احسب الربح لكل العملات</button> <button class="sm sell" id="swbtn" hidden>بيع شامل</button></div><div id="coins"></div></div>
+  <div class="c"><h3 class="plain">العملات</h3><div style="margin-bottom:4px"><button class="sm" id="avgall">احسب الربح لكل العملات</button> <button class="sm sell" id="swbtn" hidden>تقليص المراكز</button></div><div id="coins"></div></div>
   <div class="c closed" id="cord"><h3 class="fold" data-f="cord"><span>الأوامر المفتوحة <span class="sm2" id="ordsum"></span></span><span class="chev">›</span></h3><div class="fb"><div id="ords"></div><div id="newo" style="margin-top:10px" hidden><button class="sm" id="newbtn">+ أمر جديد</button></div></div></div>
   <div class="c closed" id="ctod"><h3 class="fold" data-f="ctod"><span>صفقات اليوم <span class="sm2" id="todsum"></span></span><span class="chev">›</span></h3><div class="fb"><div id="today"><div class="sub">اضغط «تحميل» لعرض صفقات اليوم</div></div><div style="margin-top:10px"><button class="sm" id="tdbtn">تحميل صفقات اليوم</button></div></div></div>
 </div>
@@ -157,14 +159,14 @@ h3.plain{margin-bottom:6px}
       <div class="g2">
         <div><label for="ox">وقف الخسارة</label><input id="ox" inputmode="decimal"></div>
         <div><label for="orr">المخاطرة % من الرصيد</label><input id="orr" inputmode="decimal" value="1"></div>
-        <div><label for="ot">الهدف (اختياري)</label><input id="ot" inputmode="decimal"></div>
+        <div><label for="ot">جني الأرباح (اختياري)</label><input id="ot" inputmode="decimal"></div>
         <div></div>
       </div>
     </div>
     <div id="osum"></div>
     <div id="oerr"></div>
     <button class="go" id="orev" style="width:100%;margin-top:6px">مراجعة الأمر</button>
-    <div class="note">الوقف والهدف يُحفظان كخطة حماية تفعّلها من نافذة العملة.</div>
+    <div class="note">الوقف وجني الأرباح يُحفظان كخطة حماية تفعّلها من نافذة العملة.</div>
   </div>
   <div id="stg" class="c" hidden><h3 class="plain">المظهر</h3>
     <label>المظهر</label><div class="seg"><button data-th="auto">تلقائي</button><button data-th="light">فاتح</button><button data-th="dark">داكن</button></div>
@@ -186,20 +188,20 @@ h3.plain{margin-bottom:6px}
         <div><label for="cf">الرسوم % للجهة</label><input id="cf" inputmode="decimal" value="0.1"></div>
         <div><label for="ce">سعر الدخول</label><input id="ce" inputmode="decimal"></div>
         <div><label for="cx">وقف الخسارة</label><input id="cx" inputmode="decimal"></div>
-        <div><label for="ct">الهدف (اختياري)</label><input id="ct" inputmode="decimal"></div>
+        <div><label for="ct">جني الأرباح (اختياري)</label><input id="ct" inputmode="decimal"></div>
         <div style="align-self:end"><button id="cpx" style="width:100%">السعر الحالي</button></div>
       </div>
       <div id="cout" style="margin-top:12px"></div>
     </div>
   </div>
   <div id="lad" hidden>
-    <div class="c"><h3 class="plain">أوامر متدرّجة (Limit)</h3>
+    <div class="c"><h3 class="plain">أوامر متدرجة (Scaled)</h3>
       <div style="display:flex;gap:10px;align-items:flex-end">
         <div style="flex:1"><label for="ls" style="margin-top:0">العملة</label><input id="ls" autocapitalize="characters" autocomplete="off" placeholder="مثل REQ"></div>
         <div id="lst" style="padding-bottom:9px;min-width:84px"></div>
       </div>
       <div class="sub" id="lpxl"></div>
-      <div class="seg" style="margin-top:10px"><button class="buy on" data-ls="BUY">شراء</button><button class="sell" data-ls="SELL">بيع</button></div>
+      <div class="bs"><button class="bsb buy on" data-ls="BUY"><b>شراء <span id="lsn1"></span></b></button><button class="bsb sell" data-ls="SELL"><b>بيع <span id="lsn2"></span></b></button></div>
       <div class="g2">
         <div><label for="lp1">أول مستوى (الأقرب للسوق)</label><input id="lp1" inputmode="decimal"></div>
         <div><label for="lp2">آخر مستوى (الأبعد)</label><input id="lp2" inputmode="decimal"></div>
@@ -215,7 +217,7 @@ h3.plain{margin-bottom:6px}
       <div id="lcw" hidden><label for="lcus">كل سطر: السعر ثم النسبة % من الكمية الكلية</label><textarea id="lcus" placeholder="0.0573 17.5&#10;0.0600 17.5"></textarea></div>
       <div id="lrisk" class="g2" hidden>
         <div><label for="lx">وقف الخسارة</label><input id="lx" inputmode="decimal"></div>
-        <div><label for="lg">الهدف (اختياري)</label><input id="lg" inputmode="decimal"></div>
+        <div><label for="lg">جني الأرباح (اختياري)</label><input id="lg" inputmode="decimal"></div>
       </div>
       <div id="lhint" class="sub"></div>
       <div id="lsum"></div>
@@ -251,7 +253,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 41</div>
+<div class="note" style="text-align:center" id="foot">النسخة 42</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -486,7 +488,7 @@ function show(){
   if(has&&l2){sn.hidden=false;sn.innerHTML=l2.map(function(x){return '<button data-sub="'+x[0]+'"'+(sb[TAB]===x[0]?' class="on"':'')+'>'+x[1]+'</button>'}).join("")}else sn.hidden=true;
   var tb=document.querySelectorAll("#tabs button");for(var i=0;i<tb.length;i++)tb[i].classList.toggle("on",tb[i].getAttribute("data-tab")===TAB);
 }
-var SUBL={trd:[["ord","أمر واحد"],["lad","تدرّج"]],ana:[["risk","المخاطر"],["jr","السجل"],["tr","المتتبع"]],set:[["key","الحساب"],["hal","الشرعية"]]};
+var SUBL={trd:[["ord","أمر واحد"],["lad","متدرجة"]],ana:[["risk","المخاطر"],["jr","السجل"],["tr","المتتبع"]],set:[["key","الحساب"],["hal","الشرعية"]]};
 var SUB=(function(){try{var j=JSON.parse(LS.g("sub")||"{}");return{trd:(j.trd==="lad"?"lad":"ord"),ana:(j.ana==="jr"?"jr":j.ana==="tr"?"tr":"risk"),set:(j.set==="hal"?"hal":"key")}}catch(e){return{trd:"ord",ana:"risk",set:"key"}}})();
 var TAB=LS.g("tab")||"home";if(["home","wal","trd","ana","set"].indexOf(TAB)<0)TAB="home";
 function enter(){show();render();if(TAB==="set"&&SUB.set==="hal")renderHal();if(TAB==="trd"&&SUB.trd==="lad")ladHint();if(TAB==="ana"&&SUB.ana==="jr")renderJournal();if(TAB==="ana"&&SUB.ana==="tr")trFit();try{window.scrollTo(0,0)}catch(e){}}
@@ -552,7 +554,7 @@ function tkHashImport(){
   try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
 }
 function tkSync(manual){
-  if(!snap)return false;var d=TK(),bal=Math.round(equity()*100)/100,now=Date.now(),t=dayKey(now),y=dayKey(now-864e5),ch=false,iso=new Date(now).toISOString();d.entries=d.entries||{};
+  if(!snap)return false;var d=TK(),bal=Math.round(equity()),now=Date.now(),t=dayKey(now),y=dayKey(now-864e5),ch=false,iso=new Date(now).toISOString();d.entries=d.entries||{};
   var rec=function(){return{balance:bal,ts:iso,src:"a"}};
   if(manual){d.entries[t]=rec();ch=true}
   else{
@@ -642,7 +644,7 @@ function renderHome(as,tot){
   $("htiles").innerHTML=tile("ربح اليوم",tp,tpp)+tile("الربح الكلي",profit,sp);
   }
   $("tkflow").innerHTML=tkFlowHtml();$("swbn").innerHTML=swBanner();
-  var ts=+LS.g("tksync")||0;$("tksub").innerHTML=ts?'آخر مزامنة '+N(dayKey(ts).slice(5)+" "+hm(ts)):'لم تتم مزامنة بعد';
+  var ts=+LS.g("tksync")||0;$("tksub").innerHTML=ts?'آخر مزامنة للمتتبع '+N(dayKey(ts).slice(5)+" "+hm(ts)):'لم تتم مزامنة بعد';
   var rc=rcap(),at=[],cash=snap.usdt+as.filter(function(a){return STABLE[a.sym]}).reduce(function(t,a){return t+a.val},0);
   as.forEach(function(a){if(STABLE[a.sym])return;var sh=tot>0?a.val/tot*100:0;if(sh>rc)at.push(ICW+'<div>'+esc(a.sym)+' وحدها <span class="n">'+sh.toFixed(0)+'%</span> من محفظتك، فوق أقصى وزن</div>')});
   var cp=tot>0?cash/tot*100:0;if(cp<10)at.push(ICW+'<div>السيولة <span class="n">'+cp.toFixed(0)+'%</span> فقط</div>');
@@ -703,8 +705,8 @@ function calcRun(){
   h+='<div class="sum"><div class="row"><div class="l"><b>الكمية</b></div><div class="r"><b class="n">'+(q>=1?q.toFixed(2):q.toPrecision(3))+'</b></div></div>'+
     '<div class="row"><div class="l"><b>قيمة الصفقة</b><small><span class="n">'+(eq?(val/eq*100).toFixed(1):"-")+'%</span> من الرصيد</small></div><div class="r"><b class="n">'+usd(val)+'</b></div></div>'+
     '<div class="row"><div class="l"><b>الخسارة عند الوقف</b><small>شاملة الرسوم</small></div><div class="r"><b class="n down">−'+usd(risk)+'</b></div></div>';
-  if(t>e){var g=q*(t-e)-q*(e+t)*f;h+='<div class="row"><div class="l"><b>الربح عند الهدف</b><small>صافي بعد الرسوم · نسبة عائد/مخاطرة <span class="n">'+(g/risk).toFixed(2)+'</span></small></div><div class="r"><b class="n up">+'+usd(g)+'</b></div></div>'}
-  else if(t&&t<=e)h+='<div class="warn">الهدف يجب أن يكون أعلى من الدخول</div>';
+  if(t>e){var g=q*(t-e)-q*(e+t)*f;h+='<div class="row"><div class="l"><b>الربح عند جني الأرباح</b><small>صافي بعد الرسوم · نسبة عائد/مخاطرة <span class="n">'+(g/risk).toFixed(2)+'</span></small></div><div class="r"><b class="n up">+'+usd(g)+'</b></div></div>'}
+  else if(t&&t<=e)h+='<div class="warn">جني الأرباح يجب أن يكون أعلى من الدخول</div>';
   h+='</div>';
   var sy=$("cs").value.trim().toUpperCase();
   if(sy&&CAN)h+='<button class="go" id="cgo" style="width:100%">جهّز أمر شراء في نافذة التداول</button>';
@@ -747,6 +749,7 @@ function ladHint(){
   var sy=$("ls").value.trim().toUpperCase(),h=snap&&snap.assets.filter(function(a){return a.sym===sy})[0];
   $("lrisk").hidden=L.side!=="BUY";$("lst").innerHTML=sy?halTag(sy,L.side):"";lChips();
   $("lhint").textContent=L.side==="BUY"?(snap?"السيولة المتاحة: "+usd(freeUsdt(),0)+(snap.usdtLocked>0.5?" (محجوز "+usd(snap.usdtLocked,0)+" في أوامر)":"")+" · سقف الأمر الواحد: "+usd(capVal(),0):""):(h?"المتاح للبيع: "+qt(freeQ(h))+" "+sy+(lockQ(h)>0?" (محجوز "+qt(lockQ(h))+" في أوامر)":""):"");
+  $("lsn1").textContent=sy;$("lsn2").textContent=sy;
   var b=document.querySelectorAll("[data-ls]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-ls")===L.side);
   b=document.querySelectorAll("[data-ld]");for(i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-ld")===L.dist);
   $("lcw").hidden=L.dist!=="cus";
@@ -814,7 +817,7 @@ function ladLive(){
     if(x>0&&x<avg){
       var risk=(avg-x)*q+(avg+x)*q*fee;
       h+=oRow("الخسارة عند الوقف","−"+usd(risk)+" · "+(eq?(risk/eq*100).toFixed(2):"-")+"%","down");
-      if(t>avg){var g=q*(t-avg)-q*(avg+t)*fee;h+=oRow("الربح عند الهدف","+"+usd(g)+" · عائد/مخاطرة "+(g/risk).toFixed(2),"up")}
+      if(t>avg){var g=q*(t-avg)-q*(avg+t)*fee;h+=oRow("الربح عند جني الأرباح","+"+usd(g)+" · عائد/مخاطرة "+(g/risk).toFixed(2),"up")}
     }else if(x>0)h+='<div class="warn" style="margin-top:8px">الوقف يجب أن يكون أقل من متوسط السعر</div>';
   }else{
     if(hold)h+=oRow("من المتاح للبيع",(q/(freeQ(hold)||1)*100).toFixed(0)+"%",q>freeQ(hold)+1e-9?"down":"");
@@ -997,8 +1000,8 @@ function protectSheet(sym,opts){
 function drawProtect(){
   var sym=PR.sym,f=PR.f,L=PR.last,h='<h3 style="margin:0 0 2px">'+(PR.opts.lid?"إعادة ضبط حماية ":"حماية ")+esc(sym)+'</h3><div class="sub" style="margin:0 0 8px">السعر الآن '+N(px(L))+' · المتاح للبيع '+N(qt(PR.avail))+(PR.avg?' · متوسط تكلفتك '+N(px(PR.avg)):'')+'</div>';
   if(!(PR.avail>0)||PR.avail*L<f.minN){openSheet(h+'<div class="warn">لا توجد كمية متاحة للحماية (محجوزة في أوامر أخرى).</div><button id="tclose" style="width:100%">إغلاق</button>');return}
-  h+='<div class="g2"><div><label for="pr_x">وقف الخسارة (سعر التفعيل)</label><input id="pr_x" inputmode="decimal" value="'+(PR.x?flo(PR.x,f.tick):"")+'"></div><div><label for="pr_t">هدف الربح (اختياري)</label><input id="pr_t" inputmode="decimal" value="'+(PR.t?flo(PR.t,f.tick):"")+'"></div></div>';
-  h+='<div style="margin:6px 0 2px">'+[-3,-5,-8,-10].map(function(x){return '<span class="chip" data-prx="'+x+'">وقف −'+Math.abs(x)+'%</span>'}).join("")+[5,10,15].map(function(x){return '<span class="chip" data-prt="'+x+'">هدف +'+x+'%</span>'}).join("")+'</div>';
+  h+='<div class="g2"><div><label for="pr_x">وقف الخسارة (سعر التفعيل)</label><input id="pr_x" inputmode="decimal" value="'+(PR.x?flo(PR.x,f.tick):"")+'"></div><div><label for="pr_t">جني الأرباح (اختياري)</label><input id="pr_t" inputmode="decimal" value="'+(PR.t?flo(PR.t,f.tick):"")+'"></div></div>';
+  h+='<div style="margin:6px 0 2px">'+[-3,-5,-8,-10].map(function(x){return '<span class="chip" data-prx="'+x+'">وقف −'+Math.abs(x)+'%</span>'}).join("")+[5,10,15].map(function(x){return '<span class="chip" data-prt="'+x+'">جني +'+x+'%</span>'}).join("")+'</div>';
   h+=ruler("pr",PR.pct,1);
   h+='<div class="g2"><div><label for="pr_o">فارق التنفيذ عن التفعيل %</label><input id="pr_o" inputmode="decimal" value="0.5"></div><div></div></div>';
   h+='<div id="prsum"></div><div id="prerr"></div><div style="display:flex;gap:8px;margin-top:10px"><button class="go" id="prgo" style="flex:2">تأكيد وضع الحماية</button><button id="tclose" style="flex:1">رجوع</button></div>';
@@ -1007,25 +1010,25 @@ function drawProtect(){
 function prVal(){
   var f=PR.f,L=PR.last,x=parseFloat($("pr_x").value)||0,t=parseFloat($("pr_t").value)||0,off=parseFloat($("pr_o").value);if(!(off>=0))off=0.5;
   var q=+flo(PR.avail*PR.pct/100,f.step),xs=x?flo(x,f.tick):0,xl=x?flo(x*(1-off/100),f.tick):0,ts=t?flo(t,f.tick):0,e=null;
-  if(!x&&!t)e="أدخل وقف الخسارة أو الهدف";
+  if(!x&&!t)e="أدخل وقف الخسارة أو جني الأرباح";
   else if(x&&!(x<L))e="سعر الوقف يجب أن يكون أقل من السعر الحالي، وإلا سيُفعَّل فوراً";
-  else if(t&&!(t>L))e="سعر الهدف يجب أن يكون أعلى من السعر الحالي";
-  else if(x&&t&&!(x<t))e="الوقف يجب أن يكون أقل من الهدف";
+  else if(t&&!(t>L))e="سعر جني الأرباح يجب أن يكون أعلى من السعر الحالي";
+  else if(x&&t&&!(x<t))e="الوقف يجب أن يكون أقل من جني الأرباح";
   else if(q<f.minQ)e="الكمية أقل من الحد الأدنى";
   else if(x&&q*+xl<f.minN)e="قيمة أمر الوقف أقل من الحد الأدنى ("+f.minN+"$)";
-  else if(t&&q*+ts<f.minN)e="قيمة أمر الهدف أقل من الحد الأدنى ("+f.minN+"$)";
+  else if(t&&q*+ts<f.minN)e="قيمة أمر جني الأرباح أقل من الحد الأدنى ("+f.minN+"$)";
   else if(f.dn&&xl&&+xl<L*f.dn*1.03)e="سعر الوقف بعيد جداً عن السوق وترفضه بايننس";
-  else if(f.up&&ts&&+ts>L*f.up*0.97)e="سعر الهدف بعيد جداً عن السوق وترفضه بايننس";
+  else if(f.up&&ts&&+ts>L*f.up*0.97)e="سعر جني الأرباح بعيد جداً عن السوق وترفضه بايننس";
   return{e:e,x:x,t:t,xs:xs,xl:xl,ts:ts,q:q,off:off};
 }
 function prCalc(){
   if(!PR||!$("prsum"))return null;
   var v=prVal(),L=PR.last,eq=equity(),base=PR.avg||L,h='<div class="sum">';
   h+=oRow("الكمية",N(qt(v.q))+" · "+N(PR.pct+"%")+" من المتاح","",1);
-  h+=oRow("النوع",v.x&&v.t?"OCO: أيّهما نُفِّذ ألغى الآخر":v.x?"وقف خسارة (Stop-Limit)":v.t?"أمر بيع محدد عند الهدف":"—","",1);
+  h+=oRow("النوع",v.x&&v.t?"OCO: أيّهما نُفِّذ ألغى الآخر":v.x?"وقف خسارة (Stop-Limit)":v.t?"أمر بيع محدد عند جني الأرباح":"—","",1);
   if(v.x){var ls=(base-v.x)*v.q+(base+v.x)*v.q*0.001;h+=oRow(PR.avg?"الخسارة عند الوقف":"الخسارة عن السعر الحالي",(ls>0?"−":"+")+usd(Math.abs(ls))+" · "+(eq?(Math.abs(ls)/eq*100).toFixed(2):"-")+"% من الرصيد",ls>0?"down":"up");
     h+=oRow("المسافة من السعر الآن",pc((v.x/L-1)*100))}
-  if(v.t){var g=(v.t-base)*v.q-(base+v.t)*v.q*0.001;h+=oRow("الربح عند الهدف",sg(g)+" · "+pc((v.t/base-1)*100),cl(g));
+  if(v.t){var g=(v.t-base)*v.q-(base+v.t)*v.q*0.001;h+=oRow("الربح عند جني الأرباح",sg(g)+" · "+pc((v.t/base-1)*100),cl(g));
     if(v.x){var ls2=(base-v.x)*v.q+(base+v.x)*v.q*0.001;if(ls2>0)h+=oRow("عائد/مخاطرة",(g/ls2).toFixed(2))}}
   h+='</div>';
   if(v.x)h+='<div class="warn">الوقف يُفعَّل عند لمس السعر للمستوى في أي وقت، وقد لا يُنفَّذ عند الهبوط السريع.</div>';
@@ -1046,11 +1049,11 @@ function prSend(){
   var first=PR.opts.lid?call("/api/v3/orderList",{symbol:k,orderListId:PR.opts.lid},true,0,"DELETE"):Promise.resolve();
   first.then(place).then(function(){
     delete PLAN[sym];planSave();
-    openSheet('<div class="sum up">تم وضع الحماية ✓</div><div class="sub" style="margin:8px 0">'+(v.x?'وقف '+N(v.xs):'')+(v.x&&v.t?' · ':'')+(v.t?'هدف '+N(v.ts):'')+' · الكمية '+N(qt(v.q))+'</div><button id="tclose" style="width:100%">إغلاق</button>');
+    openSheet('<div class="sum up">تم وضع الحماية ✓</div><div class="sub" style="margin:8px 0">'+(v.x?'وقف '+N(v.xs):'')+(v.x&&v.t?' · ':'')+(v.t?'جني الأرباح '+N(v.ts):'')+' · الكمية '+N(qt(v.q))+'</div><button id="tclose" style="width:100%">إغلاق</button>');
     busy=false;refresh();
   },function(e){
     var m=e.message||"رفض";
-    $("prerr").innerHTML='<div class="err">'+(PR.opts.lid?"أُلغيت الحماية السابقة ولم تُنشأ الجديدة. ":"")+'رفضته بايننس: '+esc(m)+(v.x&&v.t?'<br>جرّب وضع الوقف وحده بمسح خانة الهدف.':'')+'</div>';
+    $("prerr").innerHTML='<div class="err">'+(PR.opts.lid?"أُلغيت الحماية السابقة ولم تُنشأ الجديدة. ":"")+'رفضته بايننس: '+esc(m)+(v.x&&v.t?'<br>جرّب وضع الوقف وحده بمسح خانة جني الأرباح.':'')+'</div>';
     b.disabled=false;b.textContent="إعادة المحاولة";if(PR.opts.lid){busy=false;refresh()}
   });
 }
@@ -1148,7 +1151,7 @@ function swOpen(){
   SW={step:1,coins:cs,sel:{},pct:15,f:{}};cs.forEach(function(c){SW.sel[c.sym]=true});swDraw();
 }
 function swDraw(){
-  var h='<h3 style="margin:0 0 8px">بيع شامل</h3>';
+  var h='<h3 style="margin:0 0 8px">تقليص المراكز</h3>';
   if(SW.step===1){
     h+='<div style="margin-bottom:6px"><span class="chip" data-swall="1">الكل</span><span class="chip" data-swall="0">لا شيء</span></div><div>'+
       SW.coins.map(function(c){return '<span class="chip'+(SW.sel[c.sym]?" on":"")+'" data-swc="'+esc(c.sym)+'">'+esc(c.sym)+' · '+usd(c.val,0)+'</span>'}).join("")+'</div>'+
@@ -1306,7 +1309,7 @@ function swDone(out){
 function swBanner(){
   var j=swJ();if(!j||SWRUN)return '';
   var n=0;Object.keys(j.coins).forEach(function(s){n+=j.coins[s].units.filter(function(u){return u.st==="cx"}).length});
-  return '<div class="att"><div style="color:var(--gold)">بيع شامل لم يكتمل: '+N(n)+' أوامر بيع ملغاة لم تُعَد.</div> <button class="sm" id="swrec">استعادة</button></div>';
+  return '<div class="att"><div style="color:var(--gold)">تقليص المراكز لم يكتمل: '+N(n)+' أوامر بيع ملغاة لم تُعَد.</div> <button class="sm" id="swrec">استعادة</button></div>';
 }
 function swRecSheet(){
   var j=swJ();if(!j)return;
@@ -1334,7 +1337,13 @@ function swRecRun(){
 }
 
 /* --- interactive line chart (klines) --- */
-var CD={sym:"",zone:null},CHS={},KC={};
+var CD={sym:"",zone:null},CHS={},KC={},FILLS={};
+function fillsGet(sym){var e=FILLS[sym];return e&&e.d?e.d:null}
+function fillsSet(sym,tr){FILLS[sym]={t:Date.now(),d:tr.map(function(x){return{t:+x.time,p:+x.price,q:+x.qty,b:!!x.isBuyer}})}}
+function fillsLoad(sym,cb){
+  if(!CAN||!sym)return;var e=FILLS[sym];if(e&&Date.now()-e.t<12e4){if(cb)cb();return}
+  call("/api/v3/myTrades",{symbol:sym+"USDT",limit:1000},true).then(function(tr){if(Array.isArray(tr)){fillsSet(sym,tr);if(cb)cb()}},function(){});
+}
 var TFS=["5m","15m","30m","1h","4h","1d"];
 var CHTY=LS.g("chty")==="l"?"l":"c",CHPN=["n","v","m"].indexOf(LS.g("chpn"))>=0?LS.g("chpn"):"v";
 var CHTF=(function(){var v=LS.g("chtf");return TFS.indexOf(v)>=0?v:"5m"})();
@@ -1440,11 +1449,17 @@ function chSvg(st){
   if(i0>0)pts.unshift(x(i0-1).toFixed(1)+","+y(k[i0-1][1]).toFixed(1));
   o+='<polyline clip-path="url(#'+cid+')" points="'+pts.join(" ")+'" fill="none" style="stroke:var(--fg);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round"/>';
   }
+  if(cx.fills&&cx.fills.length&&sp<=500){
+    var gm={},gk=[];
+    cx.fills.forEach(function(f){if(f.t<k[0][0])return;var q=chIx(k,f.t),c2=Math.max(0,Math.floor(q));if(c2<i0||c2>i1)return;var key=c2+(f.b?"b":"s"),g=gm[key];if(!g){g=gm[key]={i:c2,b:f.b,q:0,c:0};gk.push(key)}g.q+=f.q;g.c+=f.q*f.p});
+    gk.forEach(function(kk){var g=gm[kk],p=g.c/g.q;if(!inr(p))return;var mx0=x(g.i),my0=y(p);if(mx0<x0||mx0>x0+pw)return;
+      o+='<circle cx="'+mx0.toFixed(1)+'" cy="'+my0.toFixed(1)+'" r="5.2" style="fill:var('+(g.b?"--buy":"--sell")+');stroke:var(--s);stroke-width:1"/><text x="'+mx0.toFixed(1)+'" y="'+(my0+2.8).toFixed(1)+'" text-anchor="middle" style="fill:var(--onbs);font-size:7.5px;font-weight:700;font-family:inherit">'+(g.b?"B":"S")+'</text>'});
+  }
   var ms=chT(k,v1)-chT(k,v0),f=function(t){return ms>=2592e5?dayKey(t).slice(5):(ms>=8e7?dayKey(t).slice(5)+" "+hm(t):hm(t))};
   [[v0,"start"],[(v0+v1)/2,"middle"],[v1,"end"]].forEach(function(q,j){var tx=j===0?x0:j===1?x0+pw/2:x0+pw;o+='<text x="'+tx+'" y="'+(H-5)+'" text-anchor="'+q[1]+'" style="fill:var(--dim);font-size:10px;font-family:inherit">'+f(chT(k,q[0]))+'</text>'});
   var yl=inr(last)?y(last):edge(last).y;
   if(inr(last))o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+yl+'" y2="'+yl+'" style="stroke:var(--dim);stroke-width:1;stroke-dasharray:1 3"/>';
-  if(atEnd)o+='<circle cx="'+x(n-1)+'" cy="'+yl+'" r="4.5" style="fill:var(--bg);stroke:var(--fg);stroke-width:2.5"/>';
+  if(atEnd&&!cdl)o+='<circle cx="'+x(n-1)+'" cy="'+yl+'" r="3" style="fill:var(--bg);stroke:var(--fg);stroke-width:2"/>';
   labs.push({y:yl,t:(inr(last)?"":edge(last).a)+px(last),c:"var(--fg)",b:1});
   labs.sort(function(a,b){return a.y-b.y});
   var ly=labs.map(function(l){return l.y});
@@ -1483,10 +1498,13 @@ function chPane(st){
   }else{
     var M=chMacd(st),mn=0,mxv=0;for(i=i0;i<=i1;i++){mn=Math.min(mn,M.m[i],M.s[i],M.h[i]);mxv=Math.max(mxv,M.m[i],M.s[i],M.h[i])}
     if(mxv-mn<1e-12)mxv=mn+1e-9;var pad=(mxv-mn)*.08;mn-=pad;mxv+=pad;
-    var y=function(v){return top+(1-(v-mn)/(mxv-mn))*(yb-top)},y0=y(0),hu="",hd="",lm=[],ls=[];
-    for(i=i0;i<=i1;i++){var yh=y(M.h[i]),seg='M'+(x(i)-bw/2).toFixed(1)+','+y0.toFixed(1)+'V'+yh.toFixed(1)+'H'+(x(i)+bw/2).toFixed(1)+'V'+y0.toFixed(1)+'Z';if(M.h[i]>=0)hu+=seg;else hd+=seg;lm.push(x(i).toFixed(1)+","+y(M.m[i]).toFixed(1));ls.push(x(i).toFixed(1)+","+y(M.s[i]).toFixed(1))}
+    var y=function(v){return top+(1-(v-mn)/(mxv-mn))*(yb-top)},y0=y(0),gd="",gl="",rd="",rl="",lm=[],ls=[],dots="";
+    for(i=i0;i<=i1;i++){var hv=M.h[i],hp=i>0?M.h[i-1]:0,yh=y(hv),seg='M'+(x(i)-bw/2).toFixed(1)+','+y0.toFixed(1)+'V'+yh.toFixed(1)+'H'+(x(i)+bw/2).toFixed(1)+'V'+y0.toFixed(1)+'Z';
+      if(hv>=0){if(hv>=hp)gd+=seg;else gl+=seg}else{if(hv<=hp)rd+=seg;else rl+=seg}
+      lm.push(x(i).toFixed(1)+","+y(M.m[i]).toFixed(1));ls.push(x(i).toFixed(1)+","+y(M.s[i]).toFixed(1));
+      if(i>0){var d0=M.m[i-1]-M.s[i-1],d1=M.m[i]-M.s[i];if(d0*d1<0){var tt=d0/(d0-d1),cxv=x(i-1+tt),cyv=y(M.m[i-1]+(M.m[i]-M.m[i-1])*tt);dots+='<circle cx="'+cxv.toFixed(1)+'" cy="'+cyv.toFixed(1)+'" r="2.3" style="fill:var('+(d1>0?"--cu":"--cd")+');stroke:var(--s);stroke-width:.8"/>'}}}
     var f=function(v){return (v>=0?"":"−")+Math.abs(v).toPrecision(2)};
-    o+='<g clip-path="url(#cp_'+st.id+')"><line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+y0.toFixed(1)+'" y2="'+y0.toFixed(1)+'" style="stroke:var(--dimmer);stroke-width:1;stroke-dasharray:2 3"/><path d="'+hu+'" style="fill:var(--cu);opacity:.65"/><path d="'+hd+'" style="fill:var(--cd);opacity:.65"/><polyline points="'+lm.join(" ")+'" fill="none" style="stroke:var(--fg);stroke-width:1.4"/><polyline points="'+ls.join(" ")+'" fill="none" style="stroke:var(--gold);stroke-width:1.4"/></g>'+tx('MACD 12 26 9  <tspan style="fill:var(--fg);font-weight:600">'+f(M.m[ci])+'</tspan> <tspan style="fill:var(--gold);font-weight:600">'+f(M.s[ci])+'</tspan> <tspan style="font-weight:600">'+f(M.h[ci])+'</tspan>');
+    o+='<g clip-path="url(#cp_'+st.id+')"><line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+y0.toFixed(1)+'" y2="'+y0.toFixed(1)+'" style="stroke:var(--dimmer);stroke-width:1;stroke-dasharray:2 3"/><path d="'+gd+'" style="fill:var(--cu);opacity:.95"/><path d="'+gl+'" style="fill:var(--cu);opacity:.38"/><path d="'+rd+'" style="fill:var(--cd);opacity:.95"/><path d="'+rl+'" style="fill:var(--cd);opacity:.38"/><polyline points="'+lm.join(" ")+'" fill="none" style="stroke:var(--cu);stroke-width:1.5"/><polyline points="'+ls.join(" ")+'" fill="none" style="stroke:var(--gold);stroke-width:1.5"/>'+dots+'</g>'+tx('MACD 12 26 9  <tspan style="fill:var(--cu);font-weight:600">'+f(M.m[ci])+'</tspan> <tspan style="fill:var(--gold);font-weight:600">'+f(M.s[ci])+'</tspan> <tspan style="font-weight:600">'+f(M.h[ci])+'</tspan>');
   }
   if(st.cr){var cx=x(ci);if(cx>=x0&&cx<=x0+pw)o+='<line x1="'+cx+'" x2="'+cx+'" y1="'+top+'" y2="'+yb+'" style="stroke:var(--dim);stroke-width:1;stroke-dasharray:3 3"/>'}
   return o+'</svg>';
@@ -1557,10 +1575,10 @@ document.addEventListener("click",function(ev){
   var g=el.getAttribute("data-chgo");if(g){var pp=g.split("|");closeSheet();oOpen(CD.sym,pp[0],{px:parseFloat(pp[1])})}
 });
 chNew("cd","",function(){var sym=CHS.cd.sym,a=snap&&snap.assets.filter(function(x){return x.sym===sym})[0],k=sym+"USDT";
-  return {last:(a&&a.price)||(snap&&snap.px[k])||0,avg:AVG[sym]?AVG[sym].a:0,orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:CD.zone,draft:0}},
+  return {last:(a&&a.price)||(snap&&snap.px[k])||0,avg:AVG[sym]?AVG[sym].a:0,orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:CD.zone,draft:0,fills:fillsGet(sym)}},
   function(){return !$("sheet").hidden&&CD.sym===CHS.cd.sym},"two");
 chNew("od","ochart",function(){var sym=CHS.od.sym,k=sym+"USDT";
-  return {last:O.last||(snap&&snap.px[k])||0,avg:AVG[sym]?AVG[sym].a:0,orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:null,draft:CHS.od.draft,side:O.side}},
+  return {last:O.last||(snap&&snap.px[k])||0,avg:AVG[sym]?AVG[sym].a:0,orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:null,draft:CHS.od.draft,side:O.side,fills:fillsGet(sym)}},
   function(){return TAB==="trd"&&SUB.trd==="ord"},"one");
 setInterval(function(){if(document.hidden)return;for(var id in CHS){var st=CHS[id];if(st.sym&&st.vis())chLoad(st)}},6e4);
 function coinHtml(sym){
@@ -1580,7 +1598,7 @@ function coinHtml(sym){
     if(stops.length){var st0=stops.reduce(function(m,r){return !m||Math.abs(r.sp-last)<Math.abs(m.sp-last)?r:m},null);
       h+=oRow("وقف الخسارة",N(px(st0.sp))+" · "+N(pc((st0.sp/last-1)*100))+" · "+N(qt(st0.qty)),"",1)+'<div style="margin-top:6px"><button class="sm" data-ed="'+st0.id+'">تعديل الحماية</button></div>';
     }else{
-      h+='<div style="font-weight:600;margin-bottom:4px">الحماية</div>'+(pl?'<div class="sub" style="margin:0 0 6px">خطة محفوظة: '+(pl.x?'وقف '+N(px(pl.x)):'')+(pl.x&&pl.t?' · ':'')+(pl.t?'هدف '+N(px(pl.t)):'')+'</div>':'<div class="sub" style="margin:0 0 6px">لا يوجد وقف خسارة على هذه العملة.</div>')+'<button class="go" data-prot="'+esc(sym)+'" style="width:100%">'+(pl?'فعّل الحماية':'ضع وقف خسارة / هدف')+'</button>';
+      h+='<div style="font-weight:600;margin-bottom:4px">الحماية</div>'+(pl?'<div class="sub" style="margin:0 0 6px">خطة محفوظة: '+(pl.x?'وقف '+N(px(pl.x)):'')+(pl.x&&pl.t?' · ':'')+(pl.t?'جني الأرباح '+N(px(pl.t)):'')+'</div>':'<div class="sub" style="margin:0 0 6px">لا يوجد وقف خسارة على هذه العملة.</div>')+'<button class="go" data-prot="'+esc(sym)+'" style="width:100%">'+(pl?'فعّل الحماية':'ضع وقف خسارة / هدف')+'</button>';
     }
     h+='</div>';
   }
@@ -1619,6 +1637,7 @@ function coinSheet(sym){
   if(!CAN)return;
   call("/api/v3/myTrades",{symbol:sym+"USDT",limit:1000},true).then(function(tr){
     if(CD.sym!==sym||!Array.isArray(tr))return;
+    fillsSet(sym,tr);chDraw(CHS.cd);
     tr.sort(function(x,y){return x.time-y.time});var lots=[];
     tr.forEach(function(t){var qq=+t.qty;if(t.isBuyer)lots.push({t:t.time,q:qq,p:+t.price});else{var rem=qq;while(rem>1e-12&&lots.length){var u=Math.min(rem,lots[0].q);lots[0].q-=u;rem-=u;if(lots[0].q<=1e-12)lots.shift()}}});
     var a=snap.assets.filter(function(x){return x.sym===sym})[0];if(!a||!lots.length)return;
@@ -1683,11 +1702,20 @@ function lRgSync(){
   if(L.side==="BUY"){var fu=freeUsdt(),v=parseFloat($("lv").value);L.pc=rgShow("l",fu>0&&v>0?v/fu*100:0)}
   else{var h=assetOf($("ls").value.trim().toUpperCase()),q=parseFloat($("lq").value),fq=h?freeQ(h):0;L.pc=rgShow("l",fq>0&&q>0?q/fq*100:0)}
 }
+function oPcShow(){
+  var e=$("opc");if(!e||document.activeElement===e)return;var p=parseFloat($("op").value);
+  if(!(p>0)||!(O.last>0)){e.value="";return}
+  e.value=String(+((p/O.last-1)*100).toFixed(2));
+}
+function oPcSet(v){
+  if(!O.f||!(O.last>0)||!isFinite(v))return;
+  $("op").value=flo(O.last*(1+v/100),O.f.tick);oSync();oCalc();
+}
 function oChips(){
   var buy=O.side==="BUY",mk=O.type==="MARKET",h='',l=buy?[0,-1,-3,-5]:[0,3,5,10];
   if(!mk){
-    l.forEach(function(x){h+='<span class="chip" data-opp="'+x+'">'+(x===0?"سعر السوق":(x>0?"+":"−")+Math.abs(x)+"%")+'</span>'});
-    h+='<span class="chip'+(O.mk?" on":"")+'" data-omk="1">صانع فقط</span>';
+    h+='<div class="stp" dir="ltr"><button type="button" data-opst="-1" aria-label="أنقص">−</button><input id="opc" inputmode="decimal" aria-label="النسبة عن السوق"><span>%</span><button type="button" data-opst="1" aria-label="زِد">+</button><small>عن السوق</small></div>';
+    h+='<span class="chip'+(O.mk?" on":"")+'" data-omk="1">صانع فقط (Post-Only)</span>';
   }
   $("ochips").innerHTML=h;
   if(O._ps!==O.side||O._sy!==O.sym){O.pc=0;O._ps=O.side;O._sy=O.sym}
@@ -1701,7 +1729,7 @@ function oChips(){
   $("orisk").hidden=O.side!=="BUY";
   $("op").disabled=mk;$("opl").textContent=mk?"السعر التقديري (سوق)":"السعر";
   if(mk&&O.f){var px0=oPx();if(px0>0)$("op").value=flo(px0,O.f.tick)}
-  oAv();
+  oAv();oPcShow();
 }
 function oAv(){
   var sy=$("os").value.trim().toUpperCase(),el=$("oav");
@@ -1729,7 +1757,7 @@ function oLoad(){
     var bk=r[2];O.book=bk&&bk.bids&&bk.asks&&bk.bids.length&&bk.asks.length?{bids:bk.bids,asks:bk.asks,bid:+bk.bids[0][0],ask:+bk.asks[0][0]}:null;
     $("opx").innerHTML='السعر الحالي <span class="n">'+px(O.last)+'</span> · <span style="text-decoration:underline;cursor:pointer" data-orf="1">تحديث</span>';
     if(!(parseFloat($("op").value)>0)||O.type==="MARKET")$("op").value=flo(O.type==="MARKET"?oPx():O.last,O.f.tick);
-    chSetSym(CHS.od,sym);
+    chSetSym(CHS.od,sym);fillsLoad(sym,function(){if(O.sym===sym)chDraw(CHS.od)});
     if(O.after&&O.after.px>0&&O.type==="LIMIT"){$("op").value=flo(O.after.px,O.f.tick);O.after=null}
     oChips();
     if(O.after&&O.after.pct&&O.side==="SELL"){var ha=assetOf(sym);if(ha){$("oq").value=flo(freeQ(ha)*O.after.pct/100,O.f.step);O.ed="q"}O.after=null}
@@ -1749,6 +1777,7 @@ function oCalc(){
   var sy=$("os").value.trim().toUpperCase(),o=$("osum"),buy=O.side==="BUY";
   $("ost").innerHTML=sy?halTag(sy,O.side):"";
   oAv();
+  oPcShow();
   var mk=O.type==="MARKET",p=oPx(),q=parseFloat($("oq").value),v=parseFloat($("ov").value);
   var dr=(!mk&&p>0&&O.f)?p:0;if(CHS.od.draft!==dr||CHS.od._ds!==O.side){CHS.od.draft=dr;CHS.od._ds=O.side;chDraw(CHS.od)}
   if(!(q>0)&&v>0&&p>0)q=v/p;
@@ -1767,7 +1796,7 @@ function oCalc(){
     if(x>0&&x<p){
       var risk=(p-x)*q+(p+x)*q*fee;
       h+=oRow("الخسارة عند الوقف","−"+usd(risk)+" · "+(eq?(risk/eq*100).toFixed(2):"-")+"%","down");
-      if(t>p){var g=q*(t-p)-q*(p+t)*fee;h+=oRow("الربح عند الهدف","+"+usd(g)+" · عائد/مخاطرة "+(g/risk).toFixed(2),"up")}
+      if(t>p){var g=q*(t-p)-q*(p+t)*fee;h+=oRow("الربح عند جني الأرباح","+"+usd(g)+" · عائد/مخاطرة "+(g/risk).toFixed(2),"up")}
       if(rk>0&&eq){var sq=(eq*rk/100)/((p-x)+(p+x)*fee);h+='<div style="margin-top:8px;font-size:.84rem">الحجم المناسب لمخاطرة '+rk+'%: <b class="n">'+(sq>=1?sq.toFixed(0):sq.toPrecision(3))+'</b> <button class="sm" data-ouse="'+sq+'">اعتمده</button></div>'}
     }else if(x>0)h+='<div class="warn" style="margin-top:8px">الوقف يجب أن يكون أقل من سعر الشراء</div>';
     var hc=halCheck(sy,"BUY");ck.push([hc.block?0:(hc.msg?2:1),"الشرعية"+(hc.msg?": "+hc.msg:"")]);
@@ -1925,7 +1954,7 @@ function send(){
     var m='تم إرسال الأمر ✓',ex='';
     if(mk&&r&&+r.executedQty>0){var cq=+r.cummulativeQuoteQty,eq=+r.executedQty;m='تم التنفيذ ✓<br><span class="age">'+N(qt(eq))+' بمتوسط '+N(px(cq/eq))+' · القيمة '+N(usd(cq))+(r.status&&r.status!=="FILLED"?' · الحالة '+esc(r.status):'')+'</span>'}
     if(T.plan&&T.side==="BUY"){PLAN[T.sym]=T.plan;planSave();
-      ex='<div class="sub" style="margin:8px 0">حُفظت خطة الحماية: '+(T.plan.x?'وقف '+N(px(T.plan.x)):'')+(T.plan.x&&T.plan.t?' · ':'')+(T.plan.t?'هدف '+N(px(T.plan.t)):'')+'</div>'+(mk?'<button class="go" data-prot="'+esc(T.sym)+'" style="width:100%;margin-bottom:8px">ضع الحماية الآن</button>':'<div class="sub">بعد تنفيذ الأمر تظهر «حماية جاهزة» على العملة في «المحفظة».</div>')}
+      ex='<div class="sub" style="margin:8px 0">حُفظت خطة الحماية: '+(T.plan.x?'وقف '+N(px(T.plan.x)):'')+(T.plan.x&&T.plan.t?' · ':'')+(T.plan.t?'جني الأرباح '+N(px(T.plan.t)):'')+'</div>'+(mk?'<button class="go" data-prot="'+esc(T.sym)+'" style="width:100%;margin-bottom:8px">ضع الحماية الآن</button>':'<div class="sub">بعد تنفيذ الأمر تظهر «حماية جاهزة» على العملة في «المحفظة».</div>')}
     $("tin").innerHTML='<div class="sum up">'+m+'</div>'+ex+'<button id="tclose" style="width:100%;margin-top:8px">إغلاق</button>';
     busy=false;refresh();
   },function(e){
@@ -1988,6 +2017,7 @@ document.addEventListener("click",function(ev){
     if(O.side==="BUY"){$("ov").value=(Math.floor(freeUsdt()*pc2*100)/100).toFixed(2);O.ed="v";oSync()}
     else{var hq=assetOf($("os").value.trim().toUpperCase());if(hq&&O.f){$("oq").value=flo(freeQ(hq)*pc2,O.f.step);O.ed="q";oSync()}}
     return oCalc()}
+  if((el=t.closest("[data-opst]"))){var cur=parseFloat($("opc").value);if(!isFinite(cur))cur=0;var nx=Math.round((cur+(+el.getAttribute("data-opst")))*100)/100;oPcSet(nx);$("opc").value=String(nx);return}
   if((el=t.closest("[data-opp]"))){if(!O.f)return;var pp=O.last*(1+parseFloat(el.getAttribute("data-opp"))/100);$("op").value=flo(pp,O.f.tick);oSync();return oCalc()}
   if(t.closest("[data-oall]"))return
   if((el=t.closest("[data-ouse]"))){var uq=parseFloat(el.getAttribute("data-ouse"));if(O.f)$("oq").value=flo(uq,O.f.step);else $("oq").value=String(uq);O.ed="q";oSync();return oCalc()}
@@ -2108,7 +2138,7 @@ try{var cs=JSON.parse(LS.g("calc")||"{}");CIDS.forEach(function(i){if(cs[i]!=nul
 $("jr").addEventListener("change",function(ev){var t=ev.target;if(t.getAttribute&&t.getAttribute("data-jt")){var k=t.getAttribute("data-jt"),v=t.value.trim();if(v)JN[k]=v;else delete JN[k];LS.s("jnotes",JSON.stringify(JN))}});
 applyTheme();
 setTimeout(tkHashImport,300);
-$("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov")O.ed="v";else if(id==="oq")O.ed="q";if(id==="ov"||id==="oq"||id==="op")oSync();if(id==="ov"||id==="oq")oRgSync();oCalc()}});
+$("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov")O.ed="v";else if(id==="oq")O.ed="q";if(id==="opc"){var pv=parseFloat($("opc").value);if(isFinite(pv))oPcSet(pv);return}if(id==="ov"||id==="oq"||id==="op")oSync();if(id==="ov"||id==="oq")oRgSync();oCalc()}});
 $("rf").onclick=refresh;
 $("save").onclick=function(){var k=$("k").value.trim(),s=$("s").value.trim();if(!k||!s){err("أدخل المفتاح والسر");return}LS.s("bk",k);LS.s("bs",s);var cv=parseFloat($("cap").value);if(cv>0)LS.s("cap",String(cv));PERM=null;$("k").value="";$("s").value="";err("");forceCfg=false;show();refresh()};
 $("clr").onclick=function(){LS.d("bk");LS.d("bs");CAN=false;PERM=null;$("perm").hidden=true;LS.d("snap");LS.d("avg");snap=null;AVG={};forceCfg=false;err("");show()};
