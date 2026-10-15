@@ -103,6 +103,7 @@ h3.plain{margin-bottom:6px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 .cbar{height:6px;border-radius:4px;background:var(--s2);margin-top:5px;overflow:hidden}.cbar i{display:block;height:100%}
 .upd{position:fixed;top:8px;inset-inline:16px;max-width:608px;margin-inline:auto;background:var(--up);color:var(--onup);border-radius:12px;padding:10px 14px;font-weight:600;z-index:20;text-align:center;cursor:pointer}
+.chip.chtg{margin:0 0 9px;display:inline-flex;align-items:center;gap:6px;direction:ltr;font-weight:600;letter-spacing:.2px;color:var(--gold);background:var(--goldbg);border-color:transparent}.chip.chtg.on{background:var(--gold);color:var(--onbs);border-color:transparent}
 .chip.on{border-color:var(--fg);font-weight:600}.chip{display:inline-block;margin:3px;padding:3px 10px;border-radius:99px;background:var(--s2);border:1px solid var(--bd);cursor:pointer;font-size:.82rem}
 @keyframes sp{to{transform:rotate(360deg)}}
 #rf.spin #rfi{animation:sp .8s linear infinite}
@@ -144,7 +145,7 @@ h3.plain{margin-bottom:6px}
   <div id="ordp" hidden>
     <div style="display:flex;gap:10px;align-items:flex-end">
       <div style="flex:1"><label for="os" style="margin-top:0">العملة</label><input id="os" autocapitalize="characters" autocomplete="off" placeholder="مثل REQ"></div>
-      <div id="ost" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1" style="margin:0 0 9px">الرسم البياني</span>
+      <div id="ost" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 1.5v13"/><rect x="2.5" y="4.5" width="3" height="5.5" rx=".6" fill="currentColor"/><path d="M12 1.5v13"/><rect x="10.5" y="3.5" width="3" height="6" rx=".6"/></svg>Chart</span>
     </div>
     <div id="osyms" style="margin:6px 0 2px"></div>
     <div id="ochart"></div>
@@ -203,7 +204,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">أوامر متدرجة (Scaled)</h3>
       <div style="display:flex;gap:10px;align-items:flex-end">
         <div style="flex:1"><label for="ls" style="margin-top:0">العملة</label><input id="ls" autocapitalize="characters" autocomplete="off" placeholder="مثل REQ"></div>
-        <div id="lst" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1" style="margin:0 0 9px">الرسم البياني</span>
+        <div id="lst" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 1.5v13"/><rect x="2.5" y="4.5" width="3" height="5.5" rx=".6" fill="currentColor"/><path d="M12 1.5v13"/><rect x="10.5" y="3.5" width="3" height="6" rx=".6"/></svg>Chart</span>
       </div>
       <div class="sub" id="lpxl"></div>
       <div id="lchart"></div>
@@ -259,7 +260,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 48</div>
+<div class="note" style="text-align:center" id="foot">النسخة 49</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
