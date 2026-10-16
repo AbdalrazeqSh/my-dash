@@ -273,7 +273,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 55</div>
+<div class="note" style="text-align:center" id="foot">النسخة 56</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -851,7 +851,7 @@ function lLoad(force){
   var sym=$("ls").value.trim().toUpperCase();
   if(!sym){L.cs="";L.f=null;L.last=0;$("lpxl").textContent="";chSetSym(CHS.ld,"");ladHint();return}
   if(!force&&L.cs===sym&&L.f)return;
-  if(L.cs&&L.cs!==sym){$("lx").value="";$("lg").value="";L.rd=true}
+  if(L.cs&&L.cs!==sym){$("lx").value="";$("lg").value="";L.rd=true;L.sd=false}
   L.cs=sym;L.f=null;$("lpxl").textContent="جارٍ جلب السعر…";
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false)]).then(function(r){
     if(L.cs!==sym)return;
@@ -1815,6 +1815,7 @@ try{var _rv=JSON.parse(LS.g("orkv")||"null");if(_rv&&_rv.p>0&&_rv.d>0)O.rkv=_rv}
 var RRF=0.001;
 function rrTarget(p,x,rr){var per=(p-x)+(p+x)*RRF;return (p*(1+RRF)+rr*per)/(1-RRF)}
 function rrOf(p,x,t){var per=(p-x)+(p+x)*RRF;return ((t-p)-(p+t)*RRF)/per}
+function rrStop(p,t,rr,tick){var per=(t*(1-RRF)-p*(1+RRF))/rr,x=(p*(1+RRF)-per)/(1-RRF);return x>0&&x<p?flo(x,tick):""}
 function rrFix(){
   var p=oPx(),x=parseFloat($("ox").value);
   if(O.f&&p>0&&x>0&&x<p)$("ot").value=flo(rrTarget(p,x,O.rr),O.f.tick);
@@ -1913,7 +1914,7 @@ function oLoad(){
   if(!sym){O.sym="";O.f=null;O.last=0;O.book=null;$("opx").textContent="";chSetSym(CHS.od,"");oChips();oCalc();return}
   if(O.sym===sym&&O.f)return;
   if(CHS.od.sym!==sym){if(snap&&(assetOf(sym)||snap.px[sym+"USDT"]))chSetSym(CHS.od,sym);else chSetSym(CHS.od,"")}
-  if(O.sym&&O.sym!==sym){$("ox").value="";$("ot").value="";O.rd=true}
+  if(O.sym&&O.sym!==sym){$("ox").value="";$("ot").value="";O.rd=true;O.sd=false}
   O.sym=sym;O.f=null;O.book=null;$("opx").textContent="جارٍ جلب السعر…";oAv();
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false),call("/api/v3/depth",{symbol:sym+"USDT",limit:50},false).catch(function(){return null})]).then(function(r){
     if(O.sym!==sym)return;
@@ -2286,7 +2287,7 @@ document.addEventListener("click",function(ev){
 });
 $("sheet").addEventListener("click",function(ev){if(ev.target===$("sheet"))closeSheet()});
 document.addEventListener("input",function(ev){var el=ev.target,k=el.getAttribute&&el.getAttribute("data-rg");if(k)rgApply(k,+el.value)});
-$("sheet").addEventListener("input",function(ev){var id=ev.target.id||"";if(id.indexOf("pr_")===0){if(id==="pr_x")prFix();else if(id==="pr_t"&&PR){var x8=parseFloat($("pr_x").value),t8=parseFloat($("pr_t").value);if(x8>0&&x8<PR.last&&t8>PR.last){O.rr=Math.round(rrOf(PR.last,x8,t8)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}prCalc()}else if(id.indexOf("ed_")===0)edCalc();else if(id==="sw_v")swBoxInput()});
+$("sheet").addEventListener("input",function(ev){var id=ev.target.id||"";if(id.indexOf("pr_")===0){if(id==="pr_x"){PR.sd=false;prFix()}else if(id==="pr_t"&&PR){var x8=parseFloat($("pr_x").value),t8=parseFloat($("pr_t").value),h8=x8>0&&x8<PR.last;if(t8>PR.last&&(!h8||PR.sd)){var sx8=rrStop(PR.last,t8,O.rr,PR.f.tick);if(sx8){$("pr_x").value=sx8;PR.sd=true}}else if(h8&&t8>PR.last){O.rr=Math.round(rrOf(PR.last,x8,t8)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}prCalc()}else if(id.indexOf("ed_")===0)edCalc();else if(id==="sw_v")swBoxInput()});
 
 $("diag").onclick=function(){
   var out=$("diagout");out.hidden=false;out.textContent="…";
@@ -2357,15 +2358,15 @@ document.addEventListener("click",function(ev){
 $("calc").addEventListener("input",calcRun);
 $("lad").addEventListener("input",function(ev){L.rows=null;var id=ev.target.id;if(id==="lv"||id==="lq")L.rd=false;if(id==="lv")L.ed="v";else if(id==="lq")L.ed="q";else if(id==="lp1"||id==="lp2")L.auto=false;else if(id==="ls"){clearTimeout(lTm);lTm=setTimeout(lLoad,450)}
   if(id==="lrr"){rrRisk(parseFloat($("lrr").value));L.rd=true;lrAuto()}
-  else if(id==="lg"){var a9=lAvg(),x9=parseFloat($("lx").value),t9=parseFloat($("lg").value);if(a9>0&&x9>0&&x9<a9&&t9>a9){O.rr=Math.round(rrOf(a9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr))}}
-  else if(id==="lx"||id==="lp1"||id==="lp2"||id==="ln"||id==="lcus"){lrFix();lrAuto()}
+  else if(id==="lg"){var a9=lAvg(),x9=parseFloat($("lx").value),t9=parseFloat($("lg").value),h9=a9>0&&x9>0&&x9<a9;if(L.f&&a9>0&&t9>a9&&(!h9||L.sd)){var sx9=rrStop(a9,t9,O.rr,L.f.tick);if(sx9){$("lx").value=sx9;L.sd=true;lrAuto()}}else if(h9&&t9>a9){O.rr=Math.round(rrOf(a9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr))}}
+  else if(id==="lx"||id==="lp1"||id==="lp2"||id==="ln"||id==="lcus"){if(id==="lx")L.sd=false;lrFix();lrAuto()}
   ladHint();if(id==="lv"||id==="lq")lRgSync()});
 $("rcapin").addEventListener("change",function(){var v=parseFloat($("rcapin").value);if(v>0){LS.s("rcap",String(v));render()}});
 try{var cs=JSON.parse(LS.g("calc")||"{}");CIDS.forEach(function(i){if(cs[i]!=null)$(i).value=cs[i]})}catch(e){}
 $("jr").addEventListener("change",function(ev){var t=ev.target;if(t.getAttribute&&t.getAttribute("data-jt")){var k=t.getAttribute("data-jt"),v=t.value.trim();if(v)JN[k]=v;else delete JN[k];LS.s("jnotes",JSON.stringify(JN))}});
 applyTheme();
 setTimeout(tkHashImport,300);
-$("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov")O.ed="v";else if(id==="oq")O.ed="q";if(id==="opc"){var pv=parseFloat($("opc").value);if(isFinite(pv))oPcSet(pv);return}if(id==="ox"){rrFix();rrAuto()}else if(id==="ot"){var p9=oPx(),x9=parseFloat($("ox").value),t9=parseFloat($("ot").value);if(p9>0&&x9>0&&x9<p9&&t9>p9){O.rr=Math.round(rrOf(p9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}else if(id==="orr"){rrRisk(parseFloat($("orr").value));O.rd=true;rrAuto()}if(id==="op"){rrFix();rrAuto()}if(id==="ov"||id==="oq")O.rd=false;if(id==="ov"||id==="oq"||id==="op")oSync();if(id==="ov"||id==="oq")oRgSync();oCalc()}});
+$("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov")O.ed="v";else if(id==="oq")O.ed="q";if(id==="opc"){var pv=parseFloat($("opc").value);if(isFinite(pv))oPcSet(pv);return}if(id==="ox"){O.sd=false;rrFix();rrAuto()}else if(id==="ot"){var p9=oPx(),x9=parseFloat($("ox").value),t9=parseFloat($("ot").value),has9=p9>0&&x9>0&&x9<p9;if(O.f&&p9>0&&t9>p9&&(!has9||O.sd)){var sx=rrStop(p9,t9,O.rr,O.f.tick);if(sx){$("ox").value=sx;O.sd=true;rrAuto()}}else if(has9&&t9>p9){O.rr=Math.round(rrOf(p9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}else if(id==="orr"){rrRisk(parseFloat($("orr").value));O.rd=true;rrAuto()}if(id==="op"){rrFix();rrAuto()}if(id==="ov"||id==="oq")O.rd=false;if(id==="ov"||id==="oq"||id==="op")oSync();if(id==="ov"||id==="oq")oRgSync();oCalc()}});
 $("rf").onclick=refresh;
 $("save").onclick=function(){var k=$("k").value.trim(),s=$("s").value.trim();if(!k||!s){err("أدخل المفتاح والسر");return}LS.s("bk",k);LS.s("bs",s);var cv=parseFloat($("cap").value);if(cv>0)LS.s("cap",String(cv));PERM=null;$("k").value="";$("s").value="";err("");forceCfg=false;show();refresh()};
 $("clr").onclick=function(){LS.d("bk");LS.d("bs");CAN=false;PERM=null;$("perm").hidden=true;LS.d("snap");LS.d("avg");snap=null;AVG={};forceCfg=false;err("");show()};
