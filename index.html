@@ -178,7 +178,7 @@ h3.plain{margin-bottom:6px}
     <div id="osum"></div>
     <div id="oerr"></div>
     <button class="go" id="orev" style="width:100%;margin-top:6px">مراجعة الأمر</button>
-    <div class="note">الوقف والهدف يُحفظان كخطة حماية تفعّلها من نافذة العملة.</div>
+    <div class="note">عند وضع الوقف والهدف تُفعَّل الحماية تلقائياً بعد اكتمال الشراء.</div>
   </div>
   <div id="stg" class="c" hidden><h3 class="plain">المظهر</h3>
     <label>المظهر</label><div class="seg"><button data-th="auto">تلقائي</button><button data-th="light">فاتح</button><button data-th="dark">داكن</button></div>
@@ -266,7 +266,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 51</div>
+<div class="note" style="text-align:center" id="foot">النسخة 52</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -313,7 +313,7 @@ function hmac(key,msg){
 /* --- api --- */
 function creds(){return {k:LS.g("bk"),s:LS.g("bs")}}
 var WSU=["wss://ws-api.binance.com:443/ws-api/v3","wss://ws-api.binance.com:9443/ws-api/v3"];
-var WSM={"/api/v3/account":"account.status","/api/v3/openOrders":"openOrders.status","/api/v3/myTrades":"myTrades","POST /api/v3/order":"order.place","DELETE /api/v3/order":"order.cancel","POST /api/v3/order/test":"order.test","POST /api/v3/order/cancelReplace":"order.cancelReplace","POST /api/v3/orderList/oco":"orderList.place.oco","DELETE /api/v3/orderList":"orderList.cancel","DELETE /api/v3/openOrders":"openOrders.cancelAll"};
+var WSM={"/api/v3/account":"account.status","/api/v3/openOrders":"openOrders.status","/api/v3/myTrades":"myTrades","POST /api/v3/order":"order.place","DELETE /api/v3/order":"order.cancel","POST /api/v3/order/test":"order.test","POST /api/v3/order/cancelReplace":"order.cancelReplace","POST /api/v3/orderList/oco":"orderList.place.oco","POST /api/v3/orderList/opoco":"orderList.place.opoco","DELETE /api/v3/orderList":"orderList.cancel","DELETE /api/v3/openOrders":"openOrders.cancelAll"};
 var SOCK=null,SOCKP=null,PEND={},SEQ=0,BAD={};
 function sockOpen(i){
   i=i||0;
@@ -432,7 +432,7 @@ var PLAN=(function(){try{return JSON.parse(LS.g("plan")||"{}")}catch(e){return{}
 function planSave(){LS.s("plan",JSON.stringify(PLAN))}
 function ordRow(o,last){
   var buy=o.side==="BUY",pr=opx(o),d=last?(pr/last-1)*100:null,kd=ordKind(o);
-  return '<div class="row" '+(CAN?'data-ed="'+o.id+'" style="cursor:pointer"':'')+'><div class="l"><b><span class="tag '+(buy?"tb":"ts")+'" style="margin:0">'+(buy?"شراء":"بيع")+'</span>'+(kd?' <span class="tag g" style="margin:0">'+kd+'</span>':'')+(o.lid?' <span class="flat" style="font-weight:400;font-size:.76rem">مرتبط OCO</span>':'')+'</b><small><span class="n">'+qt(o.qty)+'</span>'+(isTrig(o)&&o.price&&o.price!==o.sp?' · تنفيذ عند <span class="n">'+px(o.price)+'</span>':'')+'</small></div><div class="r"><span class="n"><b>'+px(pr)+'</b></span> <small class="flat"><span class="n">'+(d==null?"":pc(d))+'</span></small>'+(CAN?' <button class="sm" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'">إلغاء</button>':'')+'</div></div>';
+  return '<div class="row" '+(CAN?'data-ed="'+o.id+'" style="cursor:pointer"':'')+'><div class="l"><b><span class="tag '+(buy?"tb":"ts")+'" style="margin:0">'+(buy?"شراء":"بيع")+'</span>'+(kd?' <span class="tag g" style="margin:0">'+kd+'</span>':'')+(o.lid?' <span class="flat" style="font-weight:400;font-size:.76rem">'+(o.side==="BUY"?'مع حماية تلقائية':o.ps?'حماية معلّقة':'مرتبط OCO')+'</span>':'')+'</b><small>'+(o.ps?'تُفعَّل بعد اكتمال الشراء':'<span class="n">'+qt(o.qty)+'</span>')+(isTrig(o)&&o.price&&o.price!==o.sp?' · تنفيذ عند <span class="n">'+px(o.price)+'</span>':'')+'</small></div><div class="r"><span class="n"><b>'+px(pr)+'</b></span> <small class="flat"><span class="n">'+(d==null?"":pc(d))+'</span></small>'+(CAN?' <button class="sm" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'">إلغاء</button>':'')+'</div></div>';
 }
 function render(){
   if(!snap)return;
@@ -534,7 +534,7 @@ function refresh(){
     return (need.length?priceMap(need):Promise.resolve({})).then(function(extra){
       var px={},k;for(k in have)px[k]=have[k];for(k in extra)px[k]=extra[k];
       var assets=held.map(function(h){var p=STABLE[h.sym]?1:(px[h.sym+"USDT"]||0);return{sym:h.sym,qty:h.qty,free:h.free,locked:h.locked,price:p,val:h.qty*p}});
-      var oldSnap=snap;snap={t:Date.now(),usdt:usdt,usdtFree:ufree,usdtLocked:ulock,assets:assets,px:px,orders:ords.map(function(o){return{id:o.orderId,symbol:o.symbol,side:o.side,price:+o.price,qty:+o.origQty-+o.executedQty,t:o.type||"LIMIT",sp:+o.stopPrice||0,lid:+o.orderListId>0?+o.orderListId:0,tif:o.timeInForce||""}})};
+      var oldSnap=snap;snap={t:Date.now(),usdt:usdt,usdtFree:ufree,usdtLocked:ulock,assets:assets,px:px,orders:ords.map(function(o){return{id:o.orderId,symbol:o.symbol,side:o.side,price:+o.price,qty:+o.origQty-+o.executedQty,t:o.type||"LIMIT",sp:+o.stopPrice||0,lid:+o.orderListId>0?+o.orderListId:0,tif:o.timeInForce||"",ps:o.status==="PENDING_NEW"?1:0}})};
       tkFlow(oldSnap,snap);mkLoad(true);LS.s("snap",JSON.stringify(snap));forceCfg=false;show();render();if(!PERM)checkPerm();autoAvail();avgSync();if(tkSync(false))render();
     });
   }).catch(function(e){
@@ -1135,6 +1135,12 @@ function prSend(){
 function editSheet(id){
   var o=snap.orders.filter(function(x){return String(x.id)===String(id)})[0];if(!o)return;
   var sym=o.symbol.replace(/USDT$/,"");
+  if(o.lid&&(o.ps||(o.side==="BUY"&&snap.orders.some(function(x){return x.lid===o.lid&&x.ps})))){
+    var lg0=snap.orders.filter(function(x){return x.lid===o.lid}),last0=snap.px[o.symbol]||0;
+    openSheet('<h3 style="margin:0 0 4px">شراء مع حماية تلقائية · '+esc(sym)+'</h3><div class="sub" style="margin:0 0 8px">تُفعَّل الحماية عند اكتمال الشراء، وأيّهما نُفِّذ ألغى الآخر.</div>'+lg0.map(function(x){return ordRow(Object.assign({},x),last0).replace(/data-ed="[^"]*" style="cursor:pointer"/,"").replace(/<button[^>]*data-x[^>]*>[^<]*<\/button>/,"")}).join("")+
+      '<div style="display:flex;gap:8px;margin-top:12px"><button class="sell" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'" style="flex:1">إلغاء الكل</button><button id="tclose" style="flex:1">رجوع</button></div>');
+    return;
+  }
   if(o.lid){
     var legs=snap.orders.filter(function(x){return x.lid===o.lid}),last=snap.px[o.symbol]||0;
     openSheet('<h3 style="margin:0 0 4px">حماية مرتبطة (OCO) · '+esc(sym)+'</h3><div class="sub" style="margin:0 0 8px">أيّهما نُفِّذ ألغى الآخر.</div>'+legs.map(function(x){return ordRow(Object.assign({},x),last).replace(/data-ed="[^"]*" style="cursor:pointer"/,"").replace(/<button[^>]*data-x[^>]*>[^<]*<\/button>/,"")}).join("")+
@@ -1212,7 +1218,7 @@ var SW=null,SWRUN=false;
 function swJ(){try{var j=JSON.parse(LS.g("swp")||"null");return j&&j.coins?j:null}catch(e){return null}}
 function swSave(j){if(j&&Object.keys(j.coins).length)LS.s("swp",JSON.stringify(j));else LS.d("swp")}
 function swUnits(sym){
-  var k=sym+"USDT",arr=snap.orders.filter(function(o){return o.symbol===k&&o.side==="SELL"}),u=[],g={};
+  var k=sym+"USDT",arr=snap.orders.filter(function(o){return o.symbol===k&&o.side==="SELL"&&!o.ps}),u=[],g={};
   arr.forEach(function(o){if(o.lid){(g[o.lid]=g[o.lid]||[]).push(o)}else u.push({oco:false,id:o.id,lid:0,legs:[o],qty:o.qty})});
   Object.keys(g).forEach(function(l){var lg=g[l].slice().sort(function(a,b){return opx(b)-opx(a)});u.push({oco:true,id:0,lid:+l,legs:lg,qty:lg.reduce(function(m,o){return Math.max(m,o.qty)},0)})});
   return u.map(function(x){x.st="orig";x.kind=x.oco?"oco":(x.legs[0].t||"LIMIT");return x});
@@ -1862,7 +1868,7 @@ function oLoad(){
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false),call("/api/v3/depth",{symbol:sym+"USDT",limit:50},false).catch(function(){return null})]).then(function(r){
     if(O.sym!==sym)return;
     var f={};r[0].symbols[0].filters.forEach(function(x){f[x.filterType]=x});
-    O.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0)};
+    O.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed)};
     O.last=+r[1].price;
     var bk=r[2];O.book=bk&&bk.bids&&bk.asks&&bk.bids.length&&bk.asks.length?{bids:bk.bids,asks:bk.asks,bid:+bk.bids[0][0],ask:+bk.asks[0][0]}:null;
     $("opx").innerHTML='السعر الحالي <span class="n">'+px(O.last)+'</span> · <span style="text-decoration:underline;cursor:pointer" data-orf="1">تحديث</span>';
@@ -1928,6 +1934,23 @@ function oCalc(){
   h+='</div><div style="margin:6px 0 4px">'+ck.map(function(c){return '<div style="font-size:.84rem;padding:2px 0"><span class="'+(c[0]===1?"up":c[0]===0?"down":"")+'" style="'+(c[0]===2?"color:var(--gold)":"")+'">'+(c[0]===1?"✓":c[0]===0?"✗":"!")+'</span> '+c[1]+'</div>'}).join("")+'</div>';
   o.innerHTML=h;
 }
+function protPrep(f,last,x,t,q){
+  var off=0.5,xs=flo(x,f.tick),xl=flo(x*(1-off/100),f.tick),ts=flo(t,f.tick),e=null,qn=q*0.997;
+  if(!(x>0&&t>0))e="أدخل الوقف والهدف";
+  else if(!(x<last))e="الوقف يجب أن يكون أقل من السعر الحالي، وإلا سيُفعَّل فوراً";
+  else if(!(t>last))e="الهدف يجب أن يكون أعلى من السعر الحالي";
+  else if(qn*+xl<f.minN)e="قيمة أمر الوقف أقل من الحد الأدنى ("+f.minN+"$)";
+  else if(qn*+ts<f.minN)e="قيمة أمر الهدف أقل من الحد الأدنى ("+f.minN+"$)";
+  else if(f.dn&&+xl<last*f.dn*1.03)e="سعر الوقف بعيد جداً عن السوق وترفضه بايننس";
+  else if(f.up&&+ts>last*f.up*0.97)e="سعر الهدف بعيد جداً عن السوق وترفضه بايننس";
+  return{e:e,xs:xs,xl:xl,ts:ts};
+}
+function protPlace(sym,q,x,t,f,last,id){
+  var k=sym+"USDT",pp=protPrep(f,last,x,t,q/0.997),prm;
+  if(pp.e)return Promise.reject(new Error(pp.e));
+  var qs=flo(q,f.step);if(+qs<f.minQ)return Promise.reject(new Error("الكمية أقل من الحد الأدنى"));
+  return call("/api/v3/orderList/oco",{symbol:k,side:"SELL",quantity:qs,aboveType:"LIMIT_MAKER",abovePrice:pp.ts,belowType:"STOP_LOSS_LIMIT",belowStopPrice:pp.xs,belowPrice:pp.xl,belowTimeInForce:"GTC",listClientOrderId:id,newOrderRespType:"ACK"},true,0,"POST");
+}
 function oReview(){
   var er=$("oerr");er.innerHTML="";
   function bad(m){er.innerHTML='<div class="err">'+m+'</div>'}
@@ -1936,11 +1959,17 @@ function oReview(){
   var r=checkOrder(O.sym,O.side,O.f,O.last,oPx(),parseFloat($("oq").value),parseFloat($("ov").value),{type:O.type==="MARKET"?"MARKET":(O.mk?"MAKER":"LIMIT"),ed:O.ed});
   if(r.e)return bad(r.e);
   var plan=null;if(O.side==="BUY"){var px_=parseFloat($("ox").value),pt_=parseFloat($("ot").value);if(px_>0||pt_>0)plan={x:px_>0?px_:0,t:pt_>0?pt_:0}}
+  var auto=null;
+  if(O.side==="BUY"&&plan&&plan.x>0&&plan.t>0&&(O.type==="MARKET"||O.f.opoco)){
+    var ap=protPrep(O.f,O.type==="MARKET"?O.last:+r.o.price,plan.x,plan.t,r.o.qty);
+    if(ap.e)return bad(ap.e);
+    auto={xs:ap.xs,xl:ap.xl,ts:ap.ts,m:O.type==="MARKET"};
+  }
   er.innerHTML='<div class="sub">جارٍ التحقق من بايننس…</div>';
-  testOrder(buildOrder(O.sym,O.side,r.o,"t"+Date.now().toString(36))).then(function(msg){
+  (auto&&!auto.m?Promise.resolve(null):testOrder(buildOrder(O.sym,O.side,r.o,"t"+Date.now().toString(36)))).then(function(msg){
     er.innerHTML="";
     if(msg)return bad("بايننس سترفض هذا الأمر: "+esc(msg));
-    T={sym:O.sym,side:O.side,f:O.f,last:O.last,o:r.o,page:1,plan:plan,warn:r.warn};
+    T={sym:O.sym,side:O.side,f:O.f,last:O.last,o:r.o,page:1,plan:plan,warn:r.warn,auto:auto};
     openSheet('<h3 style="margin:0 0 10px">مراجعة الأمر</h3><div id="tin">'+confirmHtml(r.hc,r.dev)+'</div>');
   });
 }
@@ -2037,7 +2066,8 @@ function confirmHtml(hc,dev){
   var b=T.side==="BUY",o=T.o,mk=o.type==="MARKET";
   var how=mk?'أمر سوق: يُنفَّذ فوراً، والسعر المعروض تقديري.':o.type==="MAKER"?'أمر Limit صانع فقط: يُرفض إن كان سيُنفَّذ فوراً.':'أمر Limit: يبقى مفتوحاً حتى يُنفَّذ أو تلغيه.';
   return (hc.msg?'<div class="warn">'+hc.msg+'</div>':'')+(T.warn?'<div class="warn">'+T.warn+'</div>':'')+'<div class="sum"><b>'+(b?"شراء":"بيع")+' '+esc(T.sym)+(mk?' · سوق':'')+'</b><br>'+(o.quote?'المبلغ: <b><span class="n">'+usd(o.quote)+'</span></b><br>الكمية التقديرية: <span class="n">'+o.qty+'</span><br>':'الكمية: <span class="n">'+o.qty+'</span><br>')+(mk?'السعر التقديري: <span class="n">'+o.price+'</span><br>':'السعر: <span class="n">'+o.price+'</span> ('+pc(dev)+' عن الحالي)<br>')+(o.quote?'':'القيمة: <b><span class="n">'+usd(o.val)+'</span></b><br>')+'<span class="age">'+how+'</span></div>'+
-   '<div id="terr"></div><div style="display:flex;gap:8px"><button class="'+(b?"buy":"sell")+'" id="tgo">تأكيد '+(b?"الشراء":"البيع")+'</button><button id="tback">'+(T.page?"إغلاق":"رجوع")+'</button></div>';
+   (T.auto?'<div class="sum"><b>حماية تلقائية</b><br>وقف عند <span class="n">'+T.auto.xs+'</span> (تنفيذ <span class="n">'+T.auto.xl+'</span>) · هدف عند <span class="n">'+T.auto.ts+'</span><br><span class="age">'+(T.auto.m?'تُوضع مباشرة بعد التنفيذ':'تُفعَّل عند اكتمال الشراء')+'، وأيّهما نُفِّذ ألغى الآخر</span></div>':'')+
+   '<div id="terr"></div><div style="display:flex;gap:8px"><button class="'+(b?"buy":"sell")+'" id="tgo">تأكيد '+(b?"الشراء":"البيع")+(T.auto?" مع الحماية":"")+'</button><button id="tback">'+(T.page?"إغلاق":"رجوع")+'</button></div>';
 }
 function review(){
   var r=checkOrder(T.sym,T.side,T.f,T.last,parseFloat($("tp").value),parseFloat($("tq").value),parseFloat($("tv").value));
@@ -2059,10 +2089,35 @@ function testOrder(prm){
 }
 function send(){
   var b=$("tgo");if(b.disabled)return;b.disabled=true;b.textContent="…";
-  var id="app"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),o=T.o,mk=o.type==="MARKET";
-  call("/api/v3/order",buildOrder(T.sym,T.side,o,id),true,0,"POST").then(function(r){
+  var id="app"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),o=T.o,mk=o.type==="MARKET",au=T.auto;
+  if(au&&!mk){
+    var sy=T.sym,wt=o.type==="MAKER"?"LIMIT_MAKER":"LIMIT",prm={symbol:sy+"USDT",workingType:wt,workingSide:"BUY",workingPrice:o.price,workingQuantity:o.qty,pendingSide:"SELL",pendingAboveType:"LIMIT_MAKER",pendingAbovePrice:au.ts,pendingBelowType:"STOP_LOSS_LIMIT",pendingBelowStopPrice:au.xs,pendingBelowPrice:au.xl,pendingBelowTimeInForce:"GTC",listClientOrderId:"ap"+id,newOrderRespType:"ACK"};
+    if(wt==="LIMIT")prm.workingTimeInForce="GTC";
+    return call("/api/v3/orderList/opoco",prm,true,0,"POST").then(function(){
+      $("tin").innerHTML='<div class="sum up">تم إرسال الأمر مع الحماية ✓</div><div class="sub" style="margin:8px 0">وقف '+N(au.xs)+' · هدف '+N(au.ts)+'. تُفعَّل الحماية تلقائياً عند اكتمال الشراء.</div><button id="tclose" style="width:100%;margin-top:8px">إغلاق</button>';
+      busy=false;refresh();
+    },function(e){
+      $("terr").innerHTML='<div class="err">'+(e.code===-2015||e.code===-2014||/permission/i.test(e.message)?"مفتاحك لا يملك صلاحية التداول. فعّلها من بايننس.":"رفضته بايننس: "+esc(e.message))+'</div>';b.disabled=false;b.textContent="إعادة المحاولة";
+    });
+  }
+  var bo=buildOrder(T.sym,T.side,o,id);if(mk&&au)bo.newOrderRespType="FULL";
+  call("/api/v3/order",bo,true,0,"POST").then(function(r){
     var m='تم إرسال الأمر ✓',ex='';
     if(mk&&r&&+r.executedQty>0){var cq=+r.cummulativeQuoteQty,eq=+r.executedQty;m='تم التنفيذ ✓<br><span class="age">'+N(qt(eq))+' بمتوسط '+N(px(cq/eq))+' · القيمة '+N(usd(cq))+(r.status&&r.status!=="FILLED"?' · الحالة '+esc(r.status):'')+'</span>'}
+    if(mk&&au&&r&&+r.executedQty>0){
+      var sy2=T.sym,pl=T.plan,eq2=+r.executedQty,cm=0;(r.fills||[]).forEach(function(f){if(f.commissionAsset===sy2)cm+=+f.commission});
+      var q2=cm>0?eq2-cm:eq2*0.999,avg2=+r.cummulativeQuoteQty/eq2;
+      $("tin").innerHTML='<div class="sum up">'+m+'</div><div class="sub" style="margin:8px 0">جارٍ وضع الحماية…</div>';
+      busy=false;
+      return protPlace(sy2,q2,pl.x,pl.t,T.f,avg2,"ap"+id).then(function(){
+        $("tin").innerHTML='<div class="sum up">'+m+'</div><div class="sum up" style="margin-top:8px">وُضعت الحماية ✓<br><span class="age">وقف '+N(px(pl.x))+' · هدف '+N(px(pl.t))+'</span></div><button id="tclose" style="width:100%;margin-top:8px">إغلاق</button>';
+        refresh();
+      },function(e){
+        PLAN[sy2]=pl;planSave();
+        $("tin").innerHTML='<div class="sum up">'+m+'</div><div class="err" style="margin-top:8px">تعذّر وضع الحماية: '+esc(e.message)+'</div><button class="go" data-prot="'+esc(sy2)+'" style="width:100%;margin-top:8px">ضع الحماية يدوياً</button><button id="tclose" style="width:100%;margin-top:8px">إغلاق</button>';
+        refresh();
+      });
+    }
     if(T.plan&&T.side==="BUY"){PLAN[T.sym]=T.plan;planSave();
       ex='<div class="sub" style="margin:8px 0">حُفظت خطة الحماية: '+(T.plan.x?'وقف '+N(px(T.plan.x)):'')+(T.plan.x&&T.plan.t?' · ':'')+(T.plan.t?'جني الأرباح '+N(px(T.plan.t)):'')+'</div>'+(mk?'<button class="go" data-prot="'+esc(T.sym)+'" style="width:100%;margin-bottom:8px">ضع الحماية الآن</button>':'<div class="sub">بعد تنفيذ الأمر تظهر «حماية جاهزة» على العملة في «المحفظة».</div>')}
     $("tin").innerHTML='<div class="sum up">'+m+'</div>'+ex+'<button id="tclose" style="width:100%;margin-top:8px">إغلاق</button>';
