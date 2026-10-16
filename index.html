@@ -260,7 +260,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 49</div>
+<div class="note" style="text-align:center" id="foot">النسخة 50</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -610,13 +610,22 @@ function tkHashImport(){
   }catch(e){}
   try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
 }
+function snapOk(m){
+  if(!snap||Date.now()-snap.t>(m?6e5:12e4))return false;
+  var bad=snap.assets.some(function(a){return !STABLE[a.sym]&&!(a.price>0)});
+  return !bad&&equity()>0;
+}
 function tkSync(manual){
-  if(!snap)return false;var d=TK(),bal=Math.round(equity()),now=Date.now(),t=dayKey(now),y=dayKey(now-864e5),ch=false,iso=new Date(now).toISOString();d.entries=d.entries||{};
+  if(!snapOk(manual))return false;var d=TK(),bal=Math.round(equity()),now=Date.now(),t=dayKey(now),y=dayKey(now-864e5),ch=false,iso=new Date(now).toISOString();d.entries=d.entries||{};
   var rec=function(){return{balance:bal,ts:iso,src:"a"}};
+  Object.keys(d.entries).forEach(function(k){var e=d.entries[k];if(e&&e.src==="a"&&!(e.balance>0)){delete d.entries[k];ch=true}});
+  var ks=Object.keys(d.entries).sort(),pv=ks.length?d.entries[ks[ks.length-1]].balance:0;
   if(manual){d.entries[t]=rec();ch=true}
   else{
-    var last=LS.g("tkday");LS.s("tkday",t);
+    var last=LS.g("tkday");
     if(last!==t&&Object.keys(d.entries).length){
+      if(pv>0&&Math.abs(bal-pv)/pv>0.5){LS.s("tkday",t);return ch&&(LS.s("trk",JSON.stringify(d)),true)}
+      LS.s("tkday",t);
       var md=new Date(now);md.setHours(0,0,0,0);var ey=d.entries[y];
       if(!ey||(ey.src==="a"&&now-md.getTime()<18e5)){d.entries[y]=rec();ch=true}
     }
@@ -2103,7 +2112,7 @@ document.addEventListener("click",function(ev){
     if(p0&&el.getAttribute("data-tkf")==="y"){var d0=TK();d0.cashflows=d0.cashflows||{};var now0=new Date(p0.t);d0.cashflows[dayKey(p0.t)+"_"+Math.random().toString(36).slice(2,8)]={date:dayKey(p0.t),amount:p0.a,ts:now0.toISOString()};LS.s("trk",JSON.stringify(d0))}
     render();return}
   if(t.id==="tkok"){if(TKIMP){LS.s("trk",JSON.stringify(TKIMP));TKIMP=null;try{$("trf").contentWindow.location.reload()}catch(e){}}closeSheet();render();return}
-  if(t.id==="tksync"){if(tkSync(true)){render();$("tksub").textContent="تمت المزامنة ✓"}return}
+  if(t.id==="tksync"){if(tkSync(true)){render();$("tksub").textContent="تمت المزامنة ✓"}else $("tksub").textContent="الأرصدة غير محدّثة، اضغط تحديث ثم أعد المحاولة";return}
   if(t.id==="tkexp"){$("tkjs").value=LS.g("trk")||"{}";return}
   if(t.id==="tkimp"){
     if(!t.dataset.c){t.dataset.c="1";t.textContent="اضغط للتأكيد";setTimeout(function(){delete t.dataset.c;t.textContent="استيراد (يستبدل الحالي)"},4000);return}
