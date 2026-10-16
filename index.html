@@ -266,7 +266,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 52</div>
+<div class="note" style="text-align:center" id="foot">النسخة 53</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1658,7 +1658,7 @@ document.addEventListener("click",function(ev){
   var id=el.getAttribute("data-chrf");if(id){return chLoad(CHS[id],true)}
   id=el.getAttribute("data-chx");if(id){CHS[id].cr=null;return chDraw(CHS[id])}
   var u=el.getAttribute("data-chuse");
-  if(u!==null){var pr=parseFloat(u);if(!O.f||!(pr>0))return;O.type="LIMIT";O.mk=false;oChips();$("op").value=flo(pr,O.f.tick);oSync();oCalc();CHS.od.cr=null;chDraw(CHS.od);return}
+  if(u!==null){var pr=parseFloat(u);if(!O.f||!(pr>0))return;O.type="LIMIT";O.mk=false;oChips();$("op").value=flo(pr,O.f.tick);rrFix();rrAuto();oSync();oCalc();CHS.od.cr=null;chDraw(CHS.od);return}
   var g=el.getAttribute("data-chgo");if(g){var pp=g.split("|");closeSheet();oOpen(CD.sym,pp[0],{px:parseFloat(pp[1])})}
 });
 chNew("cd","",function(){var sym=CHS.cd.sym,a=snap&&snap.assets.filter(function(x){return x.sym===sym})[0],k=sym+"USDT";
@@ -1766,7 +1766,7 @@ function rgApply(k,v){
   if(inp){inp.value=v;inp.style.setProperty("--p",v+"%")}
   var rv=$("rgv_"+k);if(rv)rv.textContent=v+"%";
   var f=v/100;
-  if(k==="o"){O.pc=v;
+  if(k==="o"){O.pc=v;O.qlink=false;
     if(v<=0){$("oq").value="";$("ov").value=""}
     else if(O.side==="BUY"){$("ov").value=(Math.floor(freeUsdt()*f*100)/100).toFixed(2);O.ed="v";oSync()}
     else{var hq=assetOf($("os").value.trim().toUpperCase());if(hq&&O.f){$("oq").value=flo(freeQ(hq)*f,O.f.step);O.ed="q";oSync()}}
@@ -1799,7 +1799,7 @@ function oPcShow(){
 }
 function oPcSet(v){
   if(!O.f||!(O.last>0)||!isFinite(v))return;
-  $("op").value=flo(O.last*(1+v/100),O.f.tick);rrFix();oSync();oCalc();
+  $("op").value=flo(O.last*(1+v/100),O.f.tick);rrFix();rrAuto();oSync();oCalc();
 }
 var RRL=[1,1.5,2,3];
 O.rr=(function(){var v=parseFloat(LS.g("orr_r"));return v>0?v:2})();O.rm=LS.g("orm")==="d"?"d":"p";O.rkv={p:1,d:20};
@@ -1811,6 +1811,17 @@ function rrFix(){
   var p=oPx(),x=parseFloat($("ox").value);
   if(O.f&&p>0&&x>0&&x<p)$("ot").value=flo(rrTarget(p,x,O.rr),O.f.tick);
 }
+function rrAmt(){var eq=equity();return O.rm==="p"?eq*(O.rkv.p||0)/100:(O.rkv.d||0)}
+function rrSq(p){var x=parseFloat($("ox").value),a=rrAmt();return p>0&&x>0&&x<p&&a>0?a/((p-x)+(p+x)*RRF):0}
+function rrAuto(){
+  if(!O.qlink)return;var q=rrSq(oPx());
+  if(q>0&&O.f){$("oq").value=flo(q,O.f.step);O.ed="q";oSync();oRgSync()}
+}
+function rrRisk(v){
+  var eq=equity();v=v>0?v:0;O.rkv[O.rm]=v;
+  if(eq>0){if(O.rm==="p")O.rkv.d=Math.round(eq*v)/100;else O.rkv.p=Math.round(v/eq*1e4)/100}
+  LS.s("orkv",JSON.stringify(O.rkv));
+}
 function rrChips(){
   var h=RRL.map(function(v){return '<span class="chip'+(Math.abs(O.rr-v)<0.005?" on":"")+'" data-orrr="'+v+'">'+v+':1</span>'}).join("");
   if(!RRL.some(function(v){return Math.abs(O.rr-v)<0.005}))h+='<span class="chip on" data-orrr="'+O.rr+'">'+O.rr+':1</span>';
@@ -1821,8 +1832,8 @@ function rrCard(p){
   var x=parseFloat($("ox").value),t=parseFloat($("ot").value),bx=$("oxp"),bt=$("otp"),ok=p>0&&x>0&&x<p;
   bx.textContent=x>0&&p>0?(x<p?"−"+((1-x/p)*100).toFixed(2)+"%":"فوق سعر الدخول"):"";
   bt.textContent=t>0&&p>0?(t>p?"+"+((t/p-1)*100).toFixed(2)+"%":"تحت سعر الدخول"):"";
-  var sz=$("orsz"),eq=equity(),amt=O.rm==="p"?eq*(O.rkv.p||0)/100:(O.rkv.d||0);
-  if(ok&&amt>0){var sq=amt/((p-x)+(p+x)*RRF);sz.innerHTML='الحجم المناسب <b class="n">'+(sq>=1?sq.toFixed(0):sq.toPrecision(3))+'</b> <button type="button" class="sm" data-ouse="'+sq+'">اعتمده</button>'}
+  var sz=$("orsz"),sq=rrSq(p);
+  if(sq>0){sz.innerHTML='الحجم المناسب <b class="n">'+(sq>=1?sq.toFixed(0):sq.toPrecision(3))+'</b> '+(O.qlink?'<span class="tag b" style="margin:0">مرتبط</span>':'<button type="button" class="sm" data-ouse="'+sq+'">اعتمده</button>')+(sq*p>freeUsdt()+1e-9&&snap?' <span class="down">فوق السيولة المتاحة</span>':'')}
   else sz.innerHTML=x>0&&x>=p&&p>0?'<span class="down">الوقف يجب أن يكون أقل من سعر الشراء</span>':'';
   var rk=O.side==="BUY"&&ok?{x:x,t:t>p?t:0}:null,key=rk?rk.x+"|"+rk.t+"|"+p:"";
   if(CHS.od._rk!==key){CHS.od._rk=key;CHS.od.rk=rk;chDraw(CHS.od)}
@@ -1842,7 +1853,7 @@ function oChips(){
     $("osyms").innerHTML=ss.map(function(a){return '<span class="chip'+(a.sym===O.sym?" on":"")+'" data-osym="'+esc(a.sym)+'">'+esc(a.sym)+'</span>'}).join("")}
   var bs=document.querySelectorAll("[data-os]");for(var i=0;i<bs.length;i++)bs[i].classList.toggle("on",bs[i].getAttribute("data-os")===O.side);
   bs=document.querySelectorAll("[data-ot]");for(i=0;i<bs.length;i++)bs[i].classList.toggle("on",bs[i].getAttribute("data-ot")===O.type);
-  $("orisk").hidden=O.side!=="BUY";rrChips();$("orr").value=O.rkv[O.rm];
+  $("orisk").hidden=O.side!=="BUY";rrChips();var eq0=equity();if(eq0>0){if(O.rm==="p")O.rkv.d=Math.round(eq0*O.rkv.p)/100;else O.rkv.p=Math.round(O.rkv.d/eq0*1e4)/100}$("orr").value=O.rkv[O.rm];
   $("op").disabled=mk;$("opl").textContent=mk?"السعر التقديري (سوق)":"السعر";
   if(mk&&O.f){var px0=oPx();if(px0>0)$("op").value=flo(px0,O.f.tick)}
   oAv();oPcShow();
@@ -1864,6 +1875,7 @@ function oLoad(){
   if(!sym){O.sym="";O.f=null;O.last=0;O.book=null;$("opx").textContent="";chSetSym(CHS.od,"");oChips();oCalc();return}
   if(O.sym===sym&&O.f)return;
   if(CHS.od.sym!==sym){if(snap&&(assetOf(sym)||snap.px[sym+"USDT"]))chSetSym(CHS.od,sym);else chSetSym(CHS.od,"")}
+  if(O.sym&&O.sym!==sym){$("ox").value="";$("ot").value="";O.qlink=false}
   O.sym=sym;O.f=null;O.book=null;$("opx").textContent="جارٍ جلب السعر…";oAv();
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false),call("/api/v3/depth",{symbol:sym+"USDT",limit:50},false).catch(function(){return null})]).then(function(r){
     if(O.sym!==sym)return;
@@ -1975,7 +1987,7 @@ function oReview(){
 }
 function oOpen(sym,side,opts){
   TAB="trd";SUB.trd="ord";LS.s("tab",TAB);LS.s("sub",JSON.stringify(SUB));
-  O.side=side||"BUY";O.type=(opts&&opts.type)||"LIMIT";O.mk=false;O.book=null;O.after=opts||null;$("os").value=sym||"";$("op").value="";$("oq").value="";$("ov").value="";O.ed="q";O.sym="";O.f=null;
+  O.side=side||"BUY";O.type=(opts&&opts.type)||"LIMIT";O.mk=false;O.book=null;O.after=opts||null;$("os").value=sym||"";$("op").value="";$("oq").value="";$("ov").value="";O.ed="q";O.sym="";O.f=null;$("ox").value="";$("ot").value="";O.qlink=false;
   oChips();enter();oLoad();
 }
 
@@ -2177,8 +2189,8 @@ document.addEventListener("click",function(ev){
     return enter()}
   if((el=t.closest("[data-th]"))){LS.s("theme",el.getAttribute("data-th"));return applyTheme()}
   if(t.id==="allc")return setTab("wal");
-  if((el=t.closest("[data-os]"))){O.side=el.getAttribute("data-os");oChips();oSync();return oCalc()}
-  if((el=t.closest("[data-ot]"))){O.type=el.getAttribute("data-ot");if(O.type==="MARKET")O.mk=false;oChips();oSync();return oCalc()}
+  if((el=t.closest("[data-os]"))){O.side=el.getAttribute("data-os");O.qlink=false;oChips();oSync();return oCalc()}
+  if((el=t.closest("[data-ot]"))){O.type=el.getAttribute("data-ot");if(O.type==="MARKET")O.mk=false;oChips();rrFix();rrAuto();oSync();return oCalc()}
   if(t.closest("[data-omk]")){O.mk=!O.mk;oChips();return oCalc()}
   if((el=t.closest("[data-obk]"))){if(O.book&&O.f){$("op").value=flo(el.getAttribute("data-obk")==="bid"?O.book.bid:O.book.ask,O.f.tick);oSync()}return oCalc()}
   if((el=t.closest("[data-pk]"))){var pk=el.getAttribute("data-pk").split("|");return rgApply(pk[0],+pk[1])}
@@ -2190,9 +2202,9 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-opst]"))){var cur=parseFloat($("opc").value);if(!isFinite(cur))cur=0;var nx=Math.round((cur+(+el.getAttribute("data-opst")))*100)/100;oPcSet(nx);$("opc").value=String(nx);return}
   if((el=t.closest("[data-opp]"))){if(!O.f)return;var pp=O.last*(1+parseFloat(el.getAttribute("data-opp"))/100);$("op").value=flo(pp,O.f.tick);oSync();return oCalc()}
   if(t.closest("[data-oall]"))return
-  if((el=t.closest("[data-ouse]"))){var uq=parseFloat(el.getAttribute("data-ouse"));if(O.f)$("oq").value=flo(uq,O.f.step);else $("oq").value=String(uq);O.ed="q";oSync();oRgSync();return oCalc()}
-  if((el=t.closest("[data-orrr]"))){var rv2=parseFloat(el.getAttribute("data-orrr"));if(rv2>0){O.rr=rv2;LS.s("orr_r",String(rv2));rrFix();rrChips();oCalc()}return}
-  if((el=t.closest("[data-orm]"))){O.rm=el.getAttribute("data-orm");LS.s("orm",O.rm);$("orr").value=O.rkv[O.rm];rrChips();return oCalc()}
+  if((el=t.closest("[data-ouse]"))){var uq=parseFloat(el.getAttribute("data-ouse"));if(O.f)$("oq").value=flo(uq,O.f.step);else $("oq").value=String(uq);O.ed="q";O.qlink=true;oSync();oRgSync();return oCalc()}
+  if((el=t.closest("[data-orrr]"))){var rv2=parseFloat(el.getAttribute("data-orrr"));if(rv2>0){O.rr=rv2;LS.s("orr_r",String(rv2));rrFix();rrAuto();rrChips();oCalc()}return}
+  if((el=t.closest("[data-orm]"))){var nm=el.getAttribute("data-orm");if(nm===O.rm)return;var cv=parseFloat($("orr").value);if(cv>0)rrRisk(cv);O.rm=nm;LS.s("orm",O.rm);var sv=O.rkv[O.rm];$("orr").value=sv>0?String(sv):"";rrChips();return oCalc()}
   if(t.closest("[data-orf]")){O.f=null;return oLoad()}
   if(t.id==="orev")return oReview();
   if(t.id==="jload")return jLoad();
@@ -2305,13 +2317,13 @@ document.addEventListener("click",function(ev){
 });
 
 $("calc").addEventListener("input",calcRun);
-$("lad").addEventListener("input",function(ev){L.rows=null;var id=ev.target.id;if(id==="lv")L.ed="v";else if(id==="lq")L.ed="q";else if(id==="lp1"||id==="lp2")L.auto=false;else if(id==="ls"){clearTimeout(lTm);lTm=setTimeout(lLoad,450)}if(id==="lv"||id==="lq")lRgSync();ladHint()});
+$("lad").addEventListener("input",function(ev){L.rows=null;var id=ev.target.id;if(id==="lv")L.ed="v";else if(id==="lq")L.ed="q";else if(id==="lp1"||id==="lp2")L.auto=false;else if(id==="ls"){clearTimeout(lTm);lTm=setTimeout(lLoad,450)}ladHint();if(id==="lv"||id==="lq")lRgSync()});
 $("rcapin").addEventListener("change",function(){var v=parseFloat($("rcapin").value);if(v>0){LS.s("rcap",String(v));render()}});
 try{var cs=JSON.parse(LS.g("calc")||"{}");CIDS.forEach(function(i){if(cs[i]!=null)$(i).value=cs[i]})}catch(e){}
 $("jr").addEventListener("change",function(ev){var t=ev.target;if(t.getAttribute&&t.getAttribute("data-jt")){var k=t.getAttribute("data-jt"),v=t.value.trim();if(v)JN[k]=v;else delete JN[k];LS.s("jnotes",JSON.stringify(JN))}});
 applyTheme();
 setTimeout(tkHashImport,300);
-$("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov")O.ed="v";else if(id==="oq")O.ed="q";if(id==="opc"){var pv=parseFloat($("opc").value);if(isFinite(pv))oPcSet(pv);return}if(id==="ox"){rrFix()}else if(id==="ot"){var p9=oPx(),x9=parseFloat($("ox").value),t9=parseFloat($("ot").value);if(p9>0&&x9>0&&x9<p9&&t9>p9){O.rr=Math.round(rrOf(p9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}else if(id==="orr"){var rv=parseFloat($("orr").value);O.rkv[O.rm]=rv>0?rv:0;LS.s("orkv",JSON.stringify(O.rkv))}if(id==="op")rrFix();if(id==="ov"||id==="oq"||id==="op")oSync();if(id==="ov"||id==="oq")oRgSync();oCalc()}});
+$("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov")O.ed="v";else if(id==="oq")O.ed="q";if(id==="opc"){var pv=parseFloat($("opc").value);if(isFinite(pv))oPcSet(pv);return}if(id==="ox"){rrFix();rrAuto()}else if(id==="ot"){var p9=oPx(),x9=parseFloat($("ox").value),t9=parseFloat($("ot").value);if(p9>0&&x9>0&&x9<p9&&t9>p9){O.rr=Math.round(rrOf(p9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}else if(id==="orr"){rrRisk(parseFloat($("orr").value));rrAuto()}if(id==="op"){rrFix();rrAuto()}if(id==="ov"||id==="oq")O.qlink=false;if(id==="ov"||id==="oq"||id==="op")oSync();if(id==="ov"||id==="oq")oRgSync();oCalc()}});
 $("rf").onclick=refresh;
 $("save").onclick=function(){var k=$("k").value.trim(),s=$("s").value.trim();if(!k||!s){err("أدخل المفتاح والسر");return}LS.s("bk",k);LS.s("bs",s);var cv=parseFloat($("cap").value);if(cv>0)LS.s("cap",String(cv));PERM=null;$("k").value="";$("s").value="";err("");forceCfg=false;show();refresh()};
 $("clr").onclick=function(){LS.d("bk");LS.d("bs");CAN=false;PERM=null;$("perm").hidden=true;LS.d("snap");LS.d("avg");snap=null;AVG={};forceCfg=false;err("");show()};
