@@ -52,12 +52,13 @@ button.sell{background:var(--sell);color:var(--onbs);border-color:transparent;fo
 .lcr{display:grid;grid-template-columns:1fr 78px 34px;gap:8px;align-items:start;margin-bottom:8px}.lcr input{width:100%;min-width:0}.lcr .lcw{text-align:center}
 .lcr .lcc{display:flex;align-items:center;justify-content:space-between;direction:ltr;margin-top:4px;font-size:.78rem;color:var(--dim)}.lcr .lcc button{width:32px;height:26px;padding:0;font-size:1rem;line-height:1;border-radius:8px}.lcr .lcx{width:34px;height:38px;padding:0;font-size:1rem;color:var(--down)}
 .lact{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
-.lbs{display:flex;justify-content:space-between;align-items:baseline;gap:6px}.lbs b{font-weight:inherit;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lbs span{font-size:.78rem;direction:ltr;min-height:1.1em;flex:none}.lbs span.dim{color:var(--dimmer)}.lbs span.up{color:var(--up)}.lbs span.down{color:var(--down)}
+.lbs{display:flex;justify-content:space-between;align-items:center;gap:3px}.lbs b{font-weight:inherit;flex:none;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lbs span{font-size:.7rem;direction:ltr;min-height:1.1em;flex:none}.lbs span.dim{color:var(--dimmer)}.lbs span.up{color:var(--up)}.lbs span.down{color:var(--down)}
 .stw{position:relative}.stw input{text-align:center;padding-inline:40px}.stw button{position:absolute;top:50%;transform:translateY(-50%);width:30px;height:30px;padding:0;font-size:1.05rem;line-height:1;border-radius:8px;z-index:1}.stw button:first-child{left:4px}.stw button:last-child{right:4px}
 .rpx{margin:0 0 8px}.rpx .chip{margin:0;font-size:.8rem}.rpx .chip b{margin-inline-start:4px}
 input[data-ghost]::placeholder{color:var(--dimmer);opacity:.85}
 .rrp{display:block;min-height:1.1em;margin-top:3px;font-size:.78rem;direction:ltr;text-align:start}
-.rkr{display:flex;gap:8px;align-items:center}.rkr input{flex:1;min-width:0}.exb{margin-top:8px}.exr{display:grid;grid-template-columns:54px 1fr 38px;gap:8px;align-items:center;margin-bottom:6px}.exr label{margin:0;font-size:.8rem}.exr input{text-align:center}.exr button{height:38px;padding:0;color:var(--down)}.exs{display:flex;align-items:center;gap:6px;margin:2px 0 8px;font-size:.78rem;color:var(--dim)}.exs span{flex:1}.exs input{width:62px;flex:none;text-align:center;padding:6px}
+.rkr{display:flex;gap:8px;align-items:center}.rkr input{flex:1;min-width:0}.exc{margin-top:2px}.exf{margin-top:6px}.exf .lbs{margin-top:8px}.lbs .shh{flex:none;display:inline-flex}.shc{position:relative;display:inline-flex}.shc input{width:34px;height:22px;padding:0 10px 0 2px;font-size:.7rem;text-align:center;border-radius:11px;direction:ltr}.shc::after{content:"%";position:absolute;inset-inline-end:6px;top:50%;transform:translateY(-50%);font-size:.68rem;color:var(--dim);pointer-events:none}
+.exx{flex:none;width:22px;height:24px;padding:0;margin-inline-end:-4px;border:0;background:none;color:var(--dim);font-size:.95rem;line-height:1;box-shadow:none}.exa{width:100%;margin-top:8px;height:34px;padding:0;border:1px dashed var(--bd);background:none;color:var(--dim);font-size:.8rem;border-radius:10px;box-shadow:none}
 .rk1{margin-top:12px}.rk1 label{margin:0;white-space:nowrap}.rk1 input{flex:0 1 120px!important;text-align:center}.rkr .seg{flex:0 0 auto;direction:ltr}.rkr .seg button{width:46px;padding:9px 0}
 .rrs{margin-top:8px;font-size:.84rem;min-height:1.2em}
 .stp{display:flex;align-items:center;gap:6px;margin:4px 0}.stp button{width:42px;height:38px;font-size:1.25rem;line-height:1;padding:0}.stp input{width:84px;text-align:center;direction:ltr}.stp span{color:var(--dim)}.stp small{color:var(--dim);margin-inline-start:6px;font-size:.78rem}
@@ -114,7 +115,7 @@ h3.plain{margin-bottom:6px}
 .tabs button{border-radius:14px!important;margin:4px 3px;min-height:52px!important;transition:background .15s}
 .tabs button.on{color:var(--fg);font-weight:700;background:var(--tabon)}
 .tabs button.on svg{stroke:var(--up)}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 10px}.g2>div{min-width:0}
 .cbar{height:6px;border-radius:4px;background:var(--s2);margin-top:5px;overflow:hidden}.cbar i{display:block;height:100%}
 .upd{position:fixed;top:8px;inset-inline:16px;max-width:608px;margin-inline:auto;background:var(--up);color:var(--onup);border-radius:12px;padding:10px 14px;font-weight:600;z-index:20;text-align:center;cursor:pointer}
 .ftrow{display:flex;justify-content:flex-end;margin:-2px 0 6px}.chip.ftb{display:inline-flex;align-items:center;gap:6px;direction:ltr;font-weight:600;letter-spacing:.2px;color:var(--dim)}
@@ -182,10 +183,9 @@ h3.plain{margin-bottom:6px}
       <div class="rpx"><span class="chip" data-lvp="o">السعر الآن <b class="n" id="orpxv"></b></span></div>
       <div id="orrc" class="rrc"></div>
       <div class="g2">
-        <div><label for="ox" class="lbs"><b>وقف الخسارة</b><span id="oxp"></span></label><div class="stw"><button type="button" data-rst="ox|-0.5" aria-label="أنقص">−</button><input id="ox" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ox|0.5" aria-label="زِد">+</button></div></div>
-        <div><label for="ot" class="lbs"><b>الهدف</b><span id="otp"></span></label><div class="stw"><button type="button" data-rst="ot|-0.5" aria-label="أنقص">−</button><input id="ot" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ot|0.5" aria-label="زِد">+</button></div></div>
+        <div><label for="ox" class="lbs"><b id="oxlb">وقف الخسارة</b><span class="shh" id="oxsh"></span><span id="oxp"></span></label><div class="stw"><button type="button" data-rst="ox|-0.5" aria-label="أنقص">−</button><input id="ox" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ox|0.5" aria-label="زِد">+</button></div><div class="exc" id="oxex"></div></div>
+        <div><label for="ot" class="lbs"><b id="otlb">الهدف</b><span class="shh" id="otsh"></span><span id="otp"></span></label><div class="stw"><button type="button" data-rst="ot|-0.5" aria-label="أنقص">−</button><input id="ot" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ot|0.5" aria-label="زِد">+</button></div><div class="exc" id="otex"></div></div>
       </div>
-      <div id="oex" class="exb"></div>
       <div class="rkr rk1"><label for="orr">أخاطر بـ</label><input id="orr" inputmode="decimal" value="1"><div class="seg segs" id="orm"><button type="button" data-orm="p">%</button><button type="button" data-orm="d">$</button></div></div>
       <div id="orsz" class="rrs"></div>
     </div>
@@ -253,10 +253,9 @@ h3.plain{margin-bottom:6px}
         <div class="rpx"><span class="chip" data-lvp="l">السعر الآن <b class="n" id="lrpxv"></b></span></div>
         <div id="lrrc" class="rrc"></div>
         <div class="g2">
-          <div><label for="lx" class="lbs"><b>وقف الخسارة</b><span id="lxp"></span></label><div class="stw"><button type="button" data-rst="lx|-0.5" aria-label="أنقص">−</button><input id="lx" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lx|0.5" aria-label="زِد">+</button></div></div>
-          <div><label for="lg" class="lbs"><b>الهدف</b><span id="lgp"></span></label><div class="stw"><button type="button" data-rst="lg|-0.5" aria-label="أنقص">−</button><input id="lg" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lg|0.5" aria-label="زِد">+</button></div></div>
+          <div><label for="lx" class="lbs"><b id="lxlb">وقف الخسارة</b><span class="shh" id="lxsh"></span><span id="lxp"></span></label><div class="stw"><button type="button" data-rst="lx|-0.5" aria-label="أنقص">−</button><input id="lx" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lx|0.5" aria-label="زِد">+</button></div><div class="exc" id="lxex"></div></div>
+          <div><label for="lg" class="lbs"><b id="lglb">الهدف</b><span class="shh" id="lgsh"></span><span id="lgp"></span></label><div class="stw"><button type="button" data-rst="lg|-0.5" aria-label="أنقص">−</button><input id="lg" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lg|0.5" aria-label="زِد">+</button></div><div class="exc" id="lgex"></div></div>
         </div>
-        <div id="lex" class="exb"></div>
         <div class="rkr rk1"><label for="lrr">أخاطر بـ</label><input id="lrr" inputmode="decimal"><div class="seg segs" id="lrm"><button type="button" data-orm="p">%</button><button type="button" data-orm="d">$</button></div></div>
         <div id="lrsz" class="rrs"></div>
       </div>
@@ -294,7 +293,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 63</div>
+<div class="note" style="text-align:center" id="foot">النسخة 64</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -539,7 +538,7 @@ function chVis(){
   var pr=[["od",O.sym],["ld",L.cs]];
   pr.forEach(function(q){var st=CHS[q[0]];if(!st||!q[1])return;if(st.sym!==q[1])chSetSym(st,q[1]);else{if(!st.k&&!st.busy)chLoad(st);chDraw(st)}});
 }
-function tmMark(){if(!$("oex").innerHTML)exRender("o");if(!$("lex").innerHTML)exRender("l");var m=TAB==="trd"?(SUB.trd==="ord"?"one":(L.dist==="cus"?"cus":"eq")):"",b=document.querySelectorAll("[data-tm]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-tm")===m)}
+function tmMark(){if(!$("oxex").innerHTML&&!$("otex").innerHTML)exRender("o");if(!$("lxex").innerHTML&&!$("lgex").innerHTML)exRender("l");var m=TAB==="trd"?(SUB.trd==="ord"?"one":(L.dist==="cus"?"cus":"eq")):"",b=document.querySelectorAll("[data-tm]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-tm")===m)}
 function enter(){tmMark();show();render();chVis();if(TAB==="set"&&SUB.set==="hal")renderHal();if(TAB==="trd"&&SUB.trd==="lad")ladHint();if(TAB==="ana"&&SUB.ana==="jr")renderJournal();if(TAB==="ana"&&SUB.ana==="tr")trFit();try{window.scrollTo(0,0)}catch(e){}}
 function setTab(t){TAB=t;LS.s("tab",t);enter()}
 function applyTheme(){var t=LS.g("theme")||"auto",r=document.documentElement;if(t==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",t);var b=document.querySelectorAll("[data-th]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-th")===t)}
@@ -1947,24 +1946,37 @@ function oPcSet(v){
 }
 var RRL=[1,1.5,2,3],LIVE={};
 function gctx(id){
-  if(id==="ox"||id==="ot")return{p:O.sym&&O.f?oPx():0,tick:O.f&&O.f.tick,side:"o"};
-  if(id==="lx"||id==="lg")return{p:L.f?lAvg():0,tick:L.f&&L.f.tick,side:"l"};
+  if(/^o[xt]\d?$/.test(id))return{p:O.sym&&O.f?oPx():0,tick:O.f&&O.f.tick,side:"o"};
+  if(/^l[xg]\d?$/.test(id))return{p:L.f?lAvg():0,tick:L.f&&L.f.tick,side:"l"};
   return PR&&PR.f?{p:PR.last,tick:PR.f.tick,side:"p"}:{p:0,tick:0};
 }
+function isSt(id){return /^(ox|lx|pr_x)\d?$/.test(id)}
 function ghostPut(id,xid){
-  var e=$(id);if(!e)return;var c=gctx(id),isStop=/x$/.test(id);
+  var e=$(id);if(!e)return;var c=gctx(id),isStop=isSt(id),ex=/^[ol][xtg]\d$/.test(id);
   if(!(c.p>0&&c.tick)){e.placeholder="";return}
-  var v;if(isStop)v=c.p*0.99;else{var x=parseFloat($(xid).value);v=x>0&&x<c.p?rrTarget(c.p,x,O.rr):c.p*1.01}
+  var v;
+  if(ex){
+    var pr=id.charAt(0),t0=$(pr==="o"?"ot":"lg"),x0=$(pr==="o"?"ox":"lx"),xv=parseFloat(x0.value)||parseFloat(x0.placeholder),tv=parseFloat(t0.value)||parseFloat(t0.placeholder),i=+id.slice(-1)-1;
+    if(isStop){var d=xv>0&&xv<c.p?c.p-xv:c.p*0.01;v=c.p-d*(i+1)}
+    else{var d2=tv>c.p?tv-c.p:c.p*0.01;v=c.p+d2*(i+1)}
+    if(!(v>0))v=c.tick;
+  }else if(isStop)v=c.p*0.99;else{var x=parseFloat($(xid).value);v=x>0&&x<c.p?rrTarget(c.p,x,O.rr):c.p*1.01}
   e.placeholder=flo(v+c.tick*0.5,c.tick);
 }
 function ghostCap(id,capId,xid){
   var c=gctx(id),e=$(id),cap=$(capId);if(!e||!cap)return;
   var cur=parseFloat(e.value),empty=!(cur>0),v=empty?parseFloat(e.placeholder):cur;
   if(!(c.p>0)||!(v>0)){cap.textContent="";cap.className="";return}
-  var d=(v/c.p-1)*100;cap.textContent=(d>=0?"+":"−")+Math.abs(d).toFixed(2)+"%";
-  cap.className=empty?"dim":(/x$/.test(id)?(d<0?"down":"down"):(d>0?"up":"down"));
+  var d=(v/c.p-1)*100;cap.textContent=(d>=0?"+":"−")+Math.abs(d).toFixed(Math.abs(d)>=10?1:2)+"%";
+  cap.className=empty?"dim":(isSt(id)?"down":(d>0?"up":"down"));
+}
+function ghostEx(k){
+  var pre=k==="o"?"o":"l",tg=k==="o"?"t":"g";
+  EX[k].t.forEach(function(v,i){var id=pre+tg+(i+2);ghostPut(id,pre+"x");ghostCap(id,id+"p")});
+  EX[k].s.forEach(function(v,i){var id=pre+"x"+(i+2);ghostPut(id,pre+"x");ghostCap(id,id+"p")});
 }
 function ghostAll(){
+  ghostEx("o");if($("lx"))ghostEx("l");
   ghostPut("ox","ox");ghostPut("ot","ox");ghostCap("ox","oxp");ghostCap("ot","otp");
   if($("lx")){ghostPut("lx","lx");ghostPut("lg","lx");ghostCap("lx","lxp");ghostCap("lg","lgp")}
   if($("pr_x")){ghostPut("pr_x","pr_x");ghostPut("pr_t","pr_x");ghostCap("pr_x","pr_xp");ghostCap("pr_t","pr_tp")}
@@ -1973,7 +1985,7 @@ function rstStep(id,step){
   var e=$(id),c=gctx(id);if(!e||!(c.p>0)||!c.tick)return;
   var cur=parseFloat(e.value);if(!(cur>0))cur=parseFloat(e.placeholder);if(!(cur>0))return;
   var g=Math.abs(step),v=((cur/c.p-1)*100)/g,nv=step>0?Math.floor(v+1e-9)+1:Math.ceil(v-1e-9)-1,np=c.p*(1+nv*g/100);
-  if(!(np>0))return;var ns=flo(np+c.tick*0.5,c.tick);if(parseFloat(ns)===cur||(step>0&&parseFloat(ns)<cur)||(step<0&&parseFloat(ns)>cur))ns=flo(cur+(step>0?1:-1)*c.tick+c.tick*0.5,c.tick);var nn=parseFloat(ns);if(!(nn>0)||(/x$/.test(id)&&nn>=c.p)||(!/x$/.test(id)&&nn<=c.p))return;e.value=ns;e.dispatchEvent(new Event("input",{bubbles:true}));
+  if(!(np>0))return;var ns=flo(np+c.tick*0.5,c.tick);if(parseFloat(ns)===cur||(step>0&&parseFloat(ns)<cur)||(step<0&&parseFloat(ns)>cur))ns=flo(cur+(step>0?1:-1)*c.tick+c.tick*0.5,c.tick);var nn=parseFloat(ns);if(!(nn>0)||(isSt(id)&&nn>=c.p)||(!isSt(id)&&nn<=c.p))return;e.value=ns;e.dispatchEvent(new Event("input",{bubbles:true}));
 }
 function lvShow(){
   var a=$("orpxv"),b=$("lrpxv");
@@ -2288,24 +2300,26 @@ function exGet(k){
   return r;
 }
 function exUse(x){return (x.t.length||x.s.length)&&!(x.t.length===1&&x.s.length===1)}
+function exHost(k,kind){return k==="o"?(kind==="s"?"oxex":"otex"):(kind==="s"?"lxex":"lgex")}
 function exRender(k){
-  var h=$(k+"ex");if(!h)return;var e=EX[k],buy=k==="o"?O.side==="BUY":L.side==="BUY",o="";
-  if(!buy){h.innerHTML="";return}
-  var rows=function(kind,lab){
-    var a=e[kind],s="";
-    a.forEach(function(v,i){s+='<div class="exr"><label>'+lab+' '+(i+2)+'</label><input data-exp="'+k+'|'+kind+'|'+i+'" inputmode="decimal" value="'+esc(v)+'"><button type="button" class="lcx" data-exdel="'+k+'|'+kind+'|'+i+'" aria-label="احذف">✕</button></div>'});
-    return s;
-  };
-  o+=rows("t","هدف")+rows("s","وقف");
-  var share=function(kind,lab){
-    var n=1+e[kind].length,w=e[kind==="t"?"tw":"sw"];if(n<2)return"";
-    var s='<div class="exs"><span>حصص '+lab+' %</span>';
-    for(var i=0;i<n;i++)s+='<input data-exw="'+k+'|'+kind+'|'+i+'" inputmode="decimal" value="'+esc(w[i]||"")+'" placeholder="'+Math.round(100/n)+'">';
-    return s+'</div>';
-  };
-  o+=share("t","الأهداف")+share("s","الوقف");
-  o+='<div class="lact" style="margin:6px 0 0">'+(e.t.length<3?'<button type="button" class="sm" data-exadd="'+k+'|t">+ هدف</button>':'')+(e.s.length<1?'<button type="button" class="sm" data-exadd="'+k+'|s">+ وقف ثانٍ</button>':'')+'</div>';
-  h.innerHTML=o;
+  var e=EX[k],buy=k==="o"?O.side==="BUY":L.side==="BUY",pre=k==="o"?"o":"l",ids=exIds(k);
+  ["s","t"].forEach(function(kind){
+    var h=$(exHost(k,kind)),sh=$(ids[kind==="s"?"x":"t"]+"sh");if(!h)return;
+    if(!buy){h.innerHTML="";if(sh)sh.innerHTML="";return}
+    var a=e[kind],w=e[kind==="t"?"tw":"sw"],n=1+a.length,lab=kind==="t"?"هدف":"وقف",
+        chip=function(i){return n>1?'<span class="shc"><input data-exw="'+k+'|'+kind+'|'+i+'" inputmode="decimal" value="'+esc(w[i]||"")+'" placeholder="'+Math.round(100/n)+'" aria-label="الحصة"></span>':""},
+        o="";
+    if(sh)sh.innerHTML=chip(0);
+    var lb=$(ids[kind==="s"?"x":"t"]+"lb");if(lb)lb.textContent=n>1?lab+" 1":(kind==="t"?"الهدف":"وقف الخسارة");
+    a.forEach(function(v,i){
+      var id=pre+(kind==="t"?(k==="o"?"t":"g"):"x")+(i+2);
+      o+='<div class="exf"><label class="lbs" for="'+id+'"><b>'+lab+' '+(i+2)+'</b>'+chip(i+1)+'<span id="'+id+'p"></span><button type="button" class="exx" data-exdel="'+k+'|'+kind+'|'+i+'" aria-label="احذف">✕</button></label>'+
+        '<div class="stw"><button type="button" data-rst="'+id+'|-0.5" aria-label="أنقص">−</button><input id="'+id+'" data-exp="'+k+'|'+kind+'|'+i+'" data-ghost="1" inputmode="decimal" value="'+esc(v)+'"><button type="button" data-rst="'+id+'|0.5" aria-label="زِد">+</button></div></div>';
+    });
+    if(kind==="t"?a.length<3:a.length<1)o+='<button type="button" class="exa" data-exadd="'+k+'|'+kind+'">+ '+(kind==="t"?"هدف":"وقف ثانٍ")+'</button>';
+    h.innerHTML=o;
+  });
+  ghostAll();
 }
 function peSplit(q,ts,ss,f){
   var cut=[0,1],cum=function(a){var c=0,r=[];a.forEach(function(x){c+=x.f;r.push(c)});return r},tb=cum(ts),sb=cum(ss);
