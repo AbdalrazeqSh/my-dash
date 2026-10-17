@@ -115,6 +115,7 @@ h3.plain{margin-bottom:6px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 .cbar{height:6px;border-radius:4px;background:var(--s2);margin-top:5px;overflow:hidden}.cbar i{display:block;height:100%}
 .upd{position:fixed;top:8px;inset-inline:16px;max-width:608px;margin-inline:auto;background:var(--up);color:var(--onup);border-radius:12px;padding:10px 14px;font-weight:600;z-index:20;text-align:center;cursor:pointer}
+.ftrow{display:flex;justify-content:flex-end;margin:-2px 0 6px}.chip.ftb{display:inline-flex;align-items:center;gap:6px;direction:ltr;font-weight:600;letter-spacing:.2px;color:var(--dim)}
 .chip.chtg{margin:0 0 9px;display:inline-flex;align-items:center;gap:6px;direction:ltr;font-weight:600;letter-spacing:.2px;color:var(--gold);background:var(--goldbg);border-color:transparent}.chip.chtg.on{background:var(--gold);color:var(--onbs);border-color:transparent}
 .chip.on{border-color:var(--fg);font-weight:600}.chip{display:inline-block;margin:3px;padding:3px 10px;border-radius:99px;background:var(--s2);border:1px solid var(--bd);cursor:pointer;font-size:.82rem}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -159,6 +160,7 @@ h3.plain{margin-bottom:6px}
       <div style="flex:1"><label for="os" style="margin-top:0">العملة</label><input id="os" autocapitalize="characters" autocomplete="off" placeholder="مثل REQ"></div>
       <div id="ost" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 1.5v13"/><rect x="2.5" y="4.5" width="3" height="5.5" rx=".6" fill="currentColor"/><path d="M12 1.5v13"/><rect x="10.5" y="3.5" width="3" height="6" rx=".6"/></svg>Chart</span>
     </div>
+<div class="ftrow"><span class="chip ftb" data-ft="1"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h7l3 3v8H3z"/><path d="M5.5 8h5M5.5 10.5h3.5"/></svg>Free text</span></div>
     <div id="osyms" style="margin:6px 0 2px"></div>
     <div id="ochart"></div>
     <div class="sub" id="opx"></div>
@@ -221,6 +223,7 @@ h3.plain{margin-bottom:6px}
         <div style="flex:1"><label for="ls" style="margin-top:0">العملة</label><input id="ls" autocapitalize="characters" autocomplete="off" placeholder="مثل REQ"></div>
         <div id="lst" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 1.5v13"/><rect x="2.5" y="4.5" width="3" height="5.5" rx=".6" fill="currentColor"/><path d="M12 1.5v13"/><rect x="10.5" y="3.5" width="3" height="6" rx=".6"/></svg>Chart</span>
       </div>
+<div class="ftrow"><span class="chip ftb" data-ft="1"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h7l3 3v8H3z"/><path d="M5.5 8h5M5.5 10.5h3.5"/></svg>Free text</span></div>
       <div class="sub" id="lpxl"></div>
       <div id="lchart"></div>
       <div class="bs"><button class="bsb buy on" data-ls="BUY"><b>شراء <span id="lsn1"></span></b></button><button class="bsb sell" data-ls="SELL"><b>بيع <span id="lsn2"></span></b></button></div>
@@ -288,7 +291,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 59</div>
+<div class="note" style="text-align:center" id="foot">النسخة 60</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -898,6 +901,7 @@ function lLoad(force){
     $("lpxl").innerHTML='السعر الحالي <span class="n">'+px(L.last)+'</span> · <span style="text-decoration:underline;cursor:pointer" data-lrf="1">تحديث</span>';
     if(force||L.auto||!(parseFloat($("lp1").value)>0))lFill();
     chSetSym(CHS.ld,sym);fillsLoad(sym,function(){if(L.cs===sym)chDraw(CHS.ld)});
+    if(L.ft){var f1=L.ft;L.ft=null;try{f1()}catch(e){}}
     ladHint();
   },function(e){if(L.cs===sym)$("lpxl").textContent="تعذّر: "+e.message});
 }
@@ -2089,6 +2093,7 @@ function oLoad(){
     if(O.after&&O.after.px>0&&O.type==="LIMIT"){$("op").value=flo(O.after.px,O.f.tick);O.after=null}
     oChips();
     if(O.after&&O.after.pct&&O.side==="SELL"){var ha=assetOf(sym);if(ha){$("oq").value=flo(freeQ(ha)*O.after.pct/100,O.f.step);O.ed="q"}O.after=null}
+    if(O.ft){var f0=O.ft;O.ft=null;try{f0()}catch(e){}}
     oSync();oCalc();
   },function(e){if(O.sym===sym){$("opx").textContent="تعذّر: "+e.message;chSetSym(CHS.od,"")}});
 }
@@ -2188,8 +2193,127 @@ function oReview(){
 }
 function oOpen(sym,side,opts){
   TAB="trd";SUB.trd="ord";LS.s("tab",TAB);LS.s("sub",JSON.stringify(SUB));
-  O.side=side||"BUY";O.type=(opts&&opts.type)||"LIMIT";O.mk=false;O.book=null;O.after=opts||null;$("os").value=sym||"";$("op").value="";$("oq").value="";$("ov").value="";O.ed="q";O.sym="";O.f=null;$("ox").value="";$("ot").value="";O.rd=true;
+  O.side=side||"BUY";O.type=(opts&&opts.type)||"LIMIT";O.mk=false;O.book=null;O.after=opts||null;$("os").value=sym||"";$("op").value="";$("oq").value="";$("ov").value="";O.ed="q";O.sym="";O.f=null;$("ox").value="";$("ot").value="";O.rd=true;O.ft=null;
   oChips();enter();oLoad();
+}
+
+/* ---- free text: parse a pasted trade text and fill the order fields (never sends) ---- */
+var FT=null;
+function ftNorm(t){
+  t=String(t||"").replace(/[\u0660-\u0669]/g,function(c){return c.charCodeAt(0)-1632}).replace(/[\u06F0-\u06F9]/g,function(c){return c.charCodeAt(0)-1776}).replace(/\u066B/g,".").replace(/\u066C/g,"").replace(/[\u200e\u200f\u202a-\u202e]/g,"");
+  t=t.replace(/(?<![\d.])(\d+),(\d+)(?![\d,])/g,function(m,a,b){return a.charAt(0)!=="0"&&b.length===3?a+b:a+"."+b});
+  t=t.replace(/(^|\n)[ \t]*\d{1,2}[\)\.\-][ \t]+(?=\d)/g,"$1 ");
+  return t.toLowerCase();
+}
+function ftNums(s){var m=String(s).match(/\d+(?:\.\d+)?/g)||[];return m.map(parseFloat).filter(function(x){return x>0})}
+function ftParse(raw){
+  var t=ftNorm(raw),o={sym:"",side:"BUY",sideGuess:true,entries:[],stop:0,targets:[],amount:0,lev:0,short:false,market:false,notes:[],pctStop:false},m,rx;
+  var cut=function(re){var r=re.exec(t);if(r)t=t.slice(0,r.index)+" "+t.slice(r.index+r[0].length);return r};
+  if(!t.trim())return null;
+  /* symbol */
+  if((m=cut(/(?:^|[^a-z0-9])([a-z0-9]{2,10}?)[\/\-_]?usdt(?![a-z])/))&&/[a-z]/.test(m[1])&&m[1]!=="usdt")o.sym=m[1].toUpperCase();
+  else if((m=cut(/[#$]([a-z][a-z0-9]{1,9})(?![a-z0-9])/)))o.sym=m[1].toUpperCase();
+  else if((m=cut(/(?:coin|pair|عملة|زوج|العملة)\s*[:：=]?\s*([a-z][a-z0-9]{1,9})/)))o.sym=m[1].toUpperCase();
+  if(!o.sym){
+    var KW="market|at|entry|zone|now|limit|below|price|range|buy|sell|long|short|usdt|stop|sl|tp|target|targets|amount|size";
+    if((m=new RegExp("(?:^|[^a-z0-9])(?:buy|sell|long)\\s+(?!(?:"+KW+")(?![a-z]))([a-z][a-z0-9]{1,9})(?![a-z0-9])").exec(t))||(m=/^\s*[#$]?([a-z][a-z0-9]{1,9})\s*(?:\n|$)/.exec(t))||(m=/(?:شراء|بيع|لونغ)\s+([a-z][a-z0-9]{1,9})(?![a-z0-9])/.exec(t))){if(!new RegExp("^(?:"+KW+")$").test(m[1]))o.sym=m[1].toUpperCase()}
+  }
+  /* side / unsupported */
+  var hb=/(?:^|[^a-z])(?:buy|long)(?![a-z])|شراء|لونغ|لونج|اشتر/.test(t),hs=/(?:^|[^a-z])sell(?![a-z])|\bبيع\b/.test(t);
+  if(/(?:^|[^a-z])short(?![a-z])|شورت|مكشوف/.test(t))o.short=true;
+  if(hb){o.side="BUY";o.sideGuess=false}else if(hs){o.side="SELL";o.sideGuess=false}
+  if((m=/(?:leverage|lev|رافعة|الرافعة)\s*[:：=]?\s*(?:cross|isolated)?\s*[x×]?\s*(\d{1,3})|(?:^|[^a-z\d.])[x×]\s*(\d{1,3})(?![\d.%])|(\d{1,3})\s*[x×](?![a-z])/.exec(t)))o.lev=+(m[1]||m[2]||m[3]);
+  if(/(?:^|[^a-z])market(?![a-z])|بسعر السوق|سعر السوق|\bnow\b|الآن/.test(t))o.market=true;
+  /* amount */
+  if((m=cut(/(?:amount|size|invest|مبلغ|بمبلغ|حجم)\s*[:：=]?\s*\$?\s*(\d+(?:\.\d+)?)\s*(?:usdt|\$)?/)))o.amount=parseFloat(m[1]);
+  /* entry */
+  var L1="(\\d+(?:\\.\\d+)?(?![\\d.]|\\s?[x×%])(?:(?:[ \\t,\\-\\u2013\\u2014~/]|الى|إلى|to|and|و)+\\d+(?:\\.\\d+)?(?![\\d.]|\\s?[x×%]))*)";
+  var ent=new RegExp("(?:entry(?:\\s*(?:zone|price|point|targets?|range))?|enter|buy\\s*(?:zone|at|below|limit|price|range)?|buy|sell\\s*(?:at|limit|price)?|دخول|الدخول|سعر\\s*الدخول|منطقة\\s*الدخول|شراء|بيع|@)\\s*[:：=@\\-]?\\s*"+L1);
+  if((m=cut(ent)))o.entries=ftNums(m[1]);
+  /* stop */
+  var stp=/(?:stop[\s\-]*loss|stop|\bsl\b|وقف\s*الخسارة|وقف|ستوب\s*لوس|ستوب)\s*[:：=@\-]?\s*(\d+(?:\.\d+)?)(\s*%)?/;
+  if((m=cut(stp))){if(m[2])o.pctStop=true;else o.stop=parseFloat(m[1])}
+  /* targets */
+  var tg=new RegExp("(?:take[\\s\\-]*profit|targets?|\\btps?|اهداف|أهداف|الاهداف|الأهداف|الهدف|هدف)\\d?\\s*[:：=@\\-]?\\s*"+L1.replace(/\[ \\t,/,"[\\s,"),"g");
+  while((m=tg.exec(t))){ftNums(m[1]).forEach(function(x){if(o.targets.indexOf(x)<0)o.targets.push(x)})}
+  /* sanity: order by side later */
+  return o;
+}
+function ftReview(o){
+  var w=[],ok=[];
+  if(!o)return{ok:[],w:["لم أجد نصًا"],fill:false};
+  if(o.short){w.push("صفقة شورت/هامش، لا تُنفَّذ في السبوت. لم أعبّئ شيئًا");return{ok:ok,w:w,fill:false}}
+  if(!o.sym){w.push("لم أجد رمز العملة");return{ok:ok,w:w,fill:false}}
+  ok.push(o.sym);ok.push(o.side==="BUY"?"شراء":"بيع");
+  if(o.sideGuess)w.push("لم يُذكر الاتجاه، افترضتُ شراء");
+  if(o.entries.length){var e=o.entries.slice().sort(function(a,b){return a-b});ok.push("دخول "+(e.length>1?e[0]+" – "+e[e.length-1]+(e.length>2?" ("+e.length+" مستويات)":""):e[0]))}
+  else ok.push(o.market||!o.entries.length?"بسعر السوق":"");
+  if(o.stop)ok.push("وقف "+o.stop);
+  if(o.pctStop)w.push("الوقف بالنسبة المئوية غير مدعوم، أدخله بالسعر");
+  if(o.targets.length)ok.push("هدف "+o.targets[0]);
+  if(o.targets.length>1)w.push("استخدمتُ الهدف الأول فقط ("+o.targets.length+" أهداف في النص)");
+  if(o.amount)ok.push("مبلغ "+o.amount+"$");
+  if(o.lev>1)w.push("ذُكرت رافعة "+o.lev+"x، السبوت بلا رافعة فتجاهلتُها");
+  if(o.side==="SELL"&&(o.stop||o.targets.length))w.push("الوقف والهدف لا يُستخدمان مع أمر البيع");
+  var e2=o.entries.length?Math.max.apply(null,o.entries):0,e3=o.entries.length?Math.min.apply(null,o.entries):0;
+  if(o.side==="BUY"&&o.stop&&e3&&o.stop>=e3){w.push("الوقف ("+o.stop+") ليس تحت الدخول، تجاهلتُه");o.stop=0}
+  if(o.side==="BUY"&&o.targets.length&&e2&&o.targets[0]<=e2){w.push("الهدف الأول ليس فوق الدخول، تجاهلتُه");o.targets=[]}
+  return{ok:ok.filter(Boolean),w:w,fill:true};
+}
+function ftSheet(){
+  openSheet('<div class="sum" style="margin-top:0"><b>نص صفقة (Free text)</b><br><span class="sub">الصق نص الإشارة وسأعبّئ الخانات. لا يُرسَل شيء، وتراجع كل الأرقام بنفسك.</span></div>'+
+    '<textarea id="ftx" dir="auto" style="min-height:130px;direction:ltr" placeholder="BTC/USDT&#10;Buy 62000-61500&#10;Stop 60000&#10;TP 64000"></textarea>'+
+    '<div id="ftout" style="margin:10px 0"></div>'+
+    '<div style="display:flex;gap:8px"><button class="go" id="ftgo" style="flex:2" disabled>عبّئ الخانات</button><button id="tclose" style="flex:1">إلغاء</button></div>');
+  setTimeout(function(){var x=$("ftx");if(x)x.focus()},50);
+}
+function ftLive(){
+  var x=$("ftx"),out=$("ftout"),b=$("ftgo");if(!x||!out)return;
+  var o=ftParse(x.value);FT=null;b.disabled=true;
+  if(!o){out.innerHTML="";return}
+  var r=ftReview(o);
+  out.innerHTML=(r.ok.length?'<div class="chips" style="display:flex;flex-wrap:wrap;gap:6px">'+r.ok.map(function(c){return '<span class="chip on">'+esc(c)+'</span>'}).join("")+'</div>':"")+r.w.map(function(w){return '<div class="warn" style="margin-top:8px">'+esc(w)+'</div>'}).join("");
+  if(r.fill){FT=o;b.disabled=false}
+}
+function ftApply(){
+  var o=FT;if(!o)return;closeSheet();
+  var buy=o.side==="BUY",es=o.entries.slice().sort(function(a,b){return buy?b-a:a-b}),tgt=o.targets[0]||0,stop=o.stop;
+  if(buy&&es.length>1){
+    TAB="trd";SUB.trd="lad";LS.s("tab",TAB);LS.s("sub",JSON.stringify(SUB));
+    L.side="BUY";L.dist="eq";L.cl=[];L.lcr=0;L.rd=true;L.sd=false;L.auto=false;L.rows=null;$("ls").value=o.sym;$("lx").value="";$("lg").value="";
+    L.ft=function(){
+      var tk=L.f.tick;
+      if(es.length===2){$("lp1").value=flo(es[0],tk);$("lp2").value=flo(es[1],tk)}
+      else{L.dist="cus";L.cl=es.map(function(p){return{p:+flo(p,tk),w:null}});$("lp1").value=flo(es[0],tk);$("lp2").value=flo(es[es.length-1],tk);$("ln").value=es.length}
+      if(stop&&stop<es[es.length-1])$("lx").value=flo(stop,tk);
+      if(tgt&&tgt>es[0])$("lg").value=flo(tgt,tk);
+      if(o.amount>0){$("lv").value=String(o.amount);L.ed="v";L.rd=false}
+      L.rows=null;
+      var a=lAvg(),x=parseFloat($("lx").value),t=parseFloat($("lg").value);
+      if(a>0&&x>0&&x<a&&t>a){O.rr=Math.round(rrOf(a,x,t)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}
+      else if(a>0&&x>0&&x<a)lrFix();
+      else if(a>0&&t>a){var sx=rrStop(a,t,O.rr,tk);if(sx){$("lx").value=sx;L.sd=true}}
+      lrAuto();
+    };
+    enter();lLoad(true);return;
+  }
+  var ep=es[0]||0;
+  oOpen(o.sym,o.side,{type:(!ep||o.market)?"MARKET":"LIMIT"});
+  O.ft=function(){
+    var tk=O.f.tick;
+    if(ep&&!o.market&&O.type==="LIMIT")$("op").value=flo(ep,tk);
+    if(buy){
+      var ref=ep||O.last;
+      if(stop&&stop<ref)$("ox").value=flo(stop,tk);
+      if(tgt&&tgt>ref)$("ot").value=flo(tgt,tk);
+    }
+    if(o.amount>0){$("ov").value=String(o.amount);O.ed="v";O.rd=false}
+    var p=oPx(),x=parseFloat($("ox").value),t=parseFloat($("ot").value);
+    if(p>0&&x>0&&x<p&&t>p){O.rr=Math.round(rrOf(p,x,t)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}
+    else if(x>0&&x<p)rrFix();
+    else if(t>p&&p>0){var sx=rrStop(p,t,O.rr,tk);if(sx){$("ox").value=sx;O.sd=true}}
+    rrAuto();
+  };
 }
 
 /* --- permissions / trading --- */
@@ -2433,6 +2557,8 @@ document.addEventListener("click",function(ev){
   if(t.id==="newbtn")return oOpen("","BUY");
   if((el=t.closest("[data-swc]"))){var swk=el.getAttribute("data-swc");if(SW){SW.sel[swk]=!SW.sel[swk];el.classList.toggle("on",!!SW.sel[swk]);swSelInfo()}return}
   if((el=t.closest("[data-swall]"))){if(SW){var swv=el.getAttribute("data-swall")==="1";SW.coins.forEach(function(c){SW.sel[c.sym]=swv});swDraw()}return}
+  if(t.closest("[data-ft]"))return ftSheet();
+  if(t.id==="ftgo")return ftApply();
   if((el=t.closest("[data-chtg]"))){CHV=!CHV;LS.s("chv",CHV?"1":"0");return chVis()}
   if(t.id==="swbtn")return swOpen();
   if(t.id==="swnext")return swNext();
@@ -2531,6 +2657,7 @@ document.addEventListener("click",function(ev){
 });
 
 $("calc").addEventListener("input",calcRun);
+document.addEventListener("input",function(ev){if(ev.target&&ev.target.id==="ftx")ftLive()});
 $("lad").addEventListener("input",function(ev){L.rows=null;var id=ev.target.id,tg=ev.target;
   if(tg.getAttribute&&(tg.getAttribute("data-lcp")!==null||tg.getAttribute("data-lcw")!==null)){
     var ip=tg.getAttribute("data-lcp"),x=L.cl[+(ip!==null?ip:tg.getAttribute("data-lcw"))];
