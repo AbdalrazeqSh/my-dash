@@ -52,7 +52,8 @@ button.sell{background:var(--sell);color:var(--onbs);border-color:transparent;fo
 .lcr{display:grid;grid-template-columns:1fr 78px 34px;gap:8px;align-items:start;margin-bottom:8px}.lcr input{width:100%;min-width:0}.lcr .lcw{text-align:center}
 .lcr .lcc{display:flex;align-items:center;justify-content:space-between;direction:ltr;margin-top:4px;font-size:.78rem;color:var(--dim)}.lcr .lcc button{width:32px;height:26px;padding:0;font-size:1rem;line-height:1;border-radius:8px}.lcr .lcx{width:34px;height:38px;padding:0;font-size:1rem;color:var(--down)}
 .lact{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
-.rst{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-top:5px;direction:ltr}.rst button{width:34px;height:28px;padding:0;font-size:1.05rem;line-height:1;border-radius:8px}.rst span{flex:1;text-align:center;font-size:.8rem;direction:ltr;min-height:1.1em}.rst span.dim{color:var(--dimmer)}.rst span.up{color:var(--up)}.rst span.down{color:var(--down)}
+.lbs{display:flex;justify-content:space-between;align-items:baseline;gap:6px}.lbs b{font-weight:inherit;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lbs span{font-size:.78rem;direction:ltr;min-height:1.1em;flex:none}.lbs span.dim{color:var(--dimmer)}.lbs span.up{color:var(--up)}.lbs span.down{color:var(--down)}
+.stw{position:relative}.stw input{text-align:center;padding-inline:40px}.stw button{position:absolute;top:50%;transform:translateY(-50%);width:30px;height:30px;padding:0;font-size:1.05rem;line-height:1;border-radius:8px;z-index:1}.stw button:first-child{left:4px}.stw button:last-child{right:4px}
 .rpx{margin:0 0 8px}.rpx .chip{margin:0;font-size:.8rem}.rpx .chip b{margin-inline-start:4px}
 input[data-ghost]::placeholder{color:var(--dimmer);opacity:.85}
 .rrp{display:block;min-height:1.1em;margin-top:3px;font-size:.78rem;direction:ltr;text-align:start}
@@ -180,8 +181,8 @@ h3.plain{margin-bottom:6px}
       <div class="rpx"><span class="chip" data-lvp="o">السعر الآن <b class="n" id="orpxv"></b></span></div>
       <div id="orrc" class="rrc"></div>
       <div class="g2">
-        <div><label for="ox">وقف الخسارة</label><input id="ox" inputmode="decimal" data-ghost="1"><div class="rst"><button type="button" data-rst="ox|-0.5" aria-label="أنقص">−</button><span id="oxp"></span><button type="button" data-rst="ox|0.5" aria-label="زِد">+</button></div></div>
-        <div><label for="ot">الهدف</label><input id="ot" inputmode="decimal" data-ghost="1"><div class="rst"><button type="button" data-rst="ot|-0.5" aria-label="أنقص">−</button><span id="otp"></span><button type="button" data-rst="ot|0.5" aria-label="زِد">+</button></div></div>
+        <div><label for="ox" class="lbs"><b>وقف الخسارة</b><span id="oxp"></span></label><div class="stw"><button type="button" data-rst="ox|-0.5" aria-label="أنقص">−</button><input id="ox" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ox|0.5" aria-label="زِد">+</button></div></div>
+        <div><label for="ot" class="lbs"><b>الهدف</b><span id="otp"></span></label><div class="stw"><button type="button" data-rst="ot|-0.5" aria-label="أنقص">−</button><input id="ot" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ot|0.5" aria-label="زِد">+</button></div></div>
       </div>
       <label for="orr">أخاطر بـ</label>
       <div class="rkr"><input id="orr" inputmode="decimal" value="1"><div class="seg segs" id="orm"><button type="button" data-orm="p">%</button><button type="button" data-orm="d">$</button></div></div>
@@ -251,8 +252,8 @@ h3.plain{margin-bottom:6px}
         <div class="rpx"><span class="chip" data-lvp="l">السعر الآن <b class="n" id="lrpxv"></b></span></div>
         <div id="lrrc" class="rrc"></div>
         <div class="g2">
-          <div><label for="lx">وقف الخسارة</label><input id="lx" inputmode="decimal" data-ghost="1"><div class="rst"><button type="button" data-rst="lx|-0.5" aria-label="أنقص">−</button><span id="lxp"></span><button type="button" data-rst="lx|0.5" aria-label="زِد">+</button></div></div>
-          <div><label for="lg">الهدف</label><input id="lg" inputmode="decimal" data-ghost="1"><div class="rst"><button type="button" data-rst="lg|-0.5" aria-label="أنقص">−</button><span id="lgp"></span><button type="button" data-rst="lg|0.5" aria-label="زِد">+</button></div></div>
+          <div><label for="lx" class="lbs"><b>وقف الخسارة</b><span id="lxp"></span></label><div class="stw"><button type="button" data-rst="lx|-0.5" aria-label="أنقص">−</button><input id="lx" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lx|0.5" aria-label="زِد">+</button></div></div>
+          <div><label for="lg" class="lbs"><b>الهدف</b><span id="lgp"></span></label><div class="stw"><button type="button" data-rst="lg|-0.5" aria-label="أنقص">−</button><input id="lg" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lg|0.5" aria-label="زِد">+</button></div></div>
         </div>
         <label for="lrr">أخاطر بـ</label>
         <div class="rkr"><input id="lrr" inputmode="decimal"><div class="seg segs" id="lrm"><button type="button" data-orm="p">%</button><button type="button" data-orm="d">$</button></div></div>
@@ -292,7 +293,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 61</div>
+<div class="note" style="text-align:center" id="foot">النسخة 62</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1197,7 +1198,7 @@ function protectSheet(sym,opts){
 function drawProtect(){
   var sym=PR.sym,f=PR.f,L=PR.last,h='<h3 style="margin:0 0 2px">'+(PR.opts.lid?"إعادة ضبط حماية ":"حماية ")+esc(sym)+'</h3><div class="sub" style="margin:0 0 8px">السعر الآن '+N(px(L))+' · المتاح للبيع '+N(qt(PR.avail))+(PR.avg?' · متوسط تكلفتك '+N(px(PR.avg)):'')+'</div>';
   if(!(PR.avail>0)||PR.avail*L<f.minN){openSheet(h+'<div class="warn">لا توجد كمية متاحة للحماية (محجوزة في أوامر أخرى).</div><button id="tclose" style="width:100%">إغلاق</button>');return}
-  h+='<div class="g2"><div><label for="pr_x">وقف الخسارة (سعر التفعيل)</label><input id="pr_x" inputmode="decimal" data-ghost="1" value="'+(PR.x?flo(PR.x,f.tick):"")+'"><div class="rst"><button type="button" data-rst="pr_x|-0.5" aria-label="أنقص">−</button><span id="pr_xp"></span><button type="button" data-rst="pr_x|0.5" aria-label="زِد">+</button></div></div><div><label for="pr_t">الهدف (اختياري)</label><input id="pr_t" inputmode="decimal" data-ghost="1" value="'+(PR.t?flo(PR.t,f.tick):"")+'"><div class="rst"><button type="button" data-rst="pr_t|-0.5" aria-label="أنقص">−</button><span id="pr_tp"></span><button type="button" data-rst="pr_t|0.5" aria-label="زِد">+</button></div></div></div>';
+  h+='<div class="g2"><div><label for="pr_x" class="lbs"><b>وقف الخسارة (سعر التفعيل)</b><span id="pr_xp"></span></label><div class="stw"><button type="button" data-rst="pr_x|-0.5" aria-label="أنقص">−</button><input id="pr_x" inputmode="decimal" data-ghost="1" value="'+(PR.x?flo(PR.x,f.tick):"")+'"><button type="button" data-rst="pr_x|0.5" aria-label="زِد">+</button></div></div><div><label for="pr_t" class="lbs"><b>الهدف (اختياري)</b><span id="pr_tp"></span></label><div class="stw"><button type="button" data-rst="pr_t|-0.5" aria-label="أنقص">−</button><input id="pr_t" inputmode="decimal" data-ghost="1" value="'+(PR.t?flo(PR.t,f.tick):"")+'"><button type="button" data-rst="pr_t|0.5" aria-label="زِد">+</button></div></div></div>';
   h+='<div style="margin:6px 0 2px">'+[-3,-5,-8,-10].map(function(x){return '<span class="chip" data-prx="'+x+'">وقف −'+Math.abs(x)+'%</span>'}).join("")+'</div><div id="prrc" class="rrc" style="margin-top:2px"></div>';
   h+=ruler("pr",PR.pct,1);
   h+='<div class="g2"><div><label for="pr_o">فارق التنفيذ عن التفعيل %</label><input id="pr_o" inputmode="decimal" value="0.5"></div><div></div></div>';
