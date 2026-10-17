@@ -45,7 +45,7 @@ button.sell{background:var(--sell);color:var(--onbs);border-color:transparent;fo
 #trf{width:100%;border:0;display:block;min-height:600px;background:transparent}
 .mkh{display:flex;align-items:center;gap:8px;margin-bottom:6px}.mkh b{font-size:1rem}.mkh small{color:var(--dim);margin-inline-start:auto}
 .mkr{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--bd)}.mkr b{min-width:42px}.mkr .p{flex:1}.mkr svg{width:74px;height:24px;flex:none}
-.mkf{border-top:1px solid var(--bd);padding-top:8px;margin-top:2px;font-size:.84rem;color:var(--dim)}
+.mk3{display:flex;margin:-4px 0 10px;border-bottom:1px solid var(--bd)}.mk3 button{flex:1;background:none;border:0;border-bottom:2px solid transparent;border-radius:0;padding:8px 2px;font-size:.92rem;color:var(--dim);font-weight:600;min-height:40px}.mk3 button.on{color:var(--fg);border-bottom-color:var(--gold)}.mkf{border-top:1px solid var(--bd);padding-top:8px;margin-top:2px;font-size:.84rem;color:var(--dim)}
 .nochart #ochart,.nochart #lchart{display:none}
 .rrc{direction:ltr;display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 6px}.rrc .chip{margin:0;direction:ltr;font-weight:600;min-width:52px;text-align:center}.rrc .chip.on{background:var(--gold);color:var(--onbs);border-color:transparent}
 .lch{display:grid;grid-template-columns:1fr 78px 34px;gap:8px;font-size:.74rem;color:var(--dim);margin:10px 2px 4px}.lch span:nth-child(2){grid-column:2;text-align:center}
@@ -296,7 +296,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 68</div>
+<div class="note" style="text-align:center" id="foot">النسخة 69</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -581,7 +581,7 @@ function refresh(){
 
 
 /* --- market overview (BTC, ETH, breadth, my 24h vs BTC) --- */
-var MK={t:0,d:null,busy:false,err:false};
+var MK={t:0,d:null,busy:false,err:false,tab:"m"};
 function mkLoad(force){
   if(!snap||MK.busy)return;var age=Date.now()-MK.t;
   if(MK.d&&(force?age<6e4:age<3e5))return;
@@ -595,10 +595,10 @@ function mkLoad(force){
     call("/api/v3/klines",{symbol:"ETHUSDT",interval:"1d",limit:30},false)
   ]).then(function(r){
     var ch={};(r[0]||[]).forEach(function(t){var o=+t.openPrice,l=+t.lastPrice;if(o>0&&l>0)ch[t.symbol]={p:l,c:(l/o-1)*100}});
-    var br=null;
-    if(Array.isArray(r[1])){var up=0,dn=0;r[1].forEach(function(t){if(!/USDT$/.test(t.symbol)||STABLE[t.symbol.replace(/USDT$/,"")]||+t.quoteVolume<1e6)return;var o=+t.openPrice,l=+t.lastPrice;if(!(o>0))return;var c=l/o-1;if(c>0.0005)up++;else if(c<-0.0005)dn++});if(up+dn>=30)br=up/(up+dn)*100}
+    var br=null,all=[];
+    if(Array.isArray(r[1])){var up=0,dn=0;r[1].forEach(function(t){if(!/USDT$/.test(t.symbol)||STABLE[t.symbol.replace(/USDT$/,"")]||+t.quoteVolume<1e6)return;var o=+t.openPrice,l=+t.lastPrice;if(!(o>0))return;var c=l/o-1;if(halS(t.symbol.replace(/USDT$/,""))==="ok"&&l>0)all.push({s:t.symbol.replace(/USDT$/,""),p:l,c:c*100});if(c>0.0005)up++;else if(c<-0.0005)dn++});if(up+dn>=30)br=up/(up+dn)*100}
     var cl_=function(k){return Array.isArray(k)?k.map(function(x){return +x[4]}):[]};
-    MK.d={ch:ch,br:br,btc:cl_(r[2]),eth:cl_(r[3])};MK.t=Date.now();MK.err=false;
+    MK.d={ch:ch,br:br,all:all,btc:cl_(r[2]),eth:cl_(r[3])};MK.t=Date.now();MK.err=false;
   }).catch(function(){MK.err=true}).then(function(){MK.busy=false;mkRender()});
 }
 var SP3={},SP3B=false;
@@ -633,10 +633,14 @@ function mkRender(){
   var d=MK.d;
   if(!d){el.innerHTML='<div class="mkh"><b>السوق</b></div><div class="sub" style="margin:0">'+(MK.err?"تعذّر تحميل بيانات السوق":"جارٍ التحميل…")+'</div>';return}
   var b=d.ch.BTCUSDT,e=d.ch.ETHUSDT;if(!b){el.innerHTML='<div class="mkh"><b>السوق</b></div><div class="sub" style="margin:0">تعذّر تحميل بيانات السوق</div>';return}
+  var tabs='<div class="mk3" role="tablist">'+[["m","السوق"],["w","الرابحون"],["l","الخاسرون"]].map(function(x){return '<button role="tab" data-mk="'+x[0]+'" aria-selected="'+(MK.tab===x[0])+'" class="'+(MK.tab===x[0]?"on":"")+'">'+x[1]+'</button>'}).join("")+'</div>';
+  if(MK.tab!=="m"){
+    var g=MK.tab==="w",ls=(d.all||[]).filter(function(x){return g?x.c>0:x.c<0}).sort(function(x,y){return g?y.c-x.c:x.c-y.c}).slice(0,5);
+    el.innerHTML=tabs+(ls.length?'<div class="sub" style="margin:0 0 4px">أعلى '+(g?"ارتفاعاً":"انخفاضاً")+' خلال 24 ساعة، من عملاتك المباحة</div>'+ls.map(function(x){return '<div class="mkr"'+(CAN?' data-t="'+x.s+'" style="cursor:pointer"':'')+'><b>'+esc(x.s)+'</b><span class="p n">$'+px(x.p)+'</span><span class="n '+cl(x.c)+'">'+pc(x.c)+'</span></div>'}).join(""):'<div class="sub" style="margin:0">'+((d.all||[]).length?(g?"لا عملات مباحة رابحة الآن":"لا عملات مباحة خاسرة الآن"):"لا تتوفر بيانات العملات المباحة")+'</div>');return}
   var c20=d.btc.slice(-20),ma=c20.length>=20?c20.reduce(function(t,x){return t+x},0)/20:0,sc=(ma?(b.p>ma?1:-1):0)+(d.br==null?0:(d.br>=55?1:d.br<=45?-1:0)),
     st=sc>=1?["صاعد","b","up"]:sc<=-1?["هابط","s","down"]:["جانبي","g",""];
   var row=function(n,t,sp){return t?'<div class="mkr"'+(CAN?' data-t="'+n+'" style="cursor:pointer"':'')+'><b>'+n+'</b><span class="p n">$'+px(t.p)+'</span><span class="n '+cl(t.c)+'">'+pc(t.c)+'</span>'+mkSpark(sp)+'</div>':''};
-  var h='<div class="mkh"><b>السوق</b><span class="tag '+st[1]+'" style="margin:0">'+st[0]+'</span>'+(d.br!=null?'<small>'+N(Math.round(d.br)+"%")+' من العملات صاعدة</small>':'')+'</div>'+row("BTC",b,d.btc.slice(-8))+row("ETH",e,d.eth.slice(-8));
+  var h=tabs+'<div class="mkh"><b>السوق</b><span class="tag '+st[1]+'" style="margin:0">'+st[0]+'</span>'+(d.br!=null?'<small>'+N(Math.round(d.br)+"%")+' من العملات صاعدة</small>':'')+'</div>'+row("BTC",b,d.btc.slice(-8))+row("ETH",e,d.eth.slice(-8));
   var tot=equity(),prev=snap.usdt;
   snap.assets.forEach(function(a){var c=d.ch[a.sym+"USDT"];prev+=STABLE[a.sym]||!c?a.val:a.val/(1+c.c/100)});
   if(tot>0&&prev>0){var pf=(tot/prev-1)*100,df=pf-b.c;
@@ -2806,6 +2810,7 @@ document.addEventListener("click",function(ev){
   if(t.id==="newbtn")return oOpen("","BUY");
   if((el=t.closest("[data-swc]"))){var swk=el.getAttribute("data-swc");if(SW){SW.sel[swk]=!SW.sel[swk];el.classList.toggle("on",!!SW.sel[swk]);swSelInfo()}return}
   if((el=t.closest("[data-swall]"))){if(SW){var swv=el.getAttribute("data-swall")==="1";SW.coins.forEach(function(c){SW.sel[c.sym]=swv});swDraw()}return}
+  if((el=t.closest("[data-mk]"))){MK.tab=el.getAttribute("data-mk");mkRender();return}
   if(t.id==="rago")return raGo(t);
   if((el=t.closest("[data-rearm]")))return raOpen(el.getAttribute("data-rearm"));
   if((el=t.closest("[data-rearmx]")))return raDrop(el.getAttribute("data-rearmx"));
