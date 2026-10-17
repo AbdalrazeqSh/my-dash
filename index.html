@@ -57,7 +57,8 @@ button.sell{background:var(--sell);color:var(--onbs);border-color:transparent;fo
 .rpx{margin:0 0 8px}.rpx .chip{margin:0;font-size:.8rem}.rpx .chip b{margin-inline-start:4px}
 input[data-ghost]::placeholder{color:var(--dimmer);opacity:.85}
 .rrp{display:block;min-height:1.1em;margin-top:3px;font-size:.78rem;direction:ltr;text-align:start}
-.rkr{display:flex;gap:8px;align-items:center}.rkr input{flex:1;min-width:0}.rkr .seg{flex:0 0 auto;direction:ltr}.rkr .seg button{width:46px;padding:9px 0}
+.rkr{display:flex;gap:8px;align-items:center}.rkr input{flex:1;min-width:0}.exb{margin-top:8px}.exr{display:grid;grid-template-columns:54px 1fr 38px;gap:8px;align-items:center;margin-bottom:6px}.exr label{margin:0;font-size:.8rem}.exr input{text-align:center}.exr button{height:38px;padding:0;color:var(--down)}.exs{display:flex;align-items:center;gap:6px;margin:2px 0 8px;font-size:.78rem;color:var(--dim)}.exs span{flex:1}.exs input{width:62px;flex:none;text-align:center;padding:6px}
+.rk1{margin-top:12px}.rk1 label{margin:0;white-space:nowrap}.rk1 input{flex:0 1 120px!important;text-align:center}.rkr .seg{flex:0 0 auto;direction:ltr}.rkr .seg button{width:46px;padding:9px 0}
 .rrs{margin-top:8px;font-size:.84rem;min-height:1.2em}
 .stp{display:flex;align-items:center;gap:6px;margin:4px 0}.stp button{width:42px;height:38px;font-size:1.25rem;line-height:1;padding:0}.stp input{width:84px;text-align:center;direction:ltr}.stp span{color:var(--dim)}.stp small{color:var(--dim);margin-inline-start:6px;font-size:.78rem}
 .bs{display:flex;gap:10px;margin:12px 0 8px}
@@ -184,8 +185,8 @@ h3.plain{margin-bottom:6px}
         <div><label for="ox" class="lbs"><b>وقف الخسارة</b><span id="oxp"></span></label><div class="stw"><button type="button" data-rst="ox|-0.5" aria-label="أنقص">−</button><input id="ox" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ox|0.5" aria-label="زِد">+</button></div></div>
         <div><label for="ot" class="lbs"><b>الهدف</b><span id="otp"></span></label><div class="stw"><button type="button" data-rst="ot|-0.5" aria-label="أنقص">−</button><input id="ot" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ot|0.5" aria-label="زِد">+</button></div></div>
       </div>
-      <label for="orr">أخاطر بـ</label>
-      <div class="rkr"><input id="orr" inputmode="decimal" value="1"><div class="seg segs" id="orm"><button type="button" data-orm="p">%</button><button type="button" data-orm="d">$</button></div></div>
+      <div id="oex" class="exb"></div>
+      <div class="rkr rk1"><label for="orr">أخاطر بـ</label><input id="orr" inputmode="decimal" value="1"><div class="seg segs" id="orm"><button type="button" data-orm="p">%</button><button type="button" data-orm="d">$</button></div></div>
       <div id="orsz" class="rrs"></div>
     </div>
     <div id="osum"></div>
@@ -255,8 +256,8 @@ h3.plain{margin-bottom:6px}
           <div><label for="lx" class="lbs"><b>وقف الخسارة</b><span id="lxp"></span></label><div class="stw"><button type="button" data-rst="lx|-0.5" aria-label="أنقص">−</button><input id="lx" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lx|0.5" aria-label="زِد">+</button></div></div>
           <div><label for="lg" class="lbs"><b>الهدف</b><span id="lgp"></span></label><div class="stw"><button type="button" data-rst="lg|-0.5" aria-label="أنقص">−</button><input id="lg" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lg|0.5" aria-label="زِد">+</button></div></div>
         </div>
-        <label for="lrr">أخاطر بـ</label>
-        <div class="rkr"><input id="lrr" inputmode="decimal"><div class="seg segs" id="lrm"><button type="button" data-orm="p">%</button><button type="button" data-orm="d">$</button></div></div>
+        <div id="lex" class="exb"></div>
+        <div class="rkr rk1"><label for="lrr">أخاطر بـ</label><input id="lrr" inputmode="decimal"><div class="seg segs" id="lrm"><button type="button" data-orm="p">%</button><button type="button" data-orm="d">$</button></div></div>
         <div id="lrsz" class="rrs"></div>
       </div>
       <div id="lhint" class="sub"></div>
@@ -293,7 +294,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 62</div>
+<div class="note" style="text-align:center" id="foot">النسخة 63</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -340,7 +341,7 @@ function hmac(key,msg){
 /* --- api --- */
 function creds(){return {k:LS.g("bk"),s:LS.g("bs")}}
 var WSU=["wss://ws-api.binance.com:443/ws-api/v3","wss://ws-api.binance.com:9443/ws-api/v3"];
-var WSM={"/api/v3/account":"account.status","/api/v3/openOrders":"openOrders.status","/api/v3/myTrades":"myTrades","POST /api/v3/order":"order.place","DELETE /api/v3/order":"order.cancel","POST /api/v3/order/test":"order.test","POST /api/v3/order/cancelReplace":"order.cancelReplace","POST /api/v3/orderList/oco":"orderList.place.oco","POST /api/v3/orderList/opoco":"orderList.place.opoco","DELETE /api/v3/orderList":"orderList.cancel","DELETE /api/v3/openOrders":"openOrders.cancelAll"};
+var WSM={"/api/v3/account":"account.status","/api/v3/openOrders":"openOrders.status","/api/v3/myTrades":"myTrades","POST /api/v3/order":"order.place","DELETE /api/v3/order":"order.cancel","POST /api/v3/order/test":"order.test","POST /api/v3/order/cancelReplace":"order.cancelReplace","POST /api/v3/orderList/oco":"orderList.place.oco","POST /api/v3/orderList/opoco":"orderList.place.opoco","POST /api/v3/orderList/oto":"orderList.place.oto","DELETE /api/v3/orderList":"orderList.cancel","DELETE /api/v3/openOrders":"openOrders.cancelAll"};
 var SOCK=null,SOCKP=null,PEND={},SEQ=0,BAD={};
 function sockOpen(i){
   i=i||0;
@@ -538,7 +539,7 @@ function chVis(){
   var pr=[["od",O.sym],["ld",L.cs]];
   pr.forEach(function(q){var st=CHS[q[0]];if(!st||!q[1])return;if(st.sym!==q[1])chSetSym(st,q[1]);else{if(!st.k&&!st.busy)chLoad(st);chDraw(st)}});
 }
-function tmMark(){var m=TAB==="trd"?(SUB.trd==="ord"?"one":(L.dist==="cus"?"cus":"eq")):"",b=document.querySelectorAll("[data-tm]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-tm")===m)}
+function tmMark(){if(!$("oex").innerHTML)exRender("o");if(!$("lex").innerHTML)exRender("l");var m=TAB==="trd"?(SUB.trd==="ord"?"one":(L.dist==="cus"?"cus":"eq")):"",b=document.querySelectorAll("[data-tm]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-tm")===m)}
 function enter(){tmMark();show();render();chVis();if(TAB==="set"&&SUB.set==="hal")renderHal();if(TAB==="trd"&&SUB.trd==="lad")ladHint();if(TAB==="ana"&&SUB.ana==="jr")renderJournal();if(TAB==="ana"&&SUB.ana==="tr")trFit();try{window.scrollTo(0,0)}catch(e){}}
 function setTab(t){TAB=t;LS.s("tab",t);enter()}
 function applyTheme(){var t=LS.g("theme")||"auto",r=document.documentElement;if(t==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",t);var b=document.querySelectorAll("[data-th]");for(var i=0;i<b.length;i++)b[i].classList.toggle("on",b[i].getAttribute("data-th")===t)}
@@ -894,7 +895,7 @@ function lLoad(force){
   var sym=$("ls").value.trim().toUpperCase();
   if(!sym){L.cs="";L.f=null;L.last=0;$("lpxl").textContent="";chSetSym(CHS.ld,"");ladHint();return}
   if(!force&&L.cs===sym&&L.f)return;
-  if(L.cs&&L.cs!==sym){$("lx").value="";$("lg").value="";L.rd=true;L.sd=false;L.cl=[];L.lcr=0;if(L.dist==="cus")L.dist="eq"}
+  if(L.cs&&L.cs!==sym){$("lx").value="";$("lg").value="";L.rd=true;L.sd=false;L.cl=[];L.lcr=0;exReset("l");if(L.dist==="cus")L.dist="eq"}
   L.cs=sym;L.f=null;$("lpxl").textContent="جارٍ جلب السعر…";
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false)]).then(function(r){
     if(L.cs!==sym)return;
@@ -1052,7 +1053,7 @@ function ladPreview(){
   o.innerHTML='<div class="sub">جارٍ التحميل…</div>';
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sy+"USDT"},false),call("/api/v3/ticker/price",{symbol:sy+"USDT"},false)]).then(function(r){
     var f={};r[0].symbols[0].filters.forEach(function(x){f[x.filterType]=x});
-    var F={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0)},last=+r[1].price;
+    var F={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed),oto:!!r[0].symbols[0].otoAllowed},last=+r[1].price;
     var w=[],sw=0,i;
     if(cus){cus.forEach(function(c){w.push(c.w);sw+=c.w})}else for(i=0;i<n;i++){var x=L.dist==="inc"?1+i*0.5:1;w.push(x);sw+=x}
     var rows=[],errs=[],warns=[],sv=0,sq=0;
@@ -1071,17 +1072,29 @@ function ladPreview(){
     }
     if(L.side==="BUY"&&snap&&sv>freeUsdt())errs.push("المجموع "+usd(sv,0)+" أكبر من سيولتك المتاحة ("+usd(freeUsdt(),0)+")");
     if(L.side==="SELL"){var h=snap&&snap.assets.filter(function(a){return a.sym===sy})[0];if(!h||sq>freeQ(h)+1e-9)errs.push("الكمية أكبر من المتاح للبيع ("+qt(freeQ(h))+(lockQ(h)>0?"، المحجوز في أوامر أخرى "+qt(lockQ(h)):"")+")")}
+    var pe=null,xg=null;L.pe=null;
+    if(L.side==="BUY"){
+      xg=exGet("l");
+      if(xg.err)errs.push(xg.err);
+      else if(xg.t.length||xg.s.length){
+        pe=peSpecs(sy,rows.map(function(x){return{p:+x.p,ps:x.p,q:+x.q}}),xg,F,last,"LIMIT");
+        pe.errs.forEach(function(e){errs.push(e)});pe.warns.forEach(function(e){warns.push(e)});
+      }
+    }
     var html='';
     if(hc.msg)html+='<div class="warn">'+hc.msg+'</div>';
     html+=errs.map(function(e){return '<div class="err">'+e+'</div>'}).join("")+warns.map(function(e){return '<div class="warn">'+e+'</div>'}).join("");
     html+='<div class="sum">'+rows.map(function(x,i){return '<div class="row"><div class="l"><b>'+(i+1)+'</b><small class="n">'+pc(x.d)+'</small></div><div class="r"><b class="n">'+x.p+'</b> × <span class="n">'+x.q+'</span><br><small class="flat n">'+usd(x.v)+'</small></div></div>'}).join("")+'<div class="row"><div class="l"><b>المجموع</b></div><div class="r"><b class="n">'+usd(sv)+'</b></div></div></div>';
-    if(!errs.length){L.rows=rows;L.sym=sy;html+='<button class="'+(L.side==="BUY"?"buy":"sell")+'" id="lgo" style="width:100%">'+(rows.length>1?'إدراج '+rows.length+' أوامر':'إدراج الأمر')+'</button>'}
+    if(pe&&pe.specs.length)html+=peHtml(pe,xg);
+    if(!errs.length){L.rows=rows;L.sym=sy;if(pe&&pe.specs.length)L.pe=pe.specs;var nb=pe&&pe.specs.length?pe.specs.length:rows.length;html+='<button class="'+(L.side==="BUY"?"buy":"sell")+'" id="lgo" style="width:100%">'+(nb>1?'إدراج '+nb+' أوامر':'إدراج الأمر')+'</button>'}
     else L.rows=null;
     o.innerHTML=html;
   },function(e){bad("تعذّر التحميل: "+esc(e.message))});
 }
 function ladSend(){
-  var b=$("lgo");if(!L.rows||b.disabled)return;b.disabled=true;
+  var b=$("lgo");if(!L.rows||b.disabled)return;
+  if(L.pe){var sp0=L.pe;L.pe=null;L.rows=null;return peSend(sp0,b,$("lout"))}
+  b.disabled=true;
   var rows=L.rows,sy=L.sym,side=L.side,res=[],i=0;L.rows=null;
   function next(){
     if(i>=rows.length)return;var r=rows[i],k=i++;
@@ -2082,12 +2095,12 @@ function oLoad(){
   if(!sym){O.sym="";O.f=null;O.last=0;O.book=null;$("opx").textContent="";chSetSym(CHS.od,"");oChips();oCalc();return}
   if(O.sym===sym&&O.f)return;
   if(CHS.od.sym!==sym){if(snap&&(assetOf(sym)||snap.px[sym+"USDT"]))chSetSym(CHS.od,sym);else chSetSym(CHS.od,"")}
-  if(O.sym&&O.sym!==sym){$("ox").value="";$("ot").value="";O.rd=true;O.sd=false}
+  if(O.sym&&O.sym!==sym){$("ox").value="";$("ot").value="";O.rd=true;O.sd=false;exReset("o")}
   O.sym=sym;O.f=null;O.book=null;$("opx").textContent="جارٍ جلب السعر…";oAv();
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false),call("/api/v3/depth",{symbol:sym+"USDT",limit:50},false).catch(function(){return null})]).then(function(r){
     if(O.sym!==sym)return;
     var f={};r[0].symbols[0].filters.forEach(function(x){f[x.filterType]=x});
-    O.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed)};
+    O.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed),oto:!!r[0].symbols[0].otoAllowed};
     O.last=+r[1].price;
     var bk=r[2];O.book=bk&&bk.bids&&bk.asks&&bk.bids.length&&bk.asks.length?{bids:bk.bids,asks:bk.asks,bid:+bk.bids[0][0],ask:+bk.asks[0][0]}:null;
     $("opx").innerHTML='السعر الحالي <span class="n">'+px(O.last)+'</span> · <span style="text-decoration:underline;cursor:pointer" data-orf="1">تحديث</span>';
@@ -2179,6 +2192,20 @@ function oReview(){
   if(!O.f)return bad("جارٍ تحميل بيانات العملة، حاول بعد لحظة");
   var r=checkOrder(O.sym,O.side,O.f,O.last,oPx(),parseFloat($("oq").value),parseFloat($("ov").value),{type:O.type==="MARKET"?"MARKET":(O.mk?"MAKER":"LIMIT"),ed:O.ed});
   if(r.e)return bad(r.e);
+  var xg=O.side==="BUY"?exGet("o"):null;
+  if(xg&&xg.err)return bad(xg.err);
+  if(xg&&exUse(xg)&&!(O.type==="MARKET"&&xg.t.length<=1&&xg.s.length<=1)){
+    if(O.type==="MARKET")return bad("الأهداف المتعددة أو الوقفان تحتاج أمر Limit، لا أمر سوق");
+    var ent=[{p:+r.o.price,ps:r.o.price,q:+r.o.qty}],pe=peSpecs(O.sym,ent,xg,O.f,O.last,r.o.type==="MAKER"?"LIMIT_MAKER":"LIMIT");
+    if(pe.errs.length)return bad(pe.errs.join("<br>"));
+    er.innerHTML='<div class="sub">جارٍ التحقق من بايننس…</div>';
+    return testOrder(buildOrder(O.sym,O.side,r.o,"t"+Date.now().toString(36))).then(function(msg){
+      er.innerHTML="";
+      if(msg)return bad("بايننس سترفض هذا الأمر: "+esc(msg));
+      PE={specs:pe.specs};
+      openSheet('<h3 style="margin:0 0 10px">مراجعة الخطة</h3><div id="tin">'+(r.hc&&r.hc.msg?'<div class="warn">'+r.hc.msg+'</div>':'')+(r.warn?'<div class="warn">'+r.warn+'</div>':'')+'<div class="sum"><b>شراء '+esc(O.sym)+'</b><br><span class="n">'+N(r.o.price)+'</span> × <span class="n">'+N(r.o.qty)+'</span> · <span class="n">'+usd(r.o.val)+'</span></div>'+peHtml(pe,xg)+pe.warns.map(function(e){return '<div class="warn">'+e+'</div>'}).join("")+'<div id="terr"></div><div style="display:flex;gap:8px"><button class="buy" id="pego" style="flex:2">'+(pe.specs.length>1?'إدراج '+pe.specs.length+' أوامر':'إدراج الأمر')+'</button><button id="pback">رجوع</button></div></div>');
+    });
+  }
   var plan=null;if(O.side==="BUY"){var px_=parseFloat($("ox").value),pt_=parseFloat($("ot").value);if(px_>0||pt_>0)plan={x:px_>0?px_:0,t:pt_>0?pt_:0}}
   var auto=null;
   if(O.side==="BUY"&&plan&&plan.x>0&&plan.t>0&&(O.type==="MARKET"||O.f.opoco)){
@@ -2196,7 +2223,7 @@ function oReview(){
 }
 function oOpen(sym,side,opts){
   TAB="trd";SUB.trd="ord";LS.s("tab",TAB);LS.s("sub",JSON.stringify(SUB));
-  O.side=side||"BUY";O.type=(opts&&opts.type)||"LIMIT";O.mk=false;O.book=null;O.after=opts||null;$("os").value=sym||"";$("op").value="";$("oq").value="";$("ov").value="";O.ed="q";O.sym="";O.f=null;$("ox").value="";$("ot").value="";O.rd=true;O.ft=null;
+  O.side=side||"BUY";O.type=(opts&&opts.type)||"LIMIT";O.mk=false;O.book=null;O.after=opts||null;$("os").value=sym||"";$("op").value="";$("oq").value="";$("ov").value="";O.ed="q";O.sym="";O.f=null;$("ox").value="";$("ot").value="";O.rd=true;O.ft=null;exReset("o");
   oChips();enter();oLoad();
 }
 
@@ -2213,14 +2240,14 @@ function tmSwitch(to){
   var cur=SUB.trd==="ord"?"one":(L.dist==="cus"?"cus":"eq");if(to===cur)return;
   if(cur!=="one"){
     if(to==="one"){
-      var sy=$("ls").value.trim().toUpperCase(),b=L.side==="BUY",o={sym:sy,side:L.side,entries:[],stop:b?parseFloat($("lx").value)||0:0,targets:b&&parseFloat($("lg").value)>0?[parseFloat($("lg").value)]:[],amount:b&&L.ed==="v"?parseFloat($("lv").value)||0:0,plain:true};
+      var sy=$("ls").value.trim().toUpperCase(),b=L.side==="BUY",o={sym:sy,side:L.side,entries:[],stop:b?parseFloat($("lx").value)||0:0,targets:b&&parseFloat($("lg").value)>0?[parseFloat($("lg").value)]:[],amount:b&&L.ed==="v"?parseFloat($("lv").value)||0:0,plain:true,ex:JSON.parse(JSON.stringify(EX.l))};
       if(!sy){TAB="trd";SUB.trd="ord";LS.s("sub",JSON.stringify(SUB));O.side=L.side;return enter()}
       return ftRun(o);
     }
     if(to==="cus"&&!(L.cl&&L.cl.length))lcSeed();L.dist=to==="cus"?"cus":"eq";L.rows=null;L.lcr=0;lSyncRR();lrAuto();return ladHint();
   }
   /* from single */
-  var sy2=$("os").value.trim().toUpperCase(),b2=O.side==="BUY",x=parseFloat($("ox").value)||0,g=parseFloat($("ot").value)||0,amt=parseFloat($("ov").value)||0,px0=O.type==="LIMIT"?parseFloat($("op").value)||0:0;
+  var ex0=JSON.parse(JSON.stringify(EX.o)),sy2=$("os").value.trim().toUpperCase(),b2=O.side==="BUY",x=parseFloat($("ox").value)||0,g=parseFloat($("ot").value)||0,amt=parseFloat($("ov").value)||0,px0=O.type==="LIMIT"?parseFloat($("op").value)||0:0;
   TAB="trd";SUB.trd="lad";LS.s("tab",TAB);LS.s("sub",JSON.stringify(SUB));
   L.side=O.side;L.dist="eq";L.cl=[];L.lcr=0;L.rd=true;L.sd=false;L.rows=null;$("lx").value="";$("lg").value="";
   if(!sy2){L.dist=to==="cus"?"cus":"eq";return enter()}
@@ -2231,10 +2258,124 @@ function tmSwitch(to){
     if(to==="cus"){lcSeed();L.dist="cus"}
     if(b2){if(x>0)$("lx").value=flo(x,tk);if(g>0)$("lg").value=flo(g,tk)}
     if(b2&&amt>0&&O.ed==="v"){$("lv").value=String(amt);L.ed="v";L.rd=false}
+    if(b2){EX.l=ex0;exRender("l")}
     L.rows=null;lSyncRR();lrAuto();
   };
   enter();lLoad(true);
 }
+/* ---- trade plan: several targets / two stops, sent as linked order lists (OPOCO / OTO) ---- */
+var EX={o:{t:[],s:[],tw:[],sw:[]},l:{t:[],s:[],tw:[],sw:[]}},PE=null;
+function exReset(k){EX[k]={t:[],s:[],tw:[],sw:[]};exRender(k)}
+function exIds(k){return k==="o"?{x:"ox",t:"ot"}:{x:"lx",t:"lg"}}
+function exFr(raw,n){
+  var s=0,na=0,i,w=[];for(i=0;i<n;i++){var v=parseFloat(raw[i]);if(v>0){s+=v;w.push(v)}else{na++;w.push(0)}}
+  if(s>100.01)return null;
+  if(na){var each=(100-s)/na;if(!(each>0))return null;for(i=0;i<n;i++)if(!(w[i]>0))w[i]=each}
+  else if(Math.abs(s-100)>0.5)return null;
+  var t=w.reduce(function(a,b){return a+b},0);return w.map(function(x){return x/t});
+}
+function exGet(k){
+  var id=exIds(k),e=EX[k],T=[],S=[],r={t:[],s:[],err:""};
+  var pt=parseFloat($(id.t).value),ps=parseFloat($(id.x).value);
+  if(pt>0)T.push({p:pt,w:e.tw[0]});if(ps>0)S.push({p:ps,w:e.sw[0]});
+  e.t.forEach(function(v,j){var p=parseFloat(v);if(p>0)T.push({p:p,w:e.tw[j+1]})});
+  e.s.forEach(function(v,j){var p=parseFloat(v);if(p>0)S.push({p:p,w:e.sw[j+1]})});
+  T.sort(function(a,b){return a.p-b.p});S.sort(function(a,b){return b.p-a.p});
+  var ft=exFr(T.map(function(x){return x.w}),T.length),fs=exFr(S.map(function(x){return x.w}),S.length);
+  if(T.length&&!ft)r.err="حصص الأهداف يجب أن يكون مجموعها 100%";
+  else if(S.length&&!fs)r.err="حصص الوقف يجب أن يكون مجموعها 100%";
+  r.t=T.map(function(x,i){return{p:x.p,f:ft?ft[i]:0}});r.s=S.map(function(x,i){return{p:x.p,f:fs?fs[i]:0}});
+  return r;
+}
+function exUse(x){return (x.t.length||x.s.length)&&!(x.t.length===1&&x.s.length===1)}
+function exRender(k){
+  var h=$(k+"ex");if(!h)return;var e=EX[k],buy=k==="o"?O.side==="BUY":L.side==="BUY",o="";
+  if(!buy){h.innerHTML="";return}
+  var rows=function(kind,lab){
+    var a=e[kind],s="";
+    a.forEach(function(v,i){s+='<div class="exr"><label>'+lab+' '+(i+2)+'</label><input data-exp="'+k+'|'+kind+'|'+i+'" inputmode="decimal" value="'+esc(v)+'"><button type="button" class="lcx" data-exdel="'+k+'|'+kind+'|'+i+'" aria-label="احذف">✕</button></div>'});
+    return s;
+  };
+  o+=rows("t","هدف")+rows("s","وقف");
+  var share=function(kind,lab){
+    var n=1+e[kind].length,w=e[kind==="t"?"tw":"sw"];if(n<2)return"";
+    var s='<div class="exs"><span>حصص '+lab+' %</span>';
+    for(var i=0;i<n;i++)s+='<input data-exw="'+k+'|'+kind+'|'+i+'" inputmode="decimal" value="'+esc(w[i]||"")+'" placeholder="'+Math.round(100/n)+'">';
+    return s+'</div>';
+  };
+  o+=share("t","الأهداف")+share("s","الوقف");
+  o+='<div class="lact" style="margin:6px 0 0">'+(e.t.length<3?'<button type="button" class="sm" data-exadd="'+k+'|t">+ هدف</button>':'')+(e.s.length<1?'<button type="button" class="sm" data-exadd="'+k+'|s">+ وقف ثانٍ</button>':'')+'</div>';
+  h.innerHTML=o;
+}
+function peSplit(q,ts,ss,f){
+  var cut=[0,1],cum=function(a){var c=0,r=[];a.forEach(function(x){c+=x.f;r.push(c)});return r},tb=cum(ts),sb=cum(ss);
+  tb.concat(sb).forEach(function(x){if(x>1e-9&&x<1-1e-9)cut.push(x)});
+  cut.sort(function(a,b){return a-b});var u=[];cut.forEach(function(x){if(!u.length||x-u[u.length-1]>1e-9)u.push(x)});
+  var out=[],prev=0,dq=function(v){return +flo(v,f.step)};
+  for(var i=1;i<u.length;i++){
+    var a=u[i-1],b=u[i],m=(a+b)/2,ti=-1,si=-1,j;
+    for(j=0;j<tb.length;j++)if(tb[j]>m){ti=j;break}
+    for(j=0;j<sb.length;j++)if(sb[j]>m){si=j;break}
+    var c=i===u.length-1?dq(q):dq(q*b),qq=+(c-prev).toFixed(12);prev=c;
+    out.push({q:qq,t:ti,s:si});
+  }
+  return out;
+}
+function peSpecs(sym,entries,x,F,last,wtype){
+  var specs=[],errs=[],warns=[],loss=0,gain=0,dp=dec(F.step),fx=function(v){return flo(v,F.tick)};
+  var hasT=x.t.length>0,hasS=x.s.length>0,off=0.5;
+  if(hasT&&hasS&&!F.opoco)errs.push("هذه العملة لا تدعم الأمر المركّب (OPOCO) على بايننس");
+  if(!(hasT&&hasS)&&!F.oto)errs.push("هذه العملة لا تدعم الأمر المرتبط (OTO) على بايننس");
+  entries.forEach(function(en,ei){
+    var pieces=peSplit(en.q,x.t,x.s,F);
+    pieces.forEach(function(pc,pi){
+      var tag="دخول "+(ei+1)+(pieces.length>1?" ·"+(pi+1):"");
+      var tp=pc.t>=0?x.t[pc.t].p:0,sp=pc.s>=0?x.s[pc.s].p:0,xl=sp?+fx(sp*(1-off/100)):0,qn=+flo(pc.q*0.997,F.step);
+      if(!(pc.q>0)||pc.q<F.minQ){errs.push(tag+": الكمية صغيرة جداً، خفّض عدد الأهداف أو زد المبلغ");return}
+      if(sp&&!(sp<en.p))errs.push(tag+": الوقف "+px(sp)+" ليس تحت سعر الدخول "+px(en.p));
+      if(tp&&!(tp>en.p))errs.push(tag+": الهدف "+px(tp)+" ليس فوق سعر الدخول "+px(en.p));
+      if(tp&&qn*tp<F.minN)errs.push(tag+": قيمة أمر الهدف "+usd(qn*tp)+" أقل من الحد الأدنى ("+F.minN+"$)");
+      if(sp&&qn*xl<F.minN)errs.push(tag+": قيمة أمر الوقف "+usd(qn*xl)+" أقل من الحد الأدنى ("+F.minN+"$)");
+      if(sp&&F.dn&&xl<last*F.dn*1.03)errs.push(tag+": سعر الوقف بعيد جداً عن السوق وترفضه بايننس");
+      if(tp&&F.up&&tp>last*F.up*0.97)errs.push(tag+": سعر الهدف بعيد جداً عن السوق وترفضه بايننس");
+      var prm={symbol:sym+"USDT",workingType:wtype,workingSide:"BUY",workingPrice:en.ps,workingQuantity:pc.q.toFixed(dp),pendingSide:"SELL",newOrderRespType:"ACK"},path;
+      if(wtype==="LIMIT")prm.workingTimeInForce="GTC";
+      if(hasT&&hasS){path="/api/v3/orderList/opoco";prm.pendingAboveType="LIMIT_MAKER";prm.pendingAbovePrice=fx(tp);prm.pendingBelowType="STOP_LOSS_LIMIT";prm.pendingBelowStopPrice=fx(sp);prm.pendingBelowPrice=fx(xl);prm.pendingBelowTimeInForce="GTC"}
+      else{
+        path="/api/v3/orderList/oto";prm.pendingQuantity=qn.toFixed(dp);
+        if(hasT){prm.pendingType="LIMIT_MAKER";prm.pendingPrice=fx(tp)}
+        else{prm.pendingType="STOP_LOSS_LIMIT";prm.pendingStopPrice=fx(sp);prm.pendingPrice=fx(xl);prm.pendingTimeInForce="GTC"}
+      }
+      prm.listClientOrderId="pl"+Date.now().toString(36)+ei+pi+Math.random().toString(36).slice(2,5);
+      specs.push({path:path,prm:prm,tag:tag,lab:"دخول "+(ei+1),e:en.p,q:pc.q,t:tp,s:sp});
+      if(sp)loss+=pc.q*((en.p-sp)+(en.p+sp)*RRF);
+      if(tp)gain+=pc.q*((tp-en.p)-(tp+en.p)*RRF);
+    });
+  });
+  if(specs.length>15)errs.push("عدد الأوامر المرتبطة ("+specs.length+") كبير. الحد 15، خفّض الدخول أو الأهداف");
+  if(!hasT||!hasS)warns.push(hasT?"بلا وقف: لا حماية من الهبوط":"بلا هدف: لا جني ربح تلقائي");
+  return{specs:specs,errs:errs,warns:warns,loss:hasS?loss:0,gain:hasT?gain:0};
+}
+function peHtml(pe,x){
+  var sum='<div class="sum"><b>الخروج</b><br>'+
+    (x.t.length?'أهداف: '+x.t.map(function(a){return '<span class="n">'+px(a.p)+'</span>'+(x.t.length>1?' ('+Math.round(a.f*100)+'%)':'')}).join(" · "):'بلا أهداف')+'<br>'+
+    (x.s.length?'وقف: '+x.s.map(function(a){return '<span class="n">'+px(a.p)+'</span>'+(x.s.length>1?' ('+Math.round(a.f*100)+'%)':'')}).join(" · "):'بلا وقف')+'</div>';
+  var tot='<div class="sum">'+(pe.loss>0?'<div class="row"><div class="l">أقصى خسارة</div><div class="r"><b class="n down">'+usd(pe.loss)+'</b></div></div>':'')+(pe.gain>0?'<div class="row"><div class="l">الربح إن تحققت الأهداف</div><div class="r"><b class="n up">'+usd(pe.gain)+'</b></div></div>':'')+'<div class="row"><div class="l">الأوامر المرتبطة</div><div class="r"><b class="n">'+pe.specs.length+'</b></div></div></div>';
+  return sum+tot;
+}
+function peSend(specs,btn,host,done){
+  var i=0,ok=[],bad=null;btn.disabled=true;
+  function step(){
+    if(i>=specs.length)return Promise.resolve();var s=specs[i++];btn.textContent="… "+i+"/"+specs.length;
+    return call(s.path,s.prm,true,0,"POST").then(function(){ok.push(s);return step()},function(e){bad={s:s,m:e.message}});
+  }
+  return step().then(function(){
+    busy=false;
+    var html='<div class="sum"><b class="'+(!bad?"up":"down")+'">أُدرج '+ok.length+' من '+specs.length+(!bad?' ✓':'')+'</b>'+(ok.length?'<br><span class="age">'+ok.map(function(s){return s.lab||s.tag}).filter(function(v,i,a){return a.indexOf(v)===i}).map(esc).join(" · ")+'</span>':'')+'</div>'+(bad?'<div class="err" style="margin-top:8px">توقف عند '+esc(bad.s.tag)+': '+esc(bad.m)+'<br><span class="age">ما أُدرج قبله يبقى مفتوحاً، ويمكنك إلغاؤه من «الأوامر المفتوحة».</span></div>':'<div class="sub" style="margin:8px 0">تُفعَّل الحماية تلقائياً عند تنفيذ كل دخول.</div>');
+    host.innerHTML=html+(done||"");refresh();
+  });
+}
+
 /* ---- free text: parse a pasted trade text and fill the order fields (never sends) ---- */
 var FT=null;
 function ftNorm(t){
@@ -2288,8 +2429,8 @@ function ftReview(o){
   else ok.push(o.market||!o.entries.length?"بسعر السوق":"");
   if(o.stop)ok.push("وقف "+o.stop);
   if(o.pctStop)w.push("الوقف بالنسبة المئوية غير مدعوم، أدخله بالسعر");
-  if(o.targets.length)ok.push("هدف "+o.targets[0]);
-  if(o.targets.length>1)w.push("استخدمتُ الهدف الأول فقط ("+o.targets.length+" أهداف في النص)");
+  if(o.targets.length)ok.push(o.targets.length>1?"أهداف "+o.targets.slice(0,4).join(" · "):"هدف "+o.targets[0]);
+  if(o.targets.length>4)w.push("استخدمتُ أول 4 أهداف فقط ("+o.targets.length+" في النص)");
   if(o.amount)ok.push("مبلغ "+o.amount+"$");
   if(o.lev>1)w.push("ذُكرت رافعة "+o.lev+"x، السبوت بلا رافعة فتجاهلتُها");
   if(o.side==="SELL"&&(o.stop||o.targets.length))w.push("الوقف والهدف لا يُستخدمان مع أمر البيع");
@@ -2326,6 +2467,7 @@ function ftRun(o){
       if(stop&&stop<es[es.length-1])$("lx").value=flo(stop,tk);
       if(tgt&&tgt>es[0])$("lg").value=flo(tgt,tk);
       if(o.amount>0){$("lv").value=String(o.amount);L.ed="v";L.rd=false}
+      if(o.targets.length>1){EX.l={t:o.targets.slice(1,4).map(String),s:[],tw:[],sw:[]};exRender("l")}
       L.rows=null;
       var a=lAvg(),x=parseFloat($("lx").value),t=parseFloat($("lg").value);
       if(a>0&&x>0&&x<a&&t>a){O.rr=Math.round(rrOf(a,x,t)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}
@@ -2346,6 +2488,8 @@ function ftRun(o){
       if(tgt&&tgt>ref)$("ot").value=flo(tgt,tk);
     }
     if(o.amount>0){$("ov").value=String(o.amount);O.ed="v";O.rd=false}
+    if(o.ex){EX.o=o.ex;exRender("o")}
+    else if(buy&&o.targets.length>1){EX.o={t:o.targets.slice(1,4).map(String),s:[],tw:[],sw:[]};exRender("o")}
     var p=oPx(),x=parseFloat($("ox").value),t=parseFloat($("ot").value);
     if(p>0&&x>0&&x<p&&t>p){O.rr=Math.round(rrOf(p,x,t)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}
     else if(x>0&&x<p)rrFix();
@@ -2527,7 +2671,7 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-tab]"))){var nt=el.getAttribute("data-tab");if(nt==="trd"&&TAB!=="trd"&&SUB.trd!=="ord"){SUB.trd="ord";LS.s("sub",JSON.stringify(SUB));var sy0=$("ls").value.trim();if(sy0&&!$("os").value.trim())$("os").value=sy0}return setTab(nt)}
   if(t.id==="cgo"&&CALC)return tradeSheet(CALC.sym,{p:CALC.p,q:CALC.q});
   if(t.id==="cpx"){var sy=$("cs").value.trim().toUpperCase();if(!sy){err("اكتب رمز العملة أولاً");return}err("");t.textContent="…";call("/api/v3/ticker/price",{symbol:sy+"USDT"},false).then(function(r){$("ce").value=String(+r.price);t.textContent="السعر الحالي";calcRun()},function(e){t.textContent="السعر الحالي";err("تعذّر جلب السعر: "+e.message)});return}
-  if((el=t.closest("[data-ls]"))){L.side=el.getAttribute("data-ls");L.rd=true;L.cl=[];L.lcr=0;if(L.dist==="cus")L.dist="eq";L.rows=null;$("lout").innerHTML="";if(L.auto&&L.f)lFill();return ladHint()}
+  if((el=t.closest("[data-ls]"))){L.side=el.getAttribute("data-ls");L.rd=true;exRender("l");L.cl=[];L.lcr=0;if(L.dist==="cus")L.dist="eq";L.rows=null;$("lout").innerHTML="";if(L.auto&&L.f)lFill();return ladHint()}
   if(t.closest("[data-lrf]"))return lLoad(true);
   if(t.closest("[data-lpp0]")){if(L.f){$("lp1").value=flo(L.last,L.f.tick);L.auto=false;L.rows=null;lrFix();lrAuto();ladHint()}return}
   if((el=t.closest("[data-lpp]"))){if(L.f){$("lp2").value=flo(L.last*(1+parseFloat(el.getAttribute("data-lpp"))/100),L.f.tick);L.auto=false;L.rows=null;lrFix();lrAuto();ladHint()}return}
@@ -2552,7 +2696,7 @@ document.addEventListener("click",function(ev){
     return enter()}
   if((el=t.closest("[data-th]"))){LS.s("theme",el.getAttribute("data-th"));return applyTheme()}
   if(t.id==="allc")return setTab("wal");
-  if((el=t.closest("[data-os]"))){O.side=el.getAttribute("data-os");O.rd=true;oChips();oSync();return oCalc()}
+  if((el=t.closest("[data-os]"))){O.side=el.getAttribute("data-os");O.rd=true;exRender("o");oChips();oSync();return oCalc()}
   if((el=t.closest("[data-ot]"))){O.type=el.getAttribute("data-ot");if(O.type==="MARKET")O.mk=false;oChips();rrFix();rrAuto();oSync();return oCalc()}
   if(t.closest("[data-omk]")){O.mk=!O.mk;oChips();return oCalc()}
   if((el=t.closest("[data-obk]"))){if(O.book&&O.f){$("op").value=flo(el.getAttribute("data-obk")==="bid"?O.book.bid:O.book.ask,O.f.tick);oSync()}return oCalc()}
@@ -2595,6 +2739,11 @@ document.addEventListener("click",function(ev){
   if(t.id==="newbtn")return oOpen("","BUY");
   if((el=t.closest("[data-swc]"))){var swk=el.getAttribute("data-swc");if(SW){SW.sel[swk]=!SW.sel[swk];el.classList.toggle("on",!!SW.sel[swk]);swSelInfo()}return}
   if((el=t.closest("[data-swall]"))){if(SW){var swv=el.getAttribute("data-swall")==="1";SW.coins.forEach(function(c){SW.sel[c.sym]=swv});swDraw()}return}
+  if(t.id==="pego"&&PE){var sp1=PE.specs;PE=null;return peSend(sp1,t,$("tin"),'<button id="tclose" style="width:100%;margin-top:8px">إغلاق</button>')}
+  var exa=t.closest("[data-exadd]");
+  if(exa){var xp=exa.getAttribute("data-exadd").split("|"),xe=EX[xp[0]];xe[xp[1]].push("");exRender(xp[0]);return}
+  var exd=t.closest("[data-exdel]");
+  if(exd){var dp2=exd.getAttribute("data-exdel").split("|"),de=EX[dp2[0]],di=+dp2[2];de[dp2[1]].splice(di,1);de[dp2[1]==="t"?"tw":"sw"]=[];exRender(dp2[0]);return}
   var tmb=t.closest("[data-tm]");if(tmb)return tmSwitch(tmb.getAttribute("data-tm"));
   if(t.closest("[data-ft]"))return ftSheet();
   if(t.id==="ftgo")return ftApply();
@@ -2610,6 +2759,7 @@ document.addEventListener("click",function(ev){
   if(t.id==="tload"){var s=$("tsym").value.trim().toUpperCase();if(s){$("tin").textContent="…";loadSym(s)}return}
   if((el=t.closest("[data-sd]"))){T.side=el.getAttribute("data-sd");return drawForm()}
   if(t.id==="treview")return review();
+  if(t.id==="pback")return closeSheet();
   if(t.id==="tback")return T&&T.page?closeSheet():drawForm();
   if(t.id==="tgo")return send();
   if(t.id==="xgo"){t.disabled=true;t.textContent="…";var id=t.getAttribute("data-id"),sy=t.getAttribute("data-s");
@@ -2696,7 +2846,11 @@ document.addEventListener("click",function(ev){
 });
 
 $("calc").addEventListener("input",calcRun);
-document.addEventListener("input",function(ev){if(ev.target&&ev.target.id==="ftx")ftLive()});
+document.addEventListener("input",function(ev){var tg=ev.target;if(!tg)return;if(tg.id==="ftx")return ftLive();
+  var a=tg.getAttribute&&tg.getAttribute("data-exp"),b=tg.getAttribute&&tg.getAttribute("data-exw");
+  if(a){var q=a.split("|");EX[q[0]][q[1]][+q[2]]=tg.value;L.rows=null;return}
+  if(b){var q2=b.split("|");EX[q2[0]][q2[1]==="t"?"tw":"sw"][+q2[2]]=tg.value;L.rows=null}
+});
 $("lad").addEventListener("input",function(ev){L.rows=null;var id=ev.target.id,tg=ev.target;
   if(tg.getAttribute&&(tg.getAttribute("data-lcp")!==null||tg.getAttribute("data-lcw")!==null)){
     var ip=tg.getAttribute("data-lcp"),x=L.cl[+(ip!==null?ip:tg.getAttribute("data-lcw"))];
