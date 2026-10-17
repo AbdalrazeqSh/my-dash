@@ -296,7 +296,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 72</div>
+<div class="note" style="text-align:center" id="foot">النسخة 73</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1642,7 +1642,9 @@ function chCap(st){
   var i0=Math.max(0,Math.floor(st.v0)),i1=Math.min(k.length-1,Math.ceil(st.v1)),hi=-1e99,lo=1e99;
   for(var i=i0;i<=i1;i++){var ch_=k[i][3]||k[i][1],cl_=k[i][4]||k[i][1];if(ch_>hi)hi=ch_;if(cl_<lo)lo=cl_}
   var ch=(k[i1][1]/k[i0][1]-1)*100;
-  return 'النطاق المعروض: '+N(pc(ch))+' · أعلى '+N(px(hi))+' · أدنى '+N(px(lo))+(st.err?' · تعذّر التحديث':'');
+  var nk=k.length,iv=k[nk-1][0]-k[nk-2][0],age=Date.now()-k[nk-1][0],stl='';
+  if(iv>0&&age>Math.max(3*iv,36e5)){var dd=Math.floor(age/864e5),hh=Math.floor(age/36e5);stl='<br><b class="down">⚠ آخر شمعة قبل '+N(dd>=1?dd+" يوم":hh+" ساعة")+' ('+chDate(k[nk-1][0])+' '+hm(k[nk-1][0])+')، لا تداول حديث على هذا الزوج. الأسعار قديمة.</b>'}
+  return 'النطاق المعروض: '+N(pc(ch))+' · أعلى '+N(px(hi))+' · أدنى '+N(px(lo))+(st.err?' · تعذّر التحديث':'')+stl;
 }
 function chInfo(st){
   var c=st.cr,k=st.k;if(!c||!k||!c.keep)return '';var P=c.p;
