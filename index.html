@@ -296,7 +296,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 69</div>
+<div class="note" style="text-align:center" id="foot">النسخة 70</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -894,9 +894,11 @@ function lFill(){
 function lChips(){
   var b=L.side==="BUY",l=b?[5,10,15,20]:[5,10,15,20],h='';
   if(L.dist!=="cus"){h='<span class="chip" data-lpp0="1">أول مستوى = السوق</span>';l.forEach(function(x){h+='<span class="chip" data-lpp="'+(b?-x:x)+'">آخر مستوى '+(b?"−":"+")+x+'%</span>'})}
-  if(L._ps!==L.side){L.pc=0;L._ps=L.side}
-  h+=ruler("l",L.pc||0,0);
-  $("lchips").innerHTML=h;
+  var ps=L._ps!==L.side;if(ps){L.pc=0;L._ps=L.side}
+  if(!$("lchc")||!$("lrul"))$("lchips").innerHTML='<div id="lchc"></div><div id="lrul"></div>';
+  $("lchc").innerHTML=h;
+  /* the ruler element must survive re-renders, or a finger drag is cut off mid-gesture */
+  if(ps||!$("lrul").firstChild)$("lrul").innerHTML=ruler("l",L.pc||0,0);
 }
 function lLoad(force){
   var sym=$("ls").value.trim().toUpperCase();
@@ -2085,8 +2087,8 @@ function oChips(){
     h+='<span class="chip'+(O.mk?" on":"")+'" data-omk="1">صانع فقط (Post-Only)</span>';
   }
   $("ochips").innerHTML=h;
-  if(O._ps!==O.side||O._sy!==O.sym){O.pc=0;O._ps=O.side;O._sy=O.sym}
-  $("opct").innerHTML=ruler("o",O.pc||0,0);
+  var ops=O._ps!==O.side||O._sy!==O.sym;if(ops){O.pc=0;O._ps=O.side;O._sy=O.sym}
+  if(ops||!$("opct").firstChild)$("opct").innerHTML=ruler("o",O.pc||0,0);
   var nm=O.sym||"",bk=O.book;$("bsn1").textContent=nm;$("bsn2").textContent=nm;
   $("bsp1").textContent=bk?px(bk.ask):(O.last?px(O.last):"");$("bsp2").textContent=bk?px(bk.bid):(O.last?px(O.last):"");
   if(snap){var ss=snap.assets.filter(function(a){return a.price>0&&a.val>=1&&!STABLE[a.sym]}).sort(function(a,b){return b.val-a.val}).slice(0,8);
