@@ -296,7 +296,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 74</div>
+<div class="note" style="text-align:center" id="foot">النسخة 75</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -466,6 +466,7 @@ function ordRow(o,last){
 }
 function render(){
   if(!snap)return;
+  (function(){var hs={},ch=false;snap.assets.forEach(function(a){if(a.val>=1)hs[a.sym]=1});Object.keys(AVG).forEach(function(k){if(!hs[k]){delete AVG[k];ch=true}});if(ch)LS.s("avg",JSON.stringify(AVG))})();
   var as=snap.assets.map(function(a){a.avg=AVG[a.sym]?AVG[a.sym].a:0;return a}).sort(function(a,b){return b.val-a.val});
   var hold=as.reduce(function(t,a){return t+a.val},0),tot=snap.usdt+hold;
   $("tot").textContent=usd(tot,0);
@@ -597,7 +598,7 @@ function mkLoad(force){
   ]).then(function(r){
     var ch={};(r[0]||[]).forEach(function(t){var o=+t.openPrice,l=+t.lastPrice;if(o>0&&l>0)ch[t.symbol]={p:l,c:(l/o-1)*100}});
     var br=null,all=[];
-    if(Array.isArray(r[1])){var up=0,dn=0;r[1].forEach(function(t){if(!/USDT$/.test(t.symbol)||STABLE[t.symbol.replace(/USDT$/,"")]||+t.quoteVolume<1e6)return;var o=+t.openPrice,l=+t.lastPrice;if(!(o>0))return;var c=l/o-1;if(halS(t.symbol.replace(/USDT$/,""))==="ok"&&l>0)all.push({s:t.symbol.replace(/USDT$/,""),p:l,c:c*100,r:+t.lowPrice>0?(+t.highPrice/+t.lowPrice-1)*100:0});if(c>0.0005)up++;else if(c<-0.0005)dn++});if(up+dn>=30)br=up/(up+dn)*100}
+    if(Array.isArray(r[1])){aliveMap(r[1]);var up=0,dn=0;r[1].forEach(function(t){if(!/USDT$/.test(t.symbol)||STABLE[t.symbol.replace(/USDT$/,"")]||+t.quoteVolume<1e6)return;var o=+t.openPrice,l=+t.lastPrice;if(!(o>0))return;var c=l/o-1;if(halS(t.symbol.replace(/USDT$/,""))==="ok"&&l>0&&(!t.closeTime||+t.closeTime>Date.now()-1296e5)&&(t.count===undefined||+t.count>0))all.push({s:t.symbol.replace(/USDT$/,""),p:l,c:c*100,r:+t.lowPrice>0?(+t.highPrice/+t.lowPrice-1)*100:0});if(c>0.0005)up++;else if(c<-0.0005)dn++});if(up+dn>=30)br=up/(up+dn)*100}
     var cl_=function(k){return Array.isArray(k)?k.map(function(x){return +x[4]}):[]};
     MK.d={ch:ch,br:br,all:all,btc:cl_(r[2]),eth:cl_(r[3])};MK.t=Date.now();MK.err=false;
   }).catch(function(){MK.err=true}).then(function(){MK.busy=false;mkRender()});
@@ -608,6 +609,7 @@ var SST={},DLS=(function(){try{var j=JSON.parse(LS.g("dls")||"{}");return j&&j.l
 function sstBad(sy){var e=SST[sy];return !!(e&&e.s&&e.s!=="TRADING")}
 function symFlag(sy,side){
   var e=SST[sy];if(e&&e.s&&e.s!=="TRADING")return{k:"bad",blk:true,m:'غير متاحة للتداول الآن على بايننس (الحالة: '+esc(e.s)+')، قد تكون موقوفة أو في طريقها للحذف',sh:"موقوفة"};
+  if(ALIVE.m&&Date.now()-ALIVE.t<9e5&&!ALIVE.m[sy+"USDT"])return{k:"dead",blk:false,m:'لا تداول حديث على هذا الزوج (آخر 36 ساعة)، قد يكون ميتاً أو موقوفاً',sh:"لا تداول"};
   var d=DLS.l[sy];if(d&&d>=dayKey(Date.now()))return{k:"del",blk:side!=="SELL",m:'أعلنت بايننس حذفها بتاريخ '+esc(d)+(side==="SELL"?'، يمكنك البيع فقط':'، لا تشترِ'),sh:"ستُحذف"};
   return null;
 }
@@ -636,6 +638,10 @@ function stLoad(force){
     }catch(e){done()}
   }
 }
+/* live-pair map from the 24h ticker: a pair with no trade for ~36h (halted/removed) is treated as dead and hidden */
+var ALIVE={t:0,m:null};
+function aliveMap(r){var m={},now=Date.now();(r||[]).forEach(function(x){if(+x.lastPrice>0&&(!x.closeTime||+x.closeTime>now-1296e5)&&(x.count===undefined||+x.count>0))m[x.symbol]=1});ALIVE={t:now,m:m};return m}
+function avgOf(sym){var a=snap&&snap.assets.filter(function(x){return x.sym===sym})[0];return a&&a.val>=1&&AVG[sym]?AVG[sym].a:0}
 var SP3={},SP3B=false;
 function sp3Svg(a){
   var w=52,h=14,mn=Math.min.apply(null,a),mx=Math.max.apply(null,a);if(mx===mn)mx=mn+1;
@@ -881,7 +887,7 @@ function calcRun(){
 
 function autoAvail(){
   var t=+LS.g("availT")||0;if(Date.now()-t<864e5)return;LS.s("availT",String(Date.now()));
-  call("/api/v3/ticker/price",{},false).then(function(r){if(!Array.isArray(r))return;var m={};r.forEach(function(x){m[x.symbol]=1});LS.s("avail",JSON.stringify(Object.keys(BASE).filter(function(b){return m[b+"USDT"]}).sort()))},function(){LS.d("availT")});
+  call("/api/v3/ticker/24hr",{type:"MINI"},false).then(function(r){if(!Array.isArray(r))return;var m=aliveMap(r);LS.s("avail",JSON.stringify(Object.keys(BASE).filter(function(b){return m[b+"USDT"]}).sort()))},function(){LS.d("availT")});
 }
 /* --- halal list --- */
 var HALAL_BASE="0G,2Z,ACH,ACN,ACT,ACU,ADA,ADI,AGI,AGLD,AGRS,AGT,AIA,AIN,AIO,AIOT,AIX,AIXBT,AKE,ALCH,ALEO,ALEPH,ALGO,ALI,ALPH,ALPINE,ALTLAYER,AME,AMP,ANKR,ANYONE,AO,APE,API3,APT,APTM,AR,ARB,ARC,ARCS,ARCSOL,AREA,ARK,ARKM,ARPA,ARRR,ART,ARX,ASM,ASP,ASTR,AT,ATH,ATLAS,ATOM,ATR,ATS,AUKI,AURORA,AVA,AVAAI,AVAIL,AVAX,AWE,AZERO,AZTEC,B2,B3,B3TR,BANANA,BAT,BCH,BDX,BDXN,BEAM,BEAMX,BGSC,BICO,BID,BILL,BIO,BIOFI,BLEND,BLESS,BLUAI,BMT,BOBA,BOSON,BREV,BSV,BTC,BTT,BZZ,CAMP,CARR,CARV,CBK,CCD,CELL,CELO,CELR,CESS,CFX,CGPT,CHEQ,CHEX,CHR,CHZ,CKB,CLANKER,CLS,COAI,COMAI,COOKIE,CORE,COS,CREO,CROSS,CSPR,CTK,CTP,CUDIS,CWEB,CYBER,CYS,DASH,DATA,DCR,DDMT,DEAI,DEGEN,DEXE,DIAM,DIN,DKA,DMTR,DN,DNX,DOGE,DOP2,DOT,DSYNC,DUSK,EAI,ECHELON,EDEN,EDGE,EDU,EFFECT,EGLD,EGO,EIGEN,EL,ELA,ELF,ELIZAOS,ELSA,ENJ,ENS,ENSO,EPIC,ERA,ES,ESP,ESX,ETC,ETH,ETHW,ETN,EURI,EWT,FDUSD,FET,FHE,FIDA,FIL,FIRO,FITFI,FLOCK,FLR,FLT,FLUX,FORT,FREEDOM,FUEL,GAIA,GAIN,GALA,GEOD,GHX,GLMR,GLQ,GOMINING,GPS,GRAM,GRASS,GRIFFAIN,GRT,GTAI,GTC,GWEI,HAI,HASHAI,HBAR,HEART,HEU,HIGH,HIVE,HMND,HNS,HNT,HOLO,HONEY,HOOK,HOPR,HOT,HTR,HYPER,ICNT,ICP,ID,IKA,IMU,IMX,INIT,IO,ION,IOST,IOTA,IOTX,IQ,IRON,IRYS,ISP,JASMY,JCT,KAIA,KAITO,KARRAT,KAS,KAT,KGEN,KITE,KITEAI,KLV,KSM,KTA,KULA,L3,LA,LAT,LAVA,LBC,LINEA,LINK,LIT,LKY,LL,LOT,LPT,LRC,LTC,LUMIA,LUNA,LYN,LYX,MAGIC,MAN,MANA,MANTA,MAP,MAPO,MASK,MAT,MATH,ME,MEGA,MERL,METIS,MGO,MINA,MIRA,MNTC,MOCA,MON,MOVE,MOVR,MPC,MYRIA,MYST,NAORIS,NATIX,NAVI,NC,NCDT,NCT,NEAR,NEON,NERO,NES,NETX,NEWT,NEXA,NFP,NFT,NIGHT,NIL,NIM,NKN,NOCK,NODL,NOS,NRG,NS,NTX,NUM,NXRA,NYM,OAS,OBOL,OBT,OCTA,OL,OLAS,OMG,OMI,ON,ONE,ONG,ONI,OORT,OP,OPEN,OPENX,OPG,ORAI,ORDI,OVPP,OVR,OWL,OXT,PAAL,PAL,PART,PARTI,PAYAI,PEAQ,PEP,PEPECOIN,PHA,PHB,PIB,PIEVERSE,PIGGY,PIVX,PLAY,POKT,POL,POLYX,POND,PORTAL,POWER,PPC,PRL,PRO,PROMPT,PROPC,PROPS,PROVE,PUBLIC,PUNDIAI,PUNDIX,PUSH,PYTH,QAIT,QBX,QKC,QNT,QRL,QTUM,QUAI,QUBIC,RAD,RAIL,RARE,REAL,REEF,RENDER,REQ,RIF,RIO,RIZ,RIZE,RLC,RNBW,ROAM,RON,ROSE,RSC,RSR,RSS3,RVN,RXD,SAFE,SAGA,SAHARA,SAND,SAPIEN,SC,SCR,SCRT,SEI,SENT,SERV,SFP,SHARE,SHELL,SHM,SHR,SHX,SIGN,SIX,SKL,SKR,SKYAI,SNAI,SNS,SNSY,SNT,SOL,SOLVEX,SOMI,SONIC,SOON,SOPH,SOSO,SPACE,SPEC,SQD,SQT,SRC,SRX,SSV,ST,STABLE,STAR,STBU,STEEM,STORJ,STREAM,STX,SUI,SUPRA,SWARMS,SWFTC,SXT,SYL,SYS,TA,TAG,TAI,TAIKO,TAKE,TAO,TARA,TEL,TERRA,TET,TFUEL,THREE,TIA,TLOS,TNSR,TOKEN,TORN,TOWNS,TRAC,TRUF,TRUST,TRVL,TRX,TTM,TTN,TUSD,TWT,TX,U2U,ULTIMA,UPC,UQC,US,USAT,USDC,USDP,VAI,VANA,VANRY,VELO,VERONA,VET,VEX,VIRTUAL,VR,VRA,VSYS,VTHO,VVV,WAL,WALLI,WAVES,WAXP,WBAI,WCT,WIN,WLD,WMTX,WXT,XAI,XAN,XCH,XCN,XCX,XDB,XEC,XEL,XEP,XL1,XLM,XMN,XMR,XNA,XNY,XPL,XR,XRD,XRP,XRPH,XSWAP,XTER,XTZ,XU3O8,XUSD,XVG,XYM,XYO,YNE,YOM,ZAMA,ZANO,ZBCN,ZEC,ZEN,ZENT,ZETA,ZIG,ZIL,ZK,ZKC,ZKJ,ZKP,ZKWASM,ZRC,ZRO,ZTC";var BASE={};HALAL_BASE.split(",").forEach(function(x){BASE[x]=1});
@@ -1248,7 +1254,7 @@ function protectSheet(sym,opts){
   openSheet('<div class="sub">جارٍ التحميل…</div>');
   Promise.all([exInfo(sym),call("/api/v3/account",{omitZeroBalances:"true"},true)]).then(function(r){
     var bal=r[1].balances.filter(function(b){return b.asset===sym})[0]||{free:0,locked:0},legs=opts.lid?snap.orders.filter(function(o){return o.lid===opts.lid}):[],lq=legs.reduce(function(m,o){return Math.max(m,o.qty)},0);
-    PR.f=r[0].f;PR.last=r[0].last;PR.avg=AVG[sym]?AVG[sym].a:0;PR.avail=(+bal.free)+lq;PR.legs=legs;
+    PR.f=r[0].f;PR.last=r[0].last;PR.avg=avgOf(sym);PR.avail=(+bal.free)+lq;PR.legs=legs;
     var pl=PLAN[sym]||{},sl=legs.filter(isStop)[0],tl=legs.filter(function(o){return !isStop(o)})[0];
     PR.x=(sl?sl.sp:0)||pl.x||0;PR.t=(tl?tl.price:0)||pl.t||0;
     drawProtect();
@@ -1871,13 +1877,13 @@ document.addEventListener("click",function(ev){
   var g=el.getAttribute("data-chgo");if(g){var pp=g.split("|");closeSheet();oOpen(CD.sym,pp[0],{px:parseFloat(pp[1])})}
 });
 chNew("cd","",function(){var sym=CHS.cd.sym,a=snap&&snap.assets.filter(function(x){return x.sym===sym})[0],k=sym+"USDT";
-  return {last:(a&&a.price)||(snap&&snap.px[k])||0,avg:AVG[sym]?AVG[sym].a:0,orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:CD.zone,draft:0,fills:fillsGet(sym)}},
+  return {last:(a&&a.price)||(snap&&snap.px[k])||0,avg:avgOf(sym),orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:CD.zone,draft:0,fills:fillsGet(sym)}},
   function(){return !$("sheet").hidden&&CD.sym===CHS.cd.sym},"two");
 chNew("od","ochart",function(){var sym=CHS.od.sym,k=sym+"USDT";
-  return {last:O.last||(snap&&snap.px[k])||0,avg:AVG[sym]?AVG[sym].a:0,orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:null,draft:CHS.od.draft,rk:CHS.od.rk,side:O.side,fills:fillsGet(sym)}},
+  return {last:O.last||(snap&&snap.px[k])||0,avg:avgOf(sym),orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:null,draft:CHS.od.draft,rk:CHS.od.rk,side:O.side,fills:fillsGet(sym)}},
   function(){return CHV&&TAB==="trd"&&SUB.trd==="ord"},"one");
 chNew("ld","lchart",function(){var sym=CHS.ld.sym,k=sym+"USDT";
-  return {last:L.last||(snap&&snap.px[k])||0,avg:AVG[sym]?AVG[sym].a:0,orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:null,draft:0,levels:CHS.ld.levels||[],side:L.side,fills:fillsGet(sym)}},
+  return {last:L.last||(snap&&snap.px[k])||0,avg:avgOf(sym),orders:snap?snap.orders.filter(function(o){return o.symbol===k}):[],zone:null,draft:0,levels:CHS.ld.levels||[],side:L.side,fills:fillsGet(sym)}},
   function(){return CHV&&TAB==="trd"&&SUB.trd==="lad"},"lad");
 setInterval(function(){if(document.hidden)return;for(var id in CHS){var st=CHS[id];if(st.sym&&st.vis())chLoad(st)}},6e4);
 function coinHtml(sym){
@@ -2819,7 +2825,7 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-hpick]"))){$("hs").value=el.getAttribute("data-hpick");return}
   if((el=t.closest("[data-hedit]"))){var c1=el.getAttribute("data-hedit");$("hs").value=c1;$("hn").value=HAL[c1].n||"";HSEL=HAL[c1].s;renderHal();return}
   if((el=t.closest("[data-hdel]"))){delete HAL[el.getAttribute("data-hdel")];halSave();renderHal();render();return}
-  if(t.id==="hav"){t.textContent="…";call("/api/v3/ticker/price",{},false).then(function(r){if(!Array.isArray(r))throw new Error("رد غير متوقع");var m={};r.forEach(function(x){m[x.symbol]=1});var av=Object.keys(BASE).filter(function(b){return m[b+"USDT"]}).sort();LS.s("avail",JSON.stringify(av));t.textContent="تحقق من المتاح في بايننس";renderHal()}).catch(function(e){t.textContent="تحقق من المتاح في بايننس";err("تعذّر: "+e.message)});return}
+  if(t.id==="hav"){t.textContent="…";call("/api/v3/ticker/24hr",{type:"MINI"},false).then(function(r){if(!Array.isArray(r))throw new Error("رد غير متوقع");var m=aliveMap(r);var av=Object.keys(BASE).filter(function(b){return m[b+"USDT"]}).sort();LS.s("avail",JSON.stringify(av));t.textContent="تحقق من المتاح في بايننس";renderHal()}).catch(function(e){t.textContent="تحقق من المتاح في بايننس";err("تعذّر: "+e.message)});return}
   if(t.id==="havl"){var o=$("havout");o.hidden=!o.hidden;if(!o.hidden){var av=[];try{av=JSON.parse(LS.g("avail")||"[]")}catch(e){}o.innerHTML=av.length?av.map(function(c){return '<span class="chip" data-hpick="'+c+'">'+c+'</span>'}).join(""):'<div class="sub">اضغط «تحقق» أولاً</div>'}return}
   if((el=t.closest("[data-sub]"))){var sbo=SUB[TAB],sbn=el.getAttribute("data-sub");SUB[TAB]=sbn;LS.s("sub",JSON.stringify(SUB));
     if(TAB==="trd"&&sbo!==sbn){
