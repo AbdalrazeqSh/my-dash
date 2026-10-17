@@ -3,9 +3,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light"><meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E9DE"><meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F1A14"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@500;600&display=swap"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="حسابي"><title>حسابي</title>
 <style>
-:root{--bg:#E4E9DE;--s:#EEF2E9;--s2:#D9E0D1;--fg:#1B2820;--dim:#55655A;--dimmer:#7C8A7F;--up:#3F6B4F;--cu:#3F6B4F;--tabon:rgba(63,107,79,.22);--cd:#8C3B4E;--down:#A5483B;--gold:#9A6A1C;--buy:#2F5F7F;--sell:#7B4A72;--onbs:#fff;--buybg:rgba(47,95,127,.14);--sellbg:rgba(123,74,114,.14);--bd:rgba(27,40,32,.14);--onup:#fff;--ondown:#fff;--upbg:rgba(63,107,79,.14);--downbg:rgba(165,72,59,.12);--goldbg:rgba(176,122,34,.16);color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--cu:#6FB087;--tabon:rgba(111,176,135,.24);--cd:#D27A8C;--down:#E0806F;--gold:#E0AE4F;--buy:#8DBAD8;--sell:#CFA0C6;--onbs:#0E1620;--buybg:rgba(141,186,216,.16);--sellbg:rgba(207,160,198,.16);--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}}
-:root[data-theme=dark]{--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--cu:#6FB087;--tabon:rgba(111,176,135,.24);--cd:#D27A8C;--down:#E0806F;--gold:#E0AE4F;--buy:#8DBAD8;--sell:#CFA0C6;--onbs:#0E1620;--buybg:rgba(141,186,216,.16);--sellbg:rgba(207,160,198,.16);--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(224,128,111,.16);--goldbg:rgba(224,174,79,.16);color-scheme:dark}
+:root{--bg:#E4E9DE;--s:#EEF2E9;--s2:#D9E0D1;--fg:#1B2820;--dim:#4B5A50;--dimmer:#7C8A7F;--up:#375F46;--cu:#3F6B4F;--tabon:rgba(63,107,79,.22);--cd:#B03A48;--down:#9E3240;--gold:#5F5B17;--buy:#2F5F7F;--sell:#AB5A1A;--sellt:#874511;--onbs:#fff;--buybg:rgba(47,95,127,.14);--sellbg:rgba(171,90,26,.14);--bd:rgba(27,40,32,.14);--onup:#fff;--ondown:#fff;--upbg:rgba(63,107,79,.14);--downbg:rgba(158,50,64,.12);--goldbg:rgba(95,91,23,.16);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--cu:#6FB087;--tabon:rgba(111,176,135,.24);--cd:#EE7F8E;--down:#EE7F8E;--gold:#C9C25A;--buy:#8DBAD8;--sell:#E9A15C;--sellt:#E9A15C;--onbs:#0E1620;--buybg:rgba(141,186,216,.16);--sellbg:rgba(233,161,92,.16);--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(238,127,142,.16);--goldbg:rgba(201,194,90,.16);color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0F1A14;--s:#16241C;--s2:#1D2E24;--fg:#E3EBDF;--dim:#93A596;--dimmer:#6B7C6F;--up:#6FB087;--cu:#6FB087;--tabon:rgba(111,176,135,.24);--cd:#EE7F8E;--down:#EE7F8E;--gold:#C9C25A;--buy:#8DBAD8;--sell:#E9A15C;--sellt:#E9A15C;--onbs:#0E1620;--buybg:rgba(141,186,216,.16);--sellbg:rgba(233,161,92,.16);--bd:rgba(227,235,223,.13);--onup:#0D1812;--ondown:#1A0C09;--upbg:rgba(111,176,135,.16);--downbg:rgba(238,127,142,.16);--goldbg:rgba(201,194,90,.16);color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "Readex Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:18px 20px calc(88px + env(safe-area-inset-bottom));max-width:640px;margin-inline:auto}
 .n{direction:ltr;unicode-bidi:isolate;display:inline-block;font-variant-numeric:tabular-nums}
@@ -24,7 +24,7 @@ button.go{background:var(--up);color:var(--onup);border-color:transparent;font-w
 .row .r{text-align:left;direction:ltr;white-space:nowrap}
 .up{color:var(--up)}.down{color:var(--down)}.flat{color:var(--dim)}
 .tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:.74rem;font-weight:600;margin-inline-start:6px}
-.tag.b{background:var(--upbg);color:var(--up)}.tag.s{background:var(--downbg);color:var(--down)}.tag.tb{background:var(--buybg);color:var(--buy)}.tag.ts{background:var(--sellbg);color:var(--sell)}.tag.g{background:var(--goldbg);color:var(--gold)}
+.tag.b{background:var(--upbg);color:var(--up)}.tag.s{background:var(--downbg);color:var(--down)}.tag.tb{background:var(--buybg);color:var(--buy)}.tag.ts{background:var(--sellbg);color:var(--sellt)}.tag.g{background:var(--goldbg);color:var(--gold)}
 .err{background:var(--downbg);color:var(--down);border-radius:10px;padding:8px 12px;font-size:.84rem;margin-bottom:12px}
 .warn{background:var(--goldbg);color:var(--gold);border-radius:10px;padding:8px 12px;font-size:.84rem;margin-bottom:8px}
 .bar{display:flex;height:8px;border-radius:5px;overflow:hidden;gap:2px;margin:6px 0 10px;background:var(--s2)}
@@ -68,7 +68,7 @@ input[data-ghost]::placeholder{color:var(--dimmer);opacity:.85}
 .bs{display:flex;gap:10px;margin:12px 0 8px}
 .bsb{flex:1;min-height:56px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:1rem;border:1.5px solid transparent;padding:6px 4px}
 .bsb small{font-size:.7rem;font-weight:400;opacity:.9}
-.bsb.buy{background:var(--buybg);color:var(--buy);border-color:var(--buy)}.bsb.sell{background:var(--sellbg);color:var(--sell);border-color:var(--sell)}
+.bsb.buy{background:var(--buybg);color:var(--buy);border-color:var(--buy)}.bsb.sell{background:var(--sellbg);color:var(--sellt);border-color:var(--sell)}
 .bsb.buy.on{background:var(--buy);color:var(--onbs)}.bsb.sell.on{background:var(--sell);color:var(--onbs)}
 .chw{margin:4px 0}.chc{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px}
 .chsel{background:var(--s2);color:var(--fg);border:1px solid var(--bd);border-radius:99px;padding:4px 12px;font:inherit;font-size:.82rem;min-height:32px;direction:ltr}
@@ -296,7 +296,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 66</div>
+<div class="note" style="text-align:center" id="foot">النسخة 67</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1668,7 +1668,7 @@ function chSvg(st){
     for(i=i0;i<=i1;i++){var kk=k[i];xc=x(i);yo=y(kk[2]);yc=y(kk[1]);yh=y(kk[3]);yl2=y(kk[4]);yt=Math.min(yo,yc);yb2=Math.max(yo,yc);if(yb2-yt<1){yt-=.5;yb2+=.5}
       var seg='M'+xc.toFixed(1)+','+yh.toFixed(1)+'V'+yl2.toFixed(1)+'M'+(xc-bw/2).toFixed(1)+','+yt.toFixed(1)+'H'+(xc+bw/2).toFixed(1)+'V'+yb2.toFixed(1)+'H'+(xc-bw/2).toFixed(1)+'Z';
       if(kk[1]>=kk[2])pu+=seg;else pd+=seg}
-    o+='<g clip-path="url(#'+cid+')" stroke-width="1" stroke-linejoin="miter"><path d="'+pu+'" style="fill:var(--cu);stroke:var(--cu)"/><path d="'+pd+'" style="fill:var(--cd);stroke:var(--cd)"/></g>';
+    o+='<g clip-path="url(#'+cid+')" stroke-width="1" stroke-linejoin="miter"><path d="'+pu+'" style="fill:var(--cu);fill-opacity:.32;stroke:var(--cu)"/><path d="'+pd+'" style="fill:var(--cd);stroke:var(--cd)"/></g>';
   }else{
   var step=Math.max(1,Math.floor((i1-i0+1)/300)),pts=[];
   for(i=i0;i<=i1;i+=step)pts.push(x(i).toFixed(1)+","+y(k[i][1]).toFixed(1));
@@ -1721,7 +1721,7 @@ function chPane(st){
     var mx=1;for(i=i0;i<=i1;i++)if(k[i][5]>mx)mx=k[i][5];
     var pu="",pd="";
     for(i=i0;i<=i1;i++){var hh=k[i][5]/mx*(yb-top),seg='M'+(x(i)-bw/2).toFixed(1)+','+yb+'V'+(yb-Math.max(.6,hh)).toFixed(1)+'H'+(x(i)+bw/2).toFixed(1)+'V'+yb+'Z';if(k[i][1]>=k[i][2])pu+=seg;else pd+=seg}
-    o+='<g clip-path="url(#cp_'+st.id+')" style="opacity:.8"><path d="'+pu+'" style="fill:var(--cu)"/><path d="'+pd+'" style="fill:var(--cd)"/></g>'+tx('VOL  <tspan style="fill:var(--fg);font-weight:600">'+chV(k[ci][5])+'</tspan>');
+    o+='<g clip-path="url(#cp_'+st.id+')" style="opacity:.8"><path d="'+pu+'" style="fill:var(--cu);fill-opacity:.5"/><path d="'+pd+'" style="fill:var(--cd)"/></g>'+tx('VOL  <tspan style="fill:var(--fg);font-weight:600">'+chV(k[ci][5])+'</tspan>');
   }else{
     var M=chMacd(st),mn=0,mxv=0;for(i=i0;i<=i1;i++){mn=Math.min(mn,M.m[i],M.s[i],M.h[i]);mxv=Math.max(mxv,M.m[i],M.s[i],M.h[i])}
     if(mxv-mn<1e-12)mxv=mn+1e-9;var pad=(mxv-mn)*.08;mn-=pad;mxv+=pad;
