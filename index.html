@@ -89,6 +89,7 @@ h3.plain{margin-bottom:6px}
 .coin{padding:12px 0;border-bottom:1px solid var(--bd)}.coin:last-child{border-bottom:0}
 .coin .a{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .coin .nm{font-weight:600;font-size:1.02rem}
+.sp3{flex:none;align-self:center;display:inline-flex;align-items:center;gap:4px;direction:ltr}.sp3 svg{width:52px;height:14px;display:block}.sp3 small{font-size:.62rem;color:var(--dimmer);letter-spacing:.3px}
 .coin .vl{font-size:1.15rem}
 .coin .b{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:3px;font-size:.78rem;color:var(--dim)}
 .coin .t{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;align-items:center}
@@ -278,7 +279,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 57</div>
+<div class="note" style="text-align:center" id="foot">النسخة 58</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -471,7 +472,7 @@ function render(){
     else if(PLAN[a.sym]&&a.free>0&&a.free*a.price>=5)tg+='<span class="tag g" style="margin:0;cursor:pointer" data-prot="'+esc(a.sym)+'">حماية جاهزة ›</span>';
     if(oi.bn)tg+='<span class="tag tb" style="margin:0">شراء ×'+oi.bn+(oi.bd!=null?' · أقرب '+pc(oi.bd):'')+'</span>';
     var hh=halS(a.sym);if(hh==='no')tg+='<span class="tag s" style="margin:0">ممنوعة</span>';else if(hh==='rev')tg+='<span class="tag g" style="margin:0">مراجعة</span>';else if(!hh&&!STABLE[a.sym])tg+='<span class="tag g" style="margin:0">خارج القائمة</span>';
-    return '<div class="coin"><div class="a"><span class="nm" data-cd="'+esc(a.sym)+'" style="cursor:pointer"><span style="color:'+COL[Math.min(i,5)]+'">●</span> '+esc(a.sym)+'<span class="sh">'+share.toFixed(share<10?1:0)+'%</span> <span class="flat">›</span></span><span class="vl n">'+usd(a.val)+'</span></div>'+
+    return '<div class="coin"><div class="a"><span class="nm" data-cd="'+esc(a.sym)+'" style="cursor:pointer"><span style="color:'+COL[Math.min(i,5)]+'">●</span> '+esc(a.sym)+'<span class="sh">'+share.toFixed(share<10?1:0)+'%</span> <span class="flat">›</span></span>'+(a.val>=DUST&&!STABLE[a.sym]&&a.price>0?sp3Html(a.sym):'')+'<span class="vl n">'+usd(a.val)+'</span></div>'+
       '<div class="b"><span><span class="n">'+qt(a.qty)+'</span> × '+(a.price?'<span class="n">'+px(a.price)+'</span>':'لا يوجد سوق USDT')+'</span>'+
       (a.avg?'<span class="pl n '+cl(pv)+'">'+sg(pv)+' ('+pc(p)+')</span>':'<span class="flat" data-g="'+esc(a.sym)+'" style="text-decoration:underline">احسب الربح</span>')+'</div>'+
       (tg||CAN?'<div class="t">'+tg+(CAN?'<button class="sm" data-t="'+esc(a.sym)+'" style="margin-inline-start:auto">تداول</button>':'')+'</div>':'')+'</div>';
@@ -495,7 +496,7 @@ function render(){
     return h;
   }).join(""):'<div class="sub">لا توجد أوامر مفتوحة</div>';
   renderRisk(as,tot);renderHome(as,tot);
-  ages();
+  ages();sp3Kick();
 }
 function ages(){
   if(!snap){$("age").textContent="";return}
@@ -581,6 +582,28 @@ function mkLoad(force){
     var cl_=function(k){return Array.isArray(k)?k.map(function(x){return +x[4]}):[]};
     MK.d={ch:ch,br:br,btc:cl_(r[2]),eth:cl_(r[3])};MK.t=Date.now();MK.err=false;
   }).catch(function(){MK.err=true}).then(function(){MK.busy=false;mkRender()});
+}
+var SP3={},SP3B=false;
+function sp3Svg(a){
+  var w=52,h=14,mn=Math.min.apply(null,a),mx=Math.max.apply(null,a);if(mx===mn)mx=mn+1;
+  var pts=a.map(function(v,i){return (i/(a.length-1)*(w-3)+1.5).toFixed(1)+","+(1.5+(1-(v-mn)/(mx-mn))*(h-3)).toFixed(1)}).join(" ");
+  return '<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true"><polyline points="'+pts+'" fill="none" style="stroke:var('+(a[a.length-1]>=a[0]?"--up":"--down")+');stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round;opacity:.85"/></svg><small>3d</small>';
+}
+function sp3Html(sym){var d=SP3[sym];return '<span class="sp3" data-sp="'+esc(sym)+'">'+(d&&d.a?sp3Svg(d.a):'')+'</span>'}
+function sp3Fill(){var e=document.querySelectorAll("[data-sp]");for(var i=0;i<e.length;i++){var d=SP3[e[i].getAttribute("data-sp")];if(d&&d.a&&!e[i].firstChild)e[i].innerHTML=sp3Svg(d.a)}}
+function sp3Kick(){
+  if(SP3B||!snap||TAB!=="wal")return;var now=Date.now();
+  var need=snap.assets.filter(function(a){return !STABLE[a.sym]&&a.price>0&&a.val>=DUST&&(!SP3[a.sym]||now-SP3[a.sym].t>18e5)}).map(function(a){return a.sym});
+  if(!need.length)return;SP3B=true;
+  (function next(){
+    var b=need.splice(0,4);if(!b.length){SP3B=false;return}
+    Promise.all(b.map(function(sy){
+      var fail=function(){SP3[sy]={t:Date.now()-18e5+6e4,a:(SP3[sy]||{}).a||null}};
+      return call("/api/v3/klines",{symbol:sy+"USDT",interval:"1h",limit:72},false).then(function(k){
+        var c=(k||[]).slice(-72).map(function(x){return +x[4]}).filter(function(v){return v>0});
+        if(c.length<12){fail();return}var o=[];for(var i=c.length-1;i>=0;i-=2)o.unshift(c[i]);
+        SP3[sy]={t:Date.now(),a:o}},fail)})).then(function(){sp3Fill();next()},function(){SP3B=false});
+  })();
 }
 function mkSpark(a){
   if(!a||a.length<2)return "";var w=74,h=24,mn=Math.min.apply(null,a),mx=Math.max.apply(null,a);if(mx===mn)mx=mn+1;
