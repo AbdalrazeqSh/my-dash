@@ -118,6 +118,7 @@ h3.plain{margin-bottom:6px}
 .tabs button{border-radius:14px!important;margin:4px 3px;min-height:52px!important;transition:background .15s}
 .tabs button.on{color:var(--fg);font-weight:700;background:var(--tabon)}
 .tabs button.on svg{stroke:var(--up)}
+.g3{grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr)!important;gap:0 4px!important}.lkw{align-self:start;margin-top:38px;height:43px;display:flex;align-items:center;justify-content:center}.lkb{width:30px;height:30px;min-height:0;padding:0;border-radius:50%;border:1px solid var(--bd);background:var(--s);color:var(--dimmer);box-shadow:none;display:flex;align-items:center;justify-content:center}.lkb[aria-pressed=true]{color:var(--gold);border-color:var(--gold);background:var(--goldbg)}.lkb svg{width:16px;height:16px}
 .g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 10px}.g2>div{min-width:0}
 .cbar{height:6px;border-radius:4px;background:var(--s2);margin-top:5px;overflow:hidden}.cbar i{display:block;height:100%}
 .upd{position:fixed;top:8px;inset-inline:16px;max-width:608px;margin-inline:auto;background:var(--up);color:var(--onup);border-radius:12px;padding:10px 14px;font-weight:600;z-index:20;text-align:center;cursor:pointer}
@@ -185,8 +186,9 @@ h3.plain{margin-bottom:6px}
       <h3 class="plain">إدارة المخاطرة</h3>
       <div class="rpx"><span class="chip" data-lvp="o">السعر الآن <b class="n" id="orpxv"></b></span></div>
       <div id="orrc" class="rrc"></div>
-      <div class="g2">
+      <div class="g2 g3">
         <div><label for="ox" class="lbs"><b id="oxlb">وقف الخسارة</b><span class="shh" id="oxsh"></span><span id="oxp"></span><span class="exsp" id="oxxs"></span></label><div class="stw"><button type="button" data-rst="ox|-0.5" aria-label="أنقص">−</button><input id="ox" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ox|0.5" aria-label="زِد">+</button></div><div class="exc" id="oxex"></div></div>
+        <div class="lkw"><button type="button" class="lkb" data-lk="o" aria-pressed="true" aria-label="ربط الوقف بالهدف حسب نسبة العائد إلى المخاطرة"></button></div>
         <div><label for="ot" class="lbs"><b id="otlb">الهدف</b><span class="shh" id="otsh"></span><span id="otp"></span><span class="exsp" id="otxs"></span></label><div class="stw"><button type="button" data-rst="ot|-0.5" aria-label="أنقص">−</button><input id="ot" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ot|0.5" aria-label="زِد">+</button></div><div class="exc" id="otex"></div></div>
       </div>
       <div class="rkr rk1"><label for="orr">أخاطر بـ</label><input id="orr" inputmode="decimal" value="1"><div class="seg segs" id="orm"><button type="button" data-orm="p">%</button><button type="button" data-orm="d">$</button></div></div>
@@ -255,8 +257,9 @@ h3.plain{margin-bottom:6px}
         <h3 class="plain" style="margin-top:16px">إدارة المخاطرة</h3>
         <div class="rpx"><span class="chip" data-lvp="l">السعر الآن <b class="n" id="lrpxv"></b></span></div>
         <div id="lrrc" class="rrc"></div>
-        <div class="g2">
+        <div class="g2 g3">
           <div><label for="lx" class="lbs"><b id="lxlb">وقف الخسارة</b><span class="shh" id="lxsh"></span><span id="lxp"></span><span class="exsp" id="lxxs"></span></label><div class="stw"><button type="button" data-rst="lx|-0.5" aria-label="أنقص">−</button><input id="lx" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lx|0.5" aria-label="زِد">+</button></div><div class="exc" id="lxex"></div></div>
+          <div class="lkw"><button type="button" class="lkb" data-lk="l" aria-pressed="true" aria-label="ربط الوقف بالهدف حسب نسبة العائد إلى المخاطرة"></button></div>
           <div><label for="lg" class="lbs"><b id="lglb">الهدف</b><span class="shh" id="lgsh"></span><span id="lgp"></span><span class="exsp" id="lgxs"></span></label><div class="stw"><button type="button" data-rst="lg|-0.5" aria-label="أنقص">−</button><input id="lg" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lg|0.5" aria-label="زِد">+</button></div><div class="exc" id="lgex"></div></div>
         </div>
         <div class="rkr rk1"><label for="lrr">أخاطر بـ</label><input id="lrr" inputmode="decimal"><div class="seg segs" id="lrm"><button type="button" data-orm="p">%</button><button type="button" data-orm="d">$</button></div></div>
@@ -296,7 +299,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 76</div>
+<div class="note" style="text-align:center" id="foot">النسخة 77</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -959,7 +962,7 @@ function lLoad(force){
   var sym=$("ls").value.trim().toUpperCase();
   if(!sym){L.cs="";L.f=null;L.last=0;$("lpxl").textContent="";chSetSym(CHS.ld,"");ladHint();return}
   if(!force&&L.cs===sym&&L.f)return;
-  if(L.cs&&L.cs!==sym){$("lx").value="";$("lg").value="";L.rd=true;L.sd=false;L.cl=[];L.lcr=0;exReset("l");if(L.dist==="cus")L.dist="eq"}
+  if(L.cs&&L.cs!==sym){RRLK=true;$("lx").value="";$("lg").value="";L.rd=true;L.sd=false;L.cl=[];L.lcr=0;exReset("l");if(L.dist==="cus")L.dist="eq"}
   L.cs=sym;L.f=null;$("lpxl").textContent="جارٍ جلب السعر…";
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false)]).then(function(r){
     if(L.cs!==sym)return;
@@ -1262,7 +1265,7 @@ function exInfo(sym){
     return{f:{tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0)},last:+r[1].price};
   });
 }
-function protectSheet(sym,opts){
+function protectSheet(sym,opts){RRLK=true;
   opts=opts||{};PR={sym:sym,opts:opts,pct:100};
   openSheet('<div class="sub">جارٍ التحميل…</div>');
   Promise.all([exInfo(sym),call("/api/v3/account",{omitZeroBalances:"true"},true)]).then(function(r){
@@ -1276,7 +1279,7 @@ function protectSheet(sym,opts){
 function drawProtect(){
   var sym=PR.sym,f=PR.f,L=PR.last,h='<h3 style="margin:0 0 2px">'+(PR.opts.lid?"إعادة ضبط حماية ":"حماية ")+esc(sym)+'</h3><div class="sub" style="margin:0 0 8px">السعر الآن '+N(px(L))+' · المتاح للبيع '+N(qt(PR.avail))+(PR.avg?' · متوسط تكلفتك '+N(px(PR.avg)):'')+'</div>';
   if(!(PR.avail>0)||PR.avail*L<f.minN){openSheet(h+'<div class="warn">لا توجد كمية متاحة للحماية (محجوزة في أوامر أخرى).</div><button id="tclose" style="width:100%">إغلاق</button>');return}
-  h+='<div class="g2"><div><label for="pr_x" class="lbs"><b>وقف الخسارة (سعر التفعيل)</b><span id="pr_xp"></span></label><div class="stw"><button type="button" data-rst="pr_x|-0.5" aria-label="أنقص">−</button><input id="pr_x" inputmode="decimal" data-ghost="1" value="'+(PR.x?flo(PR.x,f.tick):"")+'"><button type="button" data-rst="pr_x|0.5" aria-label="زِد">+</button></div></div><div><label for="pr_t" class="lbs"><b>الهدف (اختياري)</b><span id="pr_tp"></span></label><div class="stw"><button type="button" data-rst="pr_t|-0.5" aria-label="أنقص">−</button><input id="pr_t" inputmode="decimal" data-ghost="1" value="'+(PR.t?flo(PR.t,f.tick):"")+'"><button type="button" data-rst="pr_t|0.5" aria-label="زِد">+</button></div></div></div>';
+  h+='<div class="g2 g3"><div><label for="pr_x" class="lbs"><b>وقف الخسارة</b><span id="pr_xp"></span></label><div class="stw"><button type="button" data-rst="pr_x|-0.5" aria-label="أنقص">−</button><input id="pr_x" inputmode="decimal" data-ghost="1" value="'+(PR.x?flo(PR.x,f.tick):"")+'"><button type="button" data-rst="pr_x|0.5" aria-label="زِد">+</button></div></div><div class="lkw"><button type="button" class="lkb" data-lk="p" aria-pressed="true" aria-label="ربط الوقف بالهدف حسب نسبة العائد إلى المخاطرة"></button></div><div><label for="pr_t" class="lbs"><b>الهدف</b><span id="pr_tp"></span></label><div class="stw"><button type="button" data-rst="pr_t|-0.5" aria-label="أنقص">−</button><input id="pr_t" inputmode="decimal" data-ghost="1" value="'+(PR.t?flo(PR.t,f.tick):"")+'"><button type="button" data-rst="pr_t|0.5" aria-label="زِد">+</button></div></div></div>';
   h+='<div style="margin:6px 0 2px">'+[-3,-5,-8,-10].map(function(x){return '<span class="chip" data-prx="'+x+'">وقف −'+Math.abs(x)+'%</span>'}).join("")+'</div><div id="prrc" class="rrc" style="margin-top:2px"></div>';
   h+=ruler("pr",PR.pct,1);
   h+='<div class="g2"><div><label for="pr_o">فارق التنفيذ عن التفعيل %</label><input id="pr_o" inputmode="decimal" value="0.5"></div><div></div></div>';
@@ -2062,6 +2065,7 @@ function ghostEx(k){
   EX[k].s.forEach(function(v,i){var id=pre+"x"+(i+2);ghostPut(id,pre+"x");ghostCap(id,id+"p")});
 }
 function ghostAll(){
+  lkRender();
   ghostEx("o");if($("lx"))ghostEx("l");
   ghostPut("ox","ox");ghostPut("ot","ox");ghostCap("ox","oxp");ghostCap("ot","otp");
   if($("lx")){ghostPut("lx","lx");ghostPut("lg","lx");ghostCap("lx","lxp");ghostCap("lg","lgp")}
@@ -2097,7 +2101,20 @@ var RRF=0.001;
 function rrTarget(p,x,rr){var per=(p-x)+(p+x)*RRF;return (p*(1+RRF)+rr*per)/(1-RRF)}
 function rrOf(p,x,t){var per=(p-x)+(p+x)*RRF;return ((t-p)-(p+t)*RRF)/per}
 function rrStop(p,t,rr,tick){var per=(t*(1-RRF)-p*(1+RRF))/rr,x=(p*(1+RRF)-per)/(1-RRF);return x>0&&x<p?flo(x,tick):""}
-function rrFix(){
+var RRLK=true;
+function lkIcon(on){return on?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.6-1.7"/></svg>'}
+function lkRender(){var b=document.querySelectorAll(".lkb");for(var i=0;i<b.length;i++){var on=RRLK?"1":"0";if(b[i].getAttribute("data-on")!==on){b[i].setAttribute("data-on",on);b[i].setAttribute("aria-pressed",RRLK?"true":"false");b[i].title=RRLK?"مربوط: تحريك الوقف يحرّك الهدف. اضغط لفك الربط":"غير مربوط: الوقف والهدف مستقلان. اضغط لإعادة الربط";b[i].innerHTML=lkIcon(RRLK)}}}
+function lkToggle(k){
+  if(RRLK){RRLK=false;lkRender();return}
+  var a=0,x=0,t=0;
+  if(k==="o"){a=oPx();x=parseFloat($("ox").value);t=parseFloat($("ot").value)}
+  else if(k==="l"){a=lAvg();x=parseFloat($("lx").value);t=parseFloat($("lg").value)}
+  else if(PR&&$("pr_x")){a=PR.last;x=parseFloat($("pr_x").value);t=parseFloat($("pr_t").value)}
+  RRLK=true;
+  if(a>0&&x>0&&x<a&&t>a){O.rr=Math.round(rrOf(a,x,t)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}
+  lkRender();
+}
+function rrFix(){if(!RRLK)return;
   var p=oPx(),x=parseFloat($("ox").value);
   if(O.f&&p>0&&x>0&&x<p)$("ot").value=flo(rrTarget(p,x,O.rr),O.f.tick);
 }
@@ -2129,7 +2146,7 @@ function rrShow(){var v=O.rkv[O.rm],t=v>0?String(v):"";$("orr").value=t;$("lrr")
 function rrSync(){var eq0=equity();if(eq0>0){if(O.rm==="p")O.rkv.d=Math.round(eq0*O.rkv.p)/100;else O.rkv.p=Math.round(O.rkv.d/eq0*1e4)/100}}
 /* ladder (scaled) risk tool: entry = weighted average of levels */
 function lAvg(){var lv=ladLevels();if(!lv||!L.f||L.side!=="BUY")return 0;var k=ladK(lv);return k>0?1/k:0}
-function lrFix(){var a=lAvg(),x=parseFloat($("lx").value);if(a>0&&x>0&&x<a)$("lg").value=flo(rrTarget(a,x,O.rr),L.f.tick)}
+function lrFix(){if(!RRLK)return;var a=lAvg(),x=parseFloat($("lx").value);if(a>0&&x>0&&x<a)$("lg").value=flo(rrTarget(a,x,O.rr),L.f.tick)}
 function lrSq(a){var x=parseFloat($("lx").value),m=rrAmt();return a>0&&x>0&&x<a&&m>0?m/((a-x)+(a+x)*RRF):0}
 function lrBack(){
   var a=lAvg(),x=parseFloat($("lx").value),q=parseFloat($("lq").value),eq=equity();
@@ -2149,7 +2166,7 @@ function lrCard(){
   sz.innerHTML=x>0&&a>0&&x>=a?'<span class="down">الوقف يجب أن يكون أقل من متوسط السعر</span>':(snap&&sq>0&&sq*a>freeUsdt()+1e-9&&L.rd?'<span class="down">الحجم يتجاوز السيولة المتاحة</span>':'');
 }
 /* protection sheet: entry = current price */
-function prFix(){if(!PR||!$("pr_x"))return;var x=parseFloat($("pr_x").value);if(x>0&&x<PR.last)$("pr_t").value=flo(rrTarget(PR.last,x,O.rr),PR.f.tick)}
+function prFix(){if(!RRLK||!PR||!$("pr_x"))return;var x=parseFloat($("pr_x").value);if(x>0&&x<PR.last)$("pr_t").value=flo(rrTarget(PR.last,x,O.rr),PR.f.tick)}
 function rrCard(p){
   var x=parseFloat($("ox").value),t=parseFloat($("ot").value),bx=$("oxp"),bt=$("otp"),ok=p>0&&x>0&&x<p;
   ghostAll();lvShow();
@@ -2195,7 +2212,7 @@ function oLoad(){
   if(!sym){O.sym="";O.f=null;O.last=0;O.book=null;$("opx").textContent="";chSetSym(CHS.od,"");oChips();oCalc();return}
   if(O.sym===sym&&O.f)return;
   if(CHS.od.sym!==sym){if(snap&&(assetOf(sym)||snap.px[sym+"USDT"]))chSetSym(CHS.od,sym);else chSetSym(CHS.od,"")}
-  if(O.sym&&O.sym!==sym){$("ox").value="";$("ot").value="";O.rd=true;O.sd=false;exReset("o")}
+  if(O.sym&&O.sym!==sym){RRLK=true;$("ox").value="";$("ot").value="";O.rd=true;O.sd=false;exReset("o")}
   O.sym=sym;O.f=null;O.book=null;$("opx").textContent="جارٍ جلب السعر…";oAv();
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false),call("/api/v3/depth",{symbol:sym+"USDT",limit:50},false).catch(function(){return null})]).then(function(r){
     if(O.sym!==sym)return;
@@ -2618,7 +2635,7 @@ function ftLive(){
   if(r.fill){FT=o;b.disabled=false}
 }
 function ftApply(){var o=FT;if(!o)return;closeSheet();ftRun(o)}
-function ftRun(o){
+function ftRun(o){RRLK=true;
   var buy=o.side==="BUY",es=o.entries.slice().sort(function(a,b){return buy?b-a:a-b}),tgt=o.targets[0]||0,stop=o.stop;
   if(buy&&es.length>1){
     TAB="trd";SUB.trd="lad";LS.s("tab",TAB);LS.s("sub",JSON.stringify(SUB));
@@ -2878,7 +2895,7 @@ document.addEventListener("click",function(ev){
     if(el.getAttribute("data-lvp")==="o"){var lv=LIVE.o&&LIVE.o.s===O.sym?LIVE.o.v:O.last;if(lv>0&&O.f&&O.type==="LIMIT"){$("op").value=flo(lv,O.f.tick);rrFix();rrAuto();oSync();oCalc();CHS.od.cr=null;chDraw(CHS.od)}}
     else{var lw=LIVE.l&&LIVE.l.s===L.cs?LIVE.l.v:L.last;if(lw>0&&L.f){$("lp1").value=flo(lw,L.f.tick);L.auto=false;L.rows=null;lrFix();lrAuto();ladHint()}}
     return}
-  if((el=t.closest("[data-orrr]"))){var rv2=parseFloat(el.getAttribute("data-orrr"));if(rv2>0){O.rr=rv2;LS.s("orr_r",String(rv2));rrFix();rrAuto();lrFix();lrAuto();prFix();rrChips();oCalc();if(!$("lad").hidden)ladHint();if(PR&&$("pr_x"))prCalc()}return}
+  if((el=t.closest("[data-orrr]"))){var rv2=parseFloat(el.getAttribute("data-orrr"));if(rv2>0){var lk0=RRLK;RRLK=true;O.rr=rv2;LS.s("orr_r",String(rv2));rrFix();rrAuto();lrFix();lrAuto();prFix();rrChips();oCalc();if(!$("lad").hidden)ladHint();if(PR&&$("pr_x"))prCalc();RRLK=lk0;lkRender()}return}
   if((el=t.closest("[data-orm]"))){var nm=el.getAttribute("data-orm");if(nm===O.rm)return;var cv=parseFloat($(el.closest("#lrm")?"lrr":"orr").value);if(cv>0)rrRisk(cv);O.rm=nm;LS.s("orm",O.rm);rrShow();rrChips();oCalc();ladHint();return}
   if(t.closest("[data-orf]")){O.f=null;return oLoad()}
   if(t.id==="orev")return oReview();
@@ -2904,6 +2921,7 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-swc]"))){var swk=el.getAttribute("data-swc");if(SW){SW.sel[swk]=!SW.sel[swk];el.classList.toggle("on",!!SW.sel[swk]);swSelInfo()}return}
   if((el=t.closest("[data-swall]"))){if(SW){var swv=el.getAttribute("data-swall")==="1";SW.coins.forEach(function(c){SW.sel[c.sym]=swv});swDraw()}return}
   if((el=t.closest("[data-mk]"))){MK.tab=el.getAttribute("data-mk");mkRender();return}
+  if((el=t.closest("[data-lk]")))return lkToggle(el.getAttribute("data-lk"));
   if(t.id==="rago")return raGo(t);
   if((el=t.closest("[data-rearm]")))return raOpen(el.getAttribute("data-rearm"));
   if((el=t.closest("[data-rearmx]")))return raDrop(el.getAttribute("data-rearmx"));
@@ -2939,7 +2957,7 @@ document.addEventListener("click",function(ev){
 });
 $("sheet").addEventListener("click",function(ev){if(ev.target===$("sheet"))closeSheet()});
 document.addEventListener("input",function(ev){var el=ev.target,k=el.getAttribute&&el.getAttribute("data-rg");if(k)rgApply(k,+el.value)});
-$("sheet").addEventListener("input",function(ev){var id=ev.target.id||"";if(id.indexOf("pr_")===0){if(id==="pr_x"){PR.sd=false;prFix()}else if(id==="pr_t"&&PR){var x8=parseFloat($("pr_x").value),t8=parseFloat($("pr_t").value),h8=x8>0&&x8<PR.last;if(t8>PR.last&&(!h8||PR.sd)){var sx8=rrStop(PR.last,t8,O.rr,PR.f.tick);if(sx8){$("pr_x").value=sx8;PR.sd=true}}else if(h8&&t8>PR.last){O.rr=Math.round(rrOf(PR.last,x8,t8)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}prCalc()}else if(id.indexOf("ed_")===0)edCalc();else if(id==="sw_v")swBoxInput()});
+$("sheet").addEventListener("input",function(ev){var id=ev.target.id||"";if(id.indexOf("pr_")===0){if(id==="pr_x"){PR.sd=false;prFix()}else if(id==="pr_t"&&PR){var x8=parseFloat($("pr_x").value),t8=parseFloat($("pr_t").value),h8=x8>0&&x8<PR.last;if(RRLK&&t8>PR.last&&(!h8||PR.sd)){var sx8=rrStop(PR.last,t8,O.rr,PR.f.tick);if(sx8){$("pr_x").value=sx8;PR.sd=true}}else if(h8&&t8>PR.last){O.rr=Math.round(rrOf(PR.last,x8,t8)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}prCalc()}else if(id.indexOf("ed_")===0)edCalc();else if(id==="sw_v")swBoxInput()});
 
 $("diag").onclick=function(){
   var out=$("diagout");out.hidden=false;out.textContent="…";
@@ -3027,7 +3045,7 @@ $("lad").addEventListener("input",function(ev){L.rows=null;var id=ev.target.id,t
     var ip=tg.getAttribute("data-lcp"),x=L.cl[+(ip!==null?ip:tg.getAttribute("data-lcw"))];
     if(x){var v=parseFloat(String(tg.value).replace(",","."));if(ip!==null)x.p=v>0?v:0;else x.w=v>0?v:null;lcPh();lrFix();lrAuto();ladHint()}return}if(id==="lv"||id==="lq")L.rd=false;if(id==="lv")L.ed="v";else if(id==="lq")L.ed="q";else if(id==="lp1"||id==="lp2")L.auto=false;else if(id==="ls"){clearTimeout(lTm);lTm=setTimeout(lLoad,450)}
   if(id==="lrr"){rrRisk(parseFloat($("lrr").value));L.rd=true;lrAuto()}
-  else if(id==="lg"){var a9=lAvg(),x9=parseFloat($("lx").value),t9=parseFloat($("lg").value),h9=a9>0&&x9>0&&x9<a9;if(L.f&&a9>0&&t9>a9&&(!h9||L.sd)){var sx9=rrStop(a9,t9,O.rr,L.f.tick);if(sx9){$("lx").value=sx9;L.sd=true;lrAuto()}}else if(h9&&t9>a9){O.rr=Math.round(rrOf(a9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr))}}
+  else if(id==="lg"){var a9=lAvg(),x9=parseFloat($("lx").value),t9=parseFloat($("lg").value),h9=a9>0&&x9>0&&x9<a9;if(RRLK&&L.f&&a9>0&&t9>a9&&(!h9||L.sd)){var sx9=rrStop(a9,t9,O.rr,L.f.tick);if(sx9){$("lx").value=sx9;L.sd=true;lrAuto()}}else if(h9&&t9>a9){O.rr=Math.round(rrOf(a9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr))}}
   else if(id==="lx"||id==="lp1"||id==="lp2"||id==="ln"){if(id==="lx")L.sd=false;lrFix();lrAuto()}
   ladHint();if(id==="lv"||id==="lq")lRgSync()});
 $("lad").addEventListener("change",function(ev){var tg=ev.target;if(tg.getAttribute&&tg.getAttribute("data-lcp")!==null){L.cl=L.cl.filter(function(x){return x.p>0});lcSort();lcChanged()}});
@@ -3036,7 +3054,7 @@ try{var cs=JSON.parse(LS.g("calc")||"{}");CIDS.forEach(function(i){if(cs[i]!=nul
 $("jr").addEventListener("change",function(ev){var t=ev.target;if(t.getAttribute&&t.getAttribute("data-jt")){var k=t.getAttribute("data-jt"),v=t.value.trim();if(v)JN[k]=v;else delete JN[k];LS.s("jnotes",JSON.stringify(JN))}});
 applyTheme();
 setTimeout(tkHashImport,300);
-$("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov")O.ed="v";else if(id==="oq")O.ed="q";if(id==="opc"){var pv=parseFloat($("opc").value);if(isFinite(pv))oPcSet(pv);return}if(id==="ox"){O.sd=false;rrFix();rrAuto()}else if(id==="ot"){var p9=oPx(),x9=parseFloat($("ox").value),t9=parseFloat($("ot").value),has9=p9>0&&x9>0&&x9<p9;if(O.f&&p9>0&&t9>p9&&(!has9||O.sd)){var sx=rrStop(p9,t9,O.rr,O.f.tick);if(sx){$("ox").value=sx;O.sd=true;rrAuto()}}else if(has9&&t9>p9){O.rr=Math.round(rrOf(p9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}else if(id==="orr"){rrRisk(parseFloat($("orr").value));O.rd=true;rrAuto()}if(id==="op"){rrFix();rrAuto()}if(id==="ov"||id==="oq")O.rd=false;if(id==="ov"||id==="oq"||id==="op")oSync();if(id==="ov"||id==="oq")oRgSync();oCalc()}});
+$("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov")O.ed="v";else if(id==="oq")O.ed="q";if(id==="opc"){var pv=parseFloat($("opc").value);if(isFinite(pv))oPcSet(pv);return}if(id==="ox"){O.sd=false;rrFix();rrAuto()}else if(id==="ot"){var p9=oPx(),x9=parseFloat($("ox").value),t9=parseFloat($("ot").value),has9=p9>0&&x9>0&&x9<p9;if(RRLK&&O.f&&p9>0&&t9>p9&&(!has9||O.sd)){var sx=rrStop(p9,t9,O.rr,O.f.tick);if(sx){$("ox").value=sx;O.sd=true;rrAuto()}}else if(has9&&t9>p9){O.rr=Math.round(rrOf(p9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}else if(id==="orr"){rrRisk(parseFloat($("orr").value));O.rd=true;rrAuto()}if(id==="op"){rrFix();rrAuto()}if(id==="ov"||id==="oq")O.rd=false;if(id==="ov"||id==="oq"||id==="op")oSync();if(id==="ov"||id==="oq")oRgSync();oCalc()}});
 $("rf").onclick=refresh;
 $("save").onclick=function(){var k=$("k").value.trim(),s=$("s").value.trim();if(!k||!s){err("أدخل المفتاح والسر");return}LS.s("bk",k);LS.s("bs",s);var cv=parseFloat($("cap").value);if(cv>0)LS.s("cap",String(cv));PERM=null;$("k").value="";$("s").value="";err("");forceCfg=false;show();refresh()};
 $("clr").onclick=function(){LS.d("bk");LS.d("bs");CAN=false;PERM=null;$("perm").hidden=true;LS.d("snap");LS.d("avg");snap=null;AVG={};forceCfg=false;err("");show()};
