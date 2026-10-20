@@ -139,6 +139,10 @@ h3.plain{margin-bottom:6px}
   <label for="k">API Key</label><input id="k" autocomplete="off" autocapitalize="off" spellcheck="false">
   <label for="s">Secret</label><input id="s" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
   <label for="cap">أقصى قيمة للأمر الواحد (USDT)</label><input id="cap" inputmode="decimal" value="300"><div style="display:flex;gap:8px;margin-top:12px"><button class="go" id="save">حفظ وتحديث</button><button id="clr">حذف المفتاح من الجوال</button></div><div style="margin-top:10px"><button id="diag">فحص الاتصال</button></div><div class="sum" id="diagout" hidden style="direction:ltr;text-align:left;font-size:.8rem;white-space:pre-wrap"></div>
+
+  <div class="sum" style="margin-top:14px"><div class="row"><div class="l">عنوان IP الحالي</div><div class="r"><b class="n" id="ipv" dir="ltr">…</b></div></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><button class="sm go" id="ipcp" style="flex:1">نسخ</button><button class="sm" id="iprf" style="flex:1">تحديث</button></div>
+    <div class="sub" id="ipn" style="margin:8px 0 0">أضفه في «قيود IP» لمفتاحك على بايننس. يتغير مع كل شبكة (واي فاي أو بيانات).</div></div>
 </div>
 
 <div id="hload" class="sub" hidden>جارٍ التحميل…</div>
@@ -299,7 +303,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 77</div>
+<div class="note" style="text-align:center" id="foot">النسخة 78</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -531,6 +535,7 @@ function show(){
   var has=!!(creds().k&&creds().s),sb=SUB,ld=!snap&&has&&(TAB==="home"||TAB==="wal"||(TAB==="ana"&&sb.ana==="risk"));
   var secs={hm:has&&snap&&TAB==="home",main:has&&snap&&TAB==="wal",ordp:has&&TAB==="trd"&&sb.trd==="ord",lad:has&&TAB==="trd"&&sb.trd==="lad",calc:false,risk:has&&snap&&TAB==="ana"&&sb.ana==="risk",jr:has&&TAB==="ana"&&sb.ana==="jr",tr:has&&TAB==="ana"&&sb.ana==="tr",setup:!has||(TAB==="set"&&sb.set==="key"),stg:has&&TAB==="set"&&sb.set==="key",hal:has&&TAB==="set"&&sb.set==="hal",hload:ld};
   for(var k in secs)$(k).hidden=!secs[k];
+  if(secs.setup)ipLoad(false);
   $("tabs").hidden=!has;$("rf").hidden=!has;
   var sn=$("subnav"),l2=SUBL[TAB];
   if(has&&l2){sn.hidden=false;sn.innerHTML=l2.map(function(x){return '<button data-sub="'+x[0]+'"'+(sb[TAB]===x[0]?' class="on"':'')+'>'+x[1]+'</button>'}).join("")}else sn.hidden=true;
@@ -576,10 +581,12 @@ function refresh(){
   }).catch(function(e){
     if(my!==RUN)return;
     var m=e.message||"خطأ";
-    if(e.http===401||e.code===-2014||e.code===-2015||/API-key|Invalid API/i.test(m))m="المفتاح غير صالح أو لا يملك صلاحية القراءة. "+m;
+    var ipErr=e.code===-2015;
+    if(e.http===401||e.code===-2014||e.code===-2015||/API-key|Invalid API/i.test(m))m="المفتاح غير صالح أو لا يملك صلاحية القراءة، أو أن عنوان IP الحالي غير مضاف في مفتاحك. "+m;
     else if(e.http===451||e.http===403)m="بايننس رفضت الاتصال من هذه الشبكة ("+e.http+").";
     else if(/Timestamp/i.test(m))m="ساعة الجوال غير مضبوطة. فعّل الوقت التلقائي.";
     err(m);show();
+    if(ipErr)ipLoad(true).then(function(ip){if(ip&&my===RUN)err(m+" عنوانك الآن: "+ip+" (انسخه من الإعدادات ← الحساب)")});
   }).then(function(){clearTimeout(wd);if(my===RUN){busy=false;$("rf").classList.remove("spin")}});
 }
 
@@ -607,6 +614,23 @@ function mkLoad(force){
   }).catch(function(){MK.err=true}).then(function(){MK.busy=false;mkRender()});
 }
 
+
+/* --- current public IP (Binance keys are IP-restricted) --- */
+var IPV={v:"",t:0,busy:false};
+function ipLoad(force){
+  if(IPV.busy||(!force&&IPV.v&&Date.now()-IPV.t<6e4))return Promise.resolve(IPV.v);
+  IPV.busy=true;var e=$("ipv");if(e)e.textContent="…";
+  var get=function(u){return fetch(u,{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(!j||!j.ip)throw new Error("x");return String(j.ip)})};
+  return get("https://api.ipify.org?format=json").catch(function(){return get("https://api64.ipify.org?format=json")}).then(function(ip){IPV.v=ip;IPV.t=Date.now();return ip},function(){IPV.v="";return ""}).then(function(ip){
+    IPV.busy=false;var e2=$("ipv");if(e2)e2.textContent=ip||"تعذّر";var n=$("ipn");if(n&&!ip)n.textContent="تعذّر معرفة العنوان. تحقق من الاتصال ثم اضغط تحديث.";return ip});
+}
+function ipCopy(){
+  var v=IPV.v;if(!v){ipLoad(true);return}
+  var done=function(){var b=$("ipcp");if(b){b.textContent="تم النسخ ✓";setTimeout(function(){b.textContent="نسخ"},1500)}};
+  try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(v).then(done,function(){ipCopyOld(v,done)});return}}catch(e){}
+  ipCopyOld(v,done);
+}
+function ipCopyOld(v,done){var t=document.createElement("textarea");t.value=v;t.style.cssText="position:fixed;opacity:0;top:0";document.body.appendChild(t);t.select();try{document.execCommand("copy");done()}catch(e){}document.body.removeChild(t)}
 /* --- symbol health: exchange status (halted/break) + announced delistings, shown as a small flag --- */
 var SST={},DLS=(function(){try{var j=JSON.parse(LS.g("dls")||"{}");return j&&j.l?j:{t:0,l:{}}}catch(e){return{t:0,l:{}}}})(),STB=false,DLB=false;
 function sstBad(sy){var e=SST[sy];return !!(e&&e.s&&e.s!=="TRADING")}
@@ -2921,6 +2945,8 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-swc]"))){var swk=el.getAttribute("data-swc");if(SW){SW.sel[swk]=!SW.sel[swk];el.classList.toggle("on",!!SW.sel[swk]);swSelInfo()}return}
   if((el=t.closest("[data-swall]"))){if(SW){var swv=el.getAttribute("data-swall")==="1";SW.coins.forEach(function(c){SW.sel[c.sym]=swv});swDraw()}return}
   if((el=t.closest("[data-mk]"))){MK.tab=el.getAttribute("data-mk");mkRender();return}
+  if(t.id==="ipcp")return ipCopy();
+  if(t.id==="iprf")return void ipLoad(true);
   if((el=t.closest("[data-lk]")))return lkToggle(el.getAttribute("data-lk"));
   if(t.id==="rago")return raGo(t);
   if((el=t.closest("[data-rearm]")))return raOpen(el.getAttribute("data-rearm"));
