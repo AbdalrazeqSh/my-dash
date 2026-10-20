@@ -303,7 +303,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 79</div>
+<div class="note" style="text-align:center" id="foot">النسخة 80</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1793,6 +1793,16 @@ function chSvg(st){
     gk.forEach(function(kk){var g=gm[kk],p=g.c/g.q;if(!inr(p))return;var mx0=x(g.i),my0=y(p);if(mx0<x0||mx0>x0+pw)return;
       o+='<circle cx="'+mx0.toFixed(1)+'" cy="'+my0.toFixed(1)+'" r="5.2" style="fill:var('+(g.b?"--buy":"--sell")+');stroke:var(--s);stroke-width:1"/><text x="'+mx0.toFixed(1)+'" y="'+(my0+2.8).toFixed(1)+'" text-anchor="middle" style="fill:var(--onbs);font-size:7.5px;font-weight:700;font-family:inherit">'+(g.b?"B":"S")+'</text>'});
   }
+  /* highest high / lowest low of the visible range, small labels like Binance */
+  (function(){
+    var hI=-1,lI=-1,hV=-1e99,lV=1e99;
+    for(var q=i0;q<=i1;q++){var hh=cdl?k[q][3]:k[q][1],ll=cdl?k[q][4]:k[q][1];if(hh>hV){hV=hh;hI=q}if(ll<lV){lV=ll;lI=q}}
+    if(hI<0||hV===lV)return;
+    [[hI,hV,-1],[lI,lV,1]].forEach(function(m){
+      var mx=x(m[0]),my=y(m[1]);if(mx<x0||mx>x0+pw)return;
+      var right=mx<x0+pw*0.66,tx=mx+(right?6:-6),ty=my+(m[2]<0?3:3),an=right?"start":"end";
+      o+='<line x1="'+mx.toFixed(1)+'" x2="'+tx.toFixed(1)+'" y1="'+my.toFixed(1)+'" y2="'+my.toFixed(1)+'" style="stroke:var(--dim);stroke-width:1"/><text x="'+(tx+(right?2:-2)).toFixed(1)+'" y="'+ty.toFixed(1)+'" text-anchor="'+an+'" style="fill:var(--dim);font-size:8.5px;font-family:inherit;paint-order:stroke;stroke:var(--s);stroke-width:2.5px">'+px(m[1])+'</text>'});
+  })();
   /* time axis: round local times (not arbitrary interpolated ones), each placed at its true x */
   chAxis(k,v0,v1).forEach(function(tk){var tx=x(tk.i);if(tx<x0+18||tx>x0+pw-18)return;
     o+='<line x1="'+tx.toFixed(1)+'" x2="'+tx.toFixed(1)+'" y1="'+yb+'" y2="'+(yb+3)+'" style="stroke:var(--bd);stroke-width:1"/><text x="'+tx.toFixed(1)+'" y="'+(H-5)+'" text-anchor="middle" style="fill:var(--dim);font-size:10px;font-family:inherit'+(tk.d?';font-weight:700':'')+'">'+tk.l+'</text>'});
