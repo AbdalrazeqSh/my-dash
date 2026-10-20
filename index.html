@@ -294,6 +294,18 @@ h3.plain{margin-bottom:6px}
     <iframe id="trf" src="tracker.html" title="المتتبع"></iframe>
     <div class="c closed" id="ctk"><h3 class="fold" data-f="ctk"><span>نسخ احتياطي للمتتبع</span><span class="chev">›</span></h3><div class="fb"><textarea id="tkjs"></textarea><div style="display:flex;gap:8px;margin-top:8px"><button id="tkexp">تصدير</button><button id="tkimp">استيراد (يستبدل الحالي)</button></div></div></div>
   </div>
+  <div id="lab" hidden>
+    <div class="c"><h3 class="plain">مختبر الاستراتيجيات</h3>
+      <div class="sub" style="margin:0 0 8px">يجلب شموع عملاتك المباحة الأعلى سيولة ويختبر عليها استراتيجيات مشهورة بإعدادات ثابتة، على مرحلتين: الأولى والأخيرة (لم تُضبط عليها). التكلفة محسوبة، وما ينجح فقط يستحق أن نبني عليه.</div>
+      <div class="g2"><div><label for="lab_tf">الإطار</label><select id="lab_tf" class="chsel" style="width:100%"><option value="5m">5 دقائق</option><option value="15m">15 دقيقة</option><option value="30m">30 دقيقة</option><option value="1h">ساعة</option><option value="4h">4 ساعات</option></select></div>
+      <div><label for="lab_n">عدد الشموع لكل عملة</label><select id="lab_n" class="chsel" style="width:100%"><option value="3000">3000</option><option value="5000">5000</option><option value="10000">10000</option></select></div></div>
+      <div class="g2" style="margin-top:8px"><div><label for="lab_k">عدد العملات</label><select id="lab_k" class="chsel" style="width:100%"><option value="20">20</option><option value="40">40</option></select></div>
+      <div><label for="lab_c">التكلفة لكل جهة</label><select id="lab_c" class="chsel" style="width:100%"><option value="0.1">0.10% (عمولة فقط)</option><option value="0.15">0.15% (مع انزلاق)</option><option value="0.2">0.20%</option></select></div></div>
+      <div class="sub" id="lab_d" style="margin:6px 0"></div>
+      <button class="go" id="lab_go" style="width:100%">ابدأ الاختبار</button>
+      <div id="lab_out" style="margin-top:8px"></div>
+    </div>
+  </div>
   <div id="jr" hidden>
     <div class="c"><h3 class="plain">سجل الصفقات</h3>
       <div class="seg segs"><button data-jrg="1">24 س</button><button data-jrg="3">3 أيام</button><button data-jrg="7">7 أيام</button><button data-jrg="30" class="on">30 يوماً</button><button data-jrg="0">الكل</button></div>
@@ -304,7 +316,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 83</div>
+<div class="note" style="text-align:center" id="foot">النسخة 84</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -534,16 +546,17 @@ function err(m){var e=$("err");e.textContent=m||"";e.hidden=!m}
 function show(){
   $("newo").hidden=!CAN;$("swbtn").hidden=!CAN;
   var has=!!(creds().k&&creds().s),sb=SUB,ld=!snap&&has&&(TAB==="home"||TAB==="wal"||(TAB==="ana"&&sb.ana==="risk"));
-  var secs={hm:has&&snap&&TAB==="home",main:has&&snap&&TAB==="wal",ordp:has&&TAB==="trd"&&sb.trd==="ord",lad:has&&TAB==="trd"&&sb.trd==="lad",calc:false,risk:has&&snap&&TAB==="ana"&&sb.ana==="risk",jr:has&&TAB==="ana"&&sb.ana==="jr",tr:has&&TAB==="ana"&&sb.ana==="tr",setup:!has||(TAB==="set"&&sb.set==="key"),stg:has&&TAB==="set"&&sb.set==="key",hal:has&&TAB==="set"&&sb.set==="hal",hload:ld};
+  var secs={hm:has&&snap&&TAB==="home",main:has&&snap&&TAB==="wal",ordp:has&&TAB==="trd"&&sb.trd==="ord",lad:has&&TAB==="trd"&&sb.trd==="lad",calc:false,risk:has&&snap&&TAB==="ana"&&sb.ana==="risk",jr:has&&TAB==="ana"&&sb.ana==="jr",tr:has&&TAB==="ana"&&sb.ana==="tr",lab:has&&TAB==="ana"&&sb.ana==="lab",setup:!has||(TAB==="set"&&sb.set==="key"),stg:has&&TAB==="set"&&sb.set==="key",hal:has&&TAB==="set"&&sb.set==="hal",hload:ld};
   for(var k in secs)$(k).hidden=!secs[k];
   if(secs.setup)ipLoad(false);
+  if(secs.lab){["tf","n","k","c"].forEach(function(k){var e=$("lab_"+k);if(e)e.value=String(LABC[k])});labRender()}
   $("tabs").hidden=!has;$("rf").hidden=!has;
   var sn=$("subnav"),l2=SUBL[TAB];
   if(has&&l2){sn.hidden=false;sn.innerHTML=l2.map(function(x){return '<button data-sub="'+x[0]+'"'+(sb[TAB]===x[0]?' class="on"':'')+'>'+x[1]+'</button>'}).join("")}else sn.hidden=true;
   var tb=document.querySelectorAll("#tabs button");for(var i=0;i<tb.length;i++)tb[i].classList.toggle("on",tb[i].getAttribute("data-tab")===TAB);
 }
-var SUBL={ana:[["risk","المخاطر"],["jr","السجل"],["tr","المتتبع"]],set:[["key","الحساب"],["hal","الشرعية"]]};
-var SUB=(function(){try{var j=JSON.parse(LS.g("sub")||"{}");return{trd:"ord",ana:(j.ana==="jr"?"jr":j.ana==="tr"?"tr":"risk"),set:(j.set==="hal"?"hal":"key")}}catch(e){return{trd:"ord",ana:"risk",set:"key"}}})();
+var SUBL={ana:[["risk","المخاطر"],["jr","السجل"],["tr","المتتبع"],["lab","المختبر"]],set:[["key","الحساب"],["hal","الشرعية"]]};
+var SUB=(function(){try{var j=JSON.parse(LS.g("sub")||"{}");return{trd:"ord",ana:(j.ana==="jr"?"jr":j.ana==="tr"?"tr":j.ana==="lab"?"lab":"risk"),set:(j.set==="hal"?"hal":"key")}}catch(e){return{trd:"ord",ana:"risk",set:"key"}}})();
 var TAB=LS.g("tab")||"home";if(["home","wal","trd","ana","set"].indexOf(TAB)<0)TAB="home";
 function chVis(){
   document.body.classList.toggle("nochart",!CHV);
@@ -1839,6 +1852,147 @@ function chCap(st){
   if(iv>0&&age>Math.max(3*iv,36e5)){var dd=Math.floor(age/864e5),hh=Math.floor(age/36e5);stl='<br><b class="down">⚠ آخر شمعة قبل '+N(dd>=1?dd+" يوم":hh+" ساعة")+' ('+chDate(k[nk-1][0])+' '+hm(k[nk-1][0])+')، لا تداول حديث على هذا الزوج. الأسعار قديمة.</b>'}
   return 'النطاق المعروض: '+N(pc(ch))+' · أعلى '+N(px(hi))+' · أدنى '+N(px(lo))+(st.err?' · تعذّر التحديث':'')+stl;
 }
+/* ---- strategy lab: walk-forward test of popular rule sets on the user's halal coins ---- */
+var LABC=(function(){var d={tf:"15m",n:5000,k:20,c:0.15};try{var j=JSON.parse(LS.g("labc")||"{}");if(TFS.indexOf(j.tf)>=0)d.tf=j.tf;if([3000,5000,10000].indexOf(+j.n)>=0)d.n=+j.n;if([20,40].indexOf(+j.k)>=0)d.k=+j.k;if([0.1,0.15,0.2].indexOf(+j.c)>=0)d.c=+j.c}catch(e){}return d})();
+var LAB={busy:false,stop:false,msg:"",res:(function(){try{return JSON.parse(LS.g("labr")||"null")}catch(e){return null}})(),open:{}};
+var LABS=[
+ {id:"mrv",n:"MACD + RSI + حجم",d:"دخول: تقاطع MACD صاعد مع RSI فوق 50 وحجم أكبر من 1.5× متوسطه. خروج: تقاطع هابط أو RSI فوق 75."},
+ {id:"mac",n:"MACD وحده",d:"دخول: تقاطع MACD (12،26،9) صاعد. خروج: تقاطع هابط. للمقارنة مع الدمج."},
+ {id:"rsi",n:"RSI ارتداد",d:"دخول: RSI(14) يعود فوق 30 بعد هبوط تحته. خروج: RSI فوق 55."},
+ {id:"bol",n:"بولنجر ارتداد",d:"دخول: الإغلاق يعود داخل الحزمة السفلية (20،2). خروج: عند الوسط."},
+ {id:"ema",n:"تقاطع EMA 9/21",d:"دخول: EMA9 يعبر فوق EMA21 مع EMA50 صاعد. خروج: عكس التقاطع."},
+ {id:"don",n:"اختراق 20 + حجم",d:"دخول: إغلاق فوق أعلى 20 شمعة وحجم 1.5×. خروج: إغلاق تحت أدنى 10."},
+ {id:"vmo",n:"انفجار حجم",d:"دخول: حجم 2.5× متوسطه وشمعة خضراء تكسر أعلى 10. خروج: إغلاق تحت EMA9."}
+];
+function lbEma(a,n){var k=2/(n+1),r=new Array(a.length),p=a[0];for(var i=0;i<a.length;i++){p=i?a[i]*k+p*(1-k):a[0];r[i]=p}return r}
+function lbSma(a,n){var r=new Array(a.length),s=0;for(var i=0;i<a.length;i++){s+=a[i];if(i>=n)s-=a[i-n];r[i]=i>=n-1?s/n:null}return r}
+function lbRsi(c,n){var r=new Array(c.length).fill(null),g=0,l=0;for(var i=1;i<c.length;i++){var d=c[i]-c[i-1],u=d>0?d:0,w=d<0?-d:0;if(i<=n){g+=u;l+=w;if(i===n){g/=n;l/=n;r[i]=l===0?100:100-100/(1+g/l)}}else{g=(g*(n-1)+u)/n;l=(l*(n-1)+w)/n;r[i]=l===0?100:100-100/(1+g/l)}}return r}
+function lbAtr(h,l,c,n){var r=new Array(c.length).fill(null),s=0,p=0;for(var i=1;i<c.length;i++){var t=Math.max(h[i]-l[i],Math.abs(h[i]-c[i-1]),Math.abs(l[i]-c[i-1]));if(i<=n){s+=t;if(i===n){p=s/n;r[i]=p}}else{p=(p*(n-1)+t)/n;r[i]=p}}return r}
+function lbPrep(k){
+  var X={n:k.length,t:[],o:[],h:[],l:[],c:[],v:[]};k.forEach(function(x){X.t.push(+x[0]);X.o.push(+x[1]);X.h.push(+x[2]);X.l.push(+x[3]);X.c.push(+x[4]);X.v.push(+x[5])});
+  var e12=lbEma(X.c,12),e26=lbEma(X.c,26),ml=e12.map(function(v,i){return v-e26[i]}),sg=lbEma(ml,9);
+  X.hist=ml.map(function(v,i){return v-sg[i]});X.rsi=lbRsi(X.c,14);X.atr=lbAtr(X.h,X.l,X.c,14);X.vs=lbSma(X.v,20);
+  X.s20=lbSma(X.c,20);X.sd=X.c.map(function(v,i){if(i<19)return null;var m=X.s20[i],s=0;for(var j=i-19;j<=i;j++)s+=(X.c[j]-m)*(X.c[j]-m);return Math.sqrt(s/20)});
+  X.e9=lbEma(X.c,9);X.e21=lbEma(X.c,21);X.e50=lbEma(X.c,50);X.e600=lbEma(X.c,600);
+  X.hh=function(i,m){var x=-1e99;for(var j=i-m;j<i;j++)if(X.h[j]>x)x=X.h[j];return x};X.ll=function(i,m){var x=1e99;for(var j=i-m;j<i;j++)if(X.l[j]<x)x=X.l[j];return x};
+  return X;
+}
+function lbSig(id,X){
+  var n=X.n,en=new Uint8Array(n),ex=new Uint8Array(n);
+  for(var i=60;i<n;i++){
+    var hu=X.hist[i-1]<=0&&X.hist[i]>0,hd=X.hist[i]<0,vs=X.vs[i],c=X.c[i];
+    if(id==="mrv"){en[i]=hu&&X.rsi[i]>50&&vs&&X.v[i]>1.5*vs?1:0;ex[i]=hd||X.rsi[i]>75?1:0}
+    else if(id==="mac"){en[i]=hu?1:0;ex[i]=hd?1:0}
+    else if(id==="rsi"){en[i]=X.rsi[i-1]!=null&&X.rsi[i-1]<30&&X.rsi[i]>=30?1:0;ex[i]=X.rsi[i]>55?1:0}
+    else if(id==="bol"){var lo=X.s20[i]-2*X.sd[i],lo1=X.s20[i-1]-2*X.sd[i-1];en[i]=X.c[i-1]<lo1&&c>lo?1:0;ex[i]=c>=X.s20[i]?1:0}
+    else if(id==="ema"){en[i]=X.e9[i-1]<=X.e21[i-1]&&X.e9[i]>X.e21[i]&&X.e50[i]>X.e50[i-5]?1:0;ex[i]=X.e9[i]<X.e21[i]?1:0}
+    else if(id==="don"){en[i]=i>=21&&c>X.hh(i,20)&&vs&&X.v[i]>1.5*vs?1:0;ex[i]=c<X.ll(i,10)?1:0}
+    else if(id==="vmo"){en[i]=vs&&X.v[i]>2.5*vs&&c>X.o[i]&&c>=X.hh(i,10)?1:0;ex[i]=c<X.e9[i]?1:0}
+  }
+  return {en:en,ex:ex};
+}
+function lbSim(X,sg,filt,cost,start){
+  var n=X.n,tr=[],i=start;
+  while(i<n-2){
+    if(sg.en[i]&&(!filt||X.c[i]>X.e600[i])&&X.atr[i]!=null){
+      var ei=i+1,ent=X.o[ei]*(1+cost),stp=X.o[ei]-1.5*X.atr[i],xp=null,xi=-1,held=0;
+      for(var j=ei;j<n;j++){
+        held++;
+        if(X.o[j]<=stp){xp=X.o[j];xi=j;break}
+        if(X.l[j]<=stp){xp=stp;xi=j;break}
+        if(sg.ex[j]||held>=60){if(j+1<n){xp=X.o[j+1];xi=j+1}else{xp=X.c[j];xi=j}break}
+      }
+      if(xp==null)break;
+      tr.push({i:ei,r:xp*(1-cost)/ent-1});i=Math.max(xi,i+1);
+    }else i++;
+  }
+  return tr;
+}
+function lbAcc(){return {n:0,s:0,s2:0,w:0,sw:0,sl:0,cn:0,cp:0}}
+function lbAdd(a,list){if(!list.length)return;var cs=0;list.forEach(function(t){a.n++;a.s+=t.r;a.s2+=t.r*t.r;if(t.r>0){a.w++;a.sw+=t.r}else a.sl+=t.r;cs+=t.r});if(list.length>=3){a.cn++;if(cs>0)a.cp++}}
+function lbFetch(sym,tf,need){
+  var all=[],tries=0;
+  var go=function(){
+    if(LAB.stop||all.length>=need||tries>=12)return Promise.resolve();tries++;
+    var p={symbol:sym+"USDT",interval:tf,limit:1000};if(all.length)p.endTime=all[0][0]-1;
+    return call("/api/v3/klines",p,false).then(function(r){if(!Array.isArray(r)||!r.length)return;all=r.map(function(k){return [+k[0],k[1],k[2],k[3],k[4],k[5]]}).concat(all);if(r.length<1000)return;return go()});
+  };
+  return go().then(function(){return all.length>need?all.slice(all.length-need):all});
+}
+function lbUniverse(){
+  return call("/api/v3/ticker/24hr",{type:"MINI"},false).then(function(r){
+    var l=[];(Array.isArray(r)?r:[]).forEach(function(t){if(!/USDT$/.test(t.symbol))return;var s=t.symbol.replace(/USDT$/,"");if(STABLE[s]||halS(s)!=="ok")return;if(!(+t.lastPrice>0)||(t.closeTime&&+t.closeTime<Date.now()-216e5))return;if(sstBad&&sstBad(s))return;l.push({s:s,q:+t.quoteVolume||0})});
+    l.sort(function(a,b){return b.q-a.q});return l.slice(0,LABC.k).map(function(x){return x.s});
+  });
+}
+function labRun(){
+  if(LAB.busy)return;LAB.busy=true;LAB.stop=false;LAB.msg="جارٍ اختيار العملات…";labRender();
+  var cfg={tf:LABC.tf,n:LABC.n,k:LABC.k,c:LABC.c},cost=cfg.c/100,start=1000,V=[];
+  LABS.forEach(function(s){[false,true].forEach(function(f){V.push({id:s.id,f:f,IS:lbAcc(),OOS:lbAcc()})})});
+  var holdIS=[],holdOOS=[],done=0,used=0,days=0,skipped=0,q;
+  lbUniverse().then(function(list){
+    q=list.slice();var total=q.length;
+    var worker=function(){
+      if(LAB.stop||!q.length)return Promise.resolve();var s=q.shift();
+      return lbFetch(s,cfg.tf,cfg.n).then(function(k){
+        done++;LAB.msg="جارٍ الجلب والاختبار… "+done+" من "+total;labRender();
+        if(k.length<start+400){skipped++;return}
+        var X=lbPrep(k),sp=start+Math.floor((X.n-start)*0.6);used++;days=Math.max(days,(X.t[X.n-1]-X.t[0])/864e5);
+        holdIS.push((X.c[sp]/X.c[start]-1)*100);holdOOS.push((X.c[X.n-1]/X.c[sp]-1)*100);
+        var cache={};
+        V.forEach(function(v){var sg=cache[v.id]||(cache[v.id]=lbSig(v.id,X)),tr=lbSim(X,sg,v.f,cost,start);lbAdd(v.IS,tr.filter(function(t){return t.i<sp}));lbAdd(v.OOS,tr.filter(function(t){return t.i>=sp}))});
+      },function(){skipped++}).then(worker);
+    };
+    return Promise.all([worker(),worker(),worker()]);
+  }).then(function(){
+    var med=function(a){if(!a.length)return 0;a=a.slice().sort(function(x,y){return x-y});return a[Math.floor(a.length/2)]};
+    if(used){LAB.res={t:Date.now(),cfg:cfg,used:used,skipped:skipped,days:days,hIS:med(holdIS),hOOS:med(holdOOS),V:V};try{LS.s("labr",JSON.stringify(LAB.res))}catch(e){}}
+    LAB.msg=LAB.stop?"أُوقف الاختبار":(used?"":"لم تتوفر بيانات كافية. جرّب عمقًا أقل أو إطارًا أعلى.");
+  },function(e){LAB.msg="تعذّر الاختبار: "+(e&&e.message||"")}).then(function(){LAB.busy=false;labRender()});
+}
+function lbStat(a){var m=a.n?a.s/a.n:0,sd=a.n>1?Math.sqrt(Math.max(0,(a.s2-a.n*m*m)/(a.n-1))):0;return {n:a.n,m:m,t:sd>0?m/(sd/Math.sqrt(a.n)):0,wr:a.n?a.w/a.n:0,aw:a.w?a.sw/a.w:0,al:a.n-a.w?a.sl/(a.n-a.w):0,pc:a.cn?a.cp/a.cn:0,cn:a.cn}}
+function lbVerdict(is,oo){
+  if(oo.n<30)return {k:"nd",t:"بيانات قليلة",c:"wn"};
+  if(is.m>0&&oo.m>0&&oo.n>=150&&oo.t>=2.5&&oo.pc>=0.6)return {k:"ok",t:"✓ نجحت",c:"ok"};
+  if(is.m>0&&oo.m>0)return {k:"mid",t:"◐ غير حاسمة",c:"wn"};
+  return {k:"no",t:"✗ فشلت",c:"bd"};
+}
+function lbName(v){var s=LABS.filter(function(x){return x.id===v.id})[0];return s.n+(v.f?" + فلتر الاتجاه الأكبر":"")}
+function labRender(){
+  var e=document.getElementById("lab_out");if(!e)return;
+  var go=document.getElementById("lab_go");if(go){go.textContent=LAB.busy?"إيقاف":"ابدأ الاختبار";}
+  var ds=document.getElementById("lab_d");if(ds){var iv=({"5m":3e5,"15m":9e5,"30m":18e5,"1h":36e5,"4h":144e5,"1d":864e5})[LABC.tf];ds.textContent="≈ "+Math.round(LABC.n*iv/864e5)+" يومًا من التاريخ لكل عملة (يخصَّص الأول للإحماء)"}
+  var h='';if(LAB.msg)h+='<div class="sub" style="margin:6px 0">'+esc(LAB.msg)+'</div>';
+  var R=LAB.res;if(R&&!LAB.busy||(R&&LAB.busy&&false)){
+    var rows=R.V.map(function(v){var is=lbStat(v.IS),oo=lbStat(v.OOS);return {v:v,is:is,oo:oo,vd:lbVerdict(is,oo)}});
+    var rk=rows.slice().sort(function(a,b){return b.oo.m-a.oo.m}),ok=rows.filter(function(x){return x.vd.k==="ok"}).length;
+    var pick=rows.filter(function(x){return x.is.n>=100}).sort(function(a,b){return b.is.m-a.is.m})[0],ltr=function(x){return '<bdi dir="ltr">'+x+'</bdi>'},d$=function(x){return ltr(N((x>=0?"+":"−")+"$"+Math.abs(x*100).toFixed(2)))};
+    h+='<div class="sgvd '+(ok?"ok":"bd")+'"><b>'+(ok?'نجحت '+N(ok)+' من '+N(rows.length)+' اختبارًا':'لم ينجح أي من '+N(rows.length)+' اختبارًا')+'</b></div>';
+    h+='<div class="sub" style="margin:6px 0">'+N(R.used)+' عملة · '+N(R.cfg.tf)+' · نحو '+N(Math.round(R.days))+' يومًا · تكلفة '+N(R.cfg.c)+'% لكل جهة'+(R.skipped?' · تخطّيت '+N(R.skipped)+' لقلة بياناتها':'')+'<br>الاحتفاظ (وسيط العملات): '+ltr(N(pc(R.hIS)))+' في المرحلة الأولى و'+ltr(N(pc(R.hOOS)))+' في الأخيرة.</div>';
+    h+='<table class="sgtb"><tr><th>الاستراتيجية</th><th>متوسط الصفقة (على $100) في المرحلة الأخيرة</th><th>الحكم</th></tr>';
+    rk.forEach(function(r){var key=r.v.id+(r.v.f?"1":"0"),op=LAB.open[key];
+      h+='<tr data-labx="'+key+'" style="cursor:pointer"><td style="text-align:right">'+esc(lbName(r.v))+'<div class="sub">'+N(r.oo.n)+' صفقة</div></td><td>'+d$(r.oo.m)+'</td><td><b class="'+(r.vd.c==="ok"?"up":r.vd.c==="bd"?"down":"")+'">'+r.vd.t+'</b> '+(op?'⌃':'⌄')+'</td></tr>';
+      if(op){var s=LABS.filter(function(x){return x.id===r.v.id})[0];
+        h+='<tr><td colspan="3" style="text-align:right"><div class="sub">'+esc(s.d)+(r.v.f?' الدخول يتم فقط إذا كان السعر فوق EMA 600 (ما يعادل EMA 50 على إطار أكبر بـ12 مرة).':'')+' الوقف 1.5×ATR، وأقصى احتفاظ 60 شمعة.</div><table class="sgtb"><tr><th></th><th>المرحلة الأولى</th><th>الأخيرة</th></tr>'
+        +'<tr><td>الصفقات</td><td>'+N(r.is.n)+'</td><td>'+N(r.oo.n)+'</td></tr>'
+        +'<tr><td>متوسط الصفقة ($100)</td><td>'+d$(r.is.m)+'</td><td>'+d$(r.oo.m)+'</td></tr>'
+        +'<tr><td>رابحة</td><td>'+N(Math.round(r.is.wr*100))+'%</td><td>'+N(Math.round(r.oo.wr*100))+'%</td></tr>'
+        +'<tr><td>متوسط الرابحة / الخاسرة</td><td>'+ltr(N(pc(r.is.aw*100)))+' / '+ltr(N(pc(r.is.al*100)))+'</td><td>'+ltr(N(pc(r.oo.aw*100)))+' / '+ltr(N(pc(r.oo.al*100)))+'</td></tr>'
+        +'<tr><td>عملات رابحة</td><td>'+N(Math.round(r.is.pc*100))+'%</td><td>'+N(Math.round(r.oo.pc*100))+'%</td></tr>'
+        +'<tr><td>الثقة الإحصائية (t)</td><td>'+N(r.is.t.toFixed(1))+'</td><td>'+N(r.oo.t.toFixed(1))+'</td></tr></table></td></tr>'}
+    });
+    h+='</table>';
+    if(pick){var po=lbStat(R.V.filter(function(v){return v.id===pick.v.id&&v.f===pick.v.f})[0].OOS);h+='<div class="sgl"><b>اختبار الاختيار:</b> الأفضل في المرحلة الأولى كانت «'+esc(lbName(pick.v))+'» ('+d$(pick.is.m)+' للصفقة). في المرحلة الأخيرة، التي لم تُختر عليها، صارت '+d$(po.m)+' للصفقة.</div>'}
+    h+='<div class="sub" style="margin-top:6px">«نجحت» تعني: ربحًا بعد التكلفة في المرحلتين، و150 صفقة فأكثر في الأخيرة، وثقة t ≥ 2.5، وربحًا في 60% من العملات. العملات تتحرك معًا، فالثقة الحقيقية أقل من المعروضة. النتيجة تخص هذه الفترة فقط وقد تتغير مع تغيّر السوق، فأعد الاختبار من حين لآخر. ولا أحد يضمن المستقبل.</div>';
+  }
+  e.innerHTML=h;
+}
+document.addEventListener("click",function(ev){
+  var t=ev.target,el=t.closest&&t.closest("#lab_go,[data-labx]");if(!el)return;
+  if(el.id==="lab_go"){if(LAB.busy){LAB.stop=true;LAB.msg="جارٍ الإيقاف…";return labRender()}return labRun()}
+  var k=el.getAttribute("data-labx");LAB.open[k]=!LAB.open[k];labRender();
+});
+document.addEventListener("change",function(ev){var el=ev.target,m=el.id&&/^lab_(tf|n|k|c)$/.exec(el.id);if(!m)return;var k=m[1],v=el.value;LABC[k]=k==="tf"?v:+v;LS.s("labc",JSON.stringify(LABC));labRender()});
 /* ---- signal line: trend rules on the displayed frame (closed candles only) ---- */
 var SGR=(function(){var v=LS.g("sgr");return v==="b"||v==="c"?v:"a"})(),SGP=LS.g("sgp")==="r"?"r":"c";
 var SGN={a:"الاتجاه المركّب",b:"المتوسطات",c:"الوقف المتحرك"};
@@ -1971,7 +2125,7 @@ function sgResult(st,R){
   else if(rB&&!dB){v="◐ نتيجتها أفضل من الاحتفاظ لكن بتراجع أكبر";cl="wn"}
   else{v="✗ أسوأ من الاحتفاظ في هذه الفترة";cl="bd"}
   if(!b.tr&&!b.open){v="لم تدخل القاعدة أي صفقة في هذه الفترة، فبقيت نقدًا";cl="wn"}
-  var span=b.t1-b.t0,days=span/864e5,lt=function(x){return '<span style="direction:ltr;unicode-bidi:isolate;display:inline-block">'+x+'</span>'};
+  var span=b.t1-b.t0,days=span/864e5,lt=function(x){return '<bdi dir="ltr">'+x+'</bdi>'};
   var sg=function(x){return lt(N(pc(x)))};
   var h='<div class="sgb"><div class="sgvd '+cl+'"><b>'+v+'</b></div>';
   h+='<div class="sub" style="margin:4px 0">الفترة المختبرة: '+sgDur(span)+' (من '+chDate(b.t0)+' إلى '+chDate(b.t1)+')'+(R.clamp?' · طلبت '+esc(R.req)+' لكن المتاح بعد مدة إحماء القاعدة أقل':'')+'</div>';
