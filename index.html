@@ -316,7 +316,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 84</div>
+<div class="note" style="text-align:center" id="foot">النسخة 85</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1862,8 +1862,38 @@ var LABS=[
  {id:"bol",n:"بولنجر ارتداد",d:"دخول: الإغلاق يعود داخل الحزمة السفلية (20،2). خروج: عند الوسط."},
  {id:"ema",n:"تقاطع EMA 9/21",d:"دخول: EMA9 يعبر فوق EMA21 مع EMA50 صاعد. خروج: عكس التقاطع."},
  {id:"don",n:"اختراق 20 + حجم",d:"دخول: إغلاق فوق أعلى 20 شمعة وحجم 1.5×. خروج: إغلاق تحت أدنى 10."},
- {id:"vmo",n:"انفجار حجم",d:"دخول: حجم 2.5× متوسطه وشمعة خضراء تكسر أعلى 10. خروج: إغلاق تحت EMA9."}
+ {id:"vmo",n:"انفجار حجم",d:"دخول: حجم 2.5× متوسطه وشمعة خضراء تكسر أعلى 10. خروج: إغلاق تحت EMA9."},
+ {id:"dv5",n:"دايفرجنس 5/5 (عادي + منطقة)",d:"قاع سعر أدنى مع قاع RSI أعلى، قمم القاع 5 شموع يسارًا ويمينًا، RSI عند القاع تحت 40. الدخول بعد التأكيد، الوقف تحت القاع، الخروج عند RSI فوق 60 أو دايفرجنس هابط."},
+ {id:"dv5n",n:"دايفرجنس 5/5 (عادي)",d:"كما السابق لكن بلا شرط منطقة RSI."},
+ {id:"dv5h",n:"دايفرجنس 5/5 (عادي + مخفي)",d:"يضيف المخفي: قاع سعر أعلى مع قاع RSI أدنى. بلا شرط منطقة."},
+ {id:"dv3",n:"دايفرجنس 3/3 (عادي + مخفي)",d:"نافذة أقصر 3/3، فإشارات أسرع وأكثر ضجيجًا. بلا شرط منطقة."},
+ {id:"dv3z",n:"دايفرجنس 3/3 (عادي + منطقة)",d:"نافذة 3/3 مع شرط RSI تحت 40."},
+ {id:"dv8",n:"دايفرجنس 8/8 (عادي + منطقة)",d:"نافذة أطول 8/8: إشارات أقل وأبطأ وأوضح. RSI تحت 40."}
 ];
+var LABDV={dv5:{r:5,z:1,h:0},dv5n:{r:5,z:0,h:0},dv5h:{r:5,z:0,h:1},dv3:{r:3,z:0,h:1},dv3z:{r:3,z:1,h:0},dv8:{r:8,z:1,h:0}};
+/* RSI divergence on confirmed price pivots (non-repainting): regular + optional hidden, with line-of-sight check */
+function lbDiv(X,P){
+  var n=X.n,R=P.r,en=new Uint8Array(n),ex=new Uint8Array(n),stp=new Array(n).fill(0),pl=[],ph=[],p,k;
+  for(p=R;p<n-R;p++){
+    var lo=true,hi=true;
+    for(k=p-R;k<=p+R;k++){if(k===p)continue;if(X.l[k]<X.l[p]||(k>p&&X.l[k]===X.l[p]))lo=false;if(X.h[k]>X.h[p]||(k>p&&X.h[k]===X.h[p]))hi=false}
+    if(lo)pl.push(p);if(hi)ph.push(p);
+  }
+  var los=function(q,p2,up){var a=X.rsi[q],b=X.rsi[p2];for(var j=q+1;j<p2;j++){var ln=a+(b-a)*(j-q)/(p2-q);if(up?X.rsi[j]<ln:X.rsi[j]>ln)return false}return true};
+  var prev=function(list,ix){for(var j=ix-1;j>=0;j--){var d=list[ix]-list[j];if(d>60)return -1;if(d>=5)return list[j]}return -1};
+  pl.forEach(function(p2,ix){
+    var q=prev(pl,ix),c=p2+R;if(q<0||c>=n||X.rsi[p2]==null||X.rsi[q]==null||X.atr[c]==null)return;
+    var reg=X.l[p2]<X.l[q]&&X.rsi[p2]>X.rsi[q],hid=P.h&&X.l[p2]>X.l[q]&&X.rsi[p2]<X.rsi[q];
+    if(!(reg||hid)||!los(q,p2,true))return;if(P.z&&!(X.rsi[p2]<40))return;
+    en[c]=1;stp[c]=X.l[p2]-0.2*X.atr[c];
+  });
+  ph.forEach(function(p2,ix){
+    var q=prev(ph,ix),c=p2+R;if(q<0||c>=n||X.rsi[p2]==null||X.rsi[q]==null)return;
+    if(X.h[p2]>X.h[q]&&X.rsi[p2]<X.rsi[q]&&los(q,p2,false))ex[c]=1;
+  });
+  for(var i=0;i<n;i++)if(X.rsi[i]!=null&&X.rsi[i]>60)ex[i]=1;
+  return {en:en,ex:ex,stp:stp};
+}
 function lbEma(a,n){var k=2/(n+1),r=new Array(a.length),p=a[0];for(var i=0;i<a.length;i++){p=i?a[i]*k+p*(1-k):a[0];r[i]=p}return r}
 function lbSma(a,n){var r=new Array(a.length),s=0;for(var i=0;i<a.length;i++){s+=a[i];if(i>=n)s-=a[i-n];r[i]=i>=n-1?s/n:null}return r}
 function lbRsi(c,n){var r=new Array(c.length).fill(null),g=0,l=0;for(var i=1;i<c.length;i++){var d=c[i]-c[i-1],u=d>0?d:0,w=d<0?-d:0;if(i<=n){g+=u;l+=w;if(i===n){g/=n;l/=n;r[i]=l===0?100:100-100/(1+g/l)}}else{g=(g*(n-1)+u)/n;l=(l*(n-1)+w)/n;r[i]=l===0?100:100-100/(1+g/l)}}return r}
@@ -1878,6 +1908,7 @@ function lbPrep(k){
   return X;
 }
 function lbSig(id,X){
+  if(LABDV[id])return lbDiv(X,LABDV[id]);
   var n=X.n,en=new Uint8Array(n),ex=new Uint8Array(n);
   for(var i=60;i<n;i++){
     var hu=X.hist[i-1]<=0&&X.hist[i]>0,hd=X.hist[i]<0,vs=X.vs[i],c=X.c[i];
@@ -1895,7 +1926,8 @@ function lbSim(X,sg,filt,cost,start){
   var n=X.n,tr=[],i=start;
   while(i<n-2){
     if(sg.en[i]&&(!filt||X.c[i]>X.e600[i])&&X.atr[i]!=null){
-      var ei=i+1,ent=X.o[ei]*(1+cost),stp=X.o[ei]-1.5*X.atr[i],xp=null,xi=-1,held=0;
+      var ei=i+1,ent=X.o[ei]*(1+cost),stp=(sg.stp&&sg.stp[i]>0)?sg.stp[i]:X.o[ei]-1.5*X.atr[i],xp=null,xi=-1,held=0;
+      if(!(stp<X.o[ei])){i++;continue}
       for(var j=ei;j<n;j++){
         held++;
         if(X.o[j]<=stp){xp=X.o[j];xi=j;break}
@@ -1953,7 +1985,7 @@ function labRun(){
 function lbStat(a){var m=a.n?a.s/a.n:0,sd=a.n>1?Math.sqrt(Math.max(0,(a.s2-a.n*m*m)/(a.n-1))):0;return {n:a.n,m:m,t:sd>0?m/(sd/Math.sqrt(a.n)):0,wr:a.n?a.w/a.n:0,aw:a.w?a.sw/a.w:0,al:a.n-a.w?a.sl/(a.n-a.w):0,pc:a.cn?a.cp/a.cn:0,cn:a.cn}}
 function lbVerdict(is,oo){
   if(oo.n<30)return {k:"nd",t:"بيانات قليلة",c:"wn"};
-  if(is.m>0&&oo.m>0&&oo.n>=150&&oo.t>=2.5&&oo.pc>=0.6)return {k:"ok",t:"✓ نجحت",c:"ok"};
+  if(is.m>0&&oo.m>0&&oo.n>=150&&oo.t>=3&&oo.pc>=0.6)return {k:"ok",t:"✓ نجحت",c:"ok"};
   if(is.m>0&&oo.m>0)return {k:"mid",t:"◐ غير حاسمة",c:"wn"};
   return {k:"no",t:"✗ فشلت",c:"bd"};
 }
@@ -1973,7 +2005,7 @@ function labRender(){
     rk.forEach(function(r){var key=r.v.id+(r.v.f?"1":"0"),op=LAB.open[key];
       h+='<tr data-labx="'+key+'" style="cursor:pointer"><td style="text-align:right">'+esc(lbName(r.v))+'<div class="sub">'+N(r.oo.n)+' صفقة</div></td><td>'+d$(r.oo.m)+'</td><td><b class="'+(r.vd.c==="ok"?"up":r.vd.c==="bd"?"down":"")+'">'+r.vd.t+'</b> '+(op?'⌃':'⌄')+'</td></tr>';
       if(op){var s=LABS.filter(function(x){return x.id===r.v.id})[0];
-        h+='<tr><td colspan="3" style="text-align:right"><div class="sub">'+esc(s.d)+(r.v.f?' الدخول يتم فقط إذا كان السعر فوق EMA 600 (ما يعادل EMA 50 على إطار أكبر بـ12 مرة).':'')+' الوقف 1.5×ATR، وأقصى احتفاظ 60 شمعة.</div><table class="sgtb"><tr><th></th><th>المرحلة الأولى</th><th>الأخيرة</th></tr>'
+        h+='<tr><td colspan="3" style="text-align:right"><div class="sub">'+esc(s.d)+(r.v.f?' الدخول يتم فقط إذا كان السعر فوق EMA 600 (ما يعادل EMA 50 على إطار أكبر بـ12 مرة).':'')+' الوقف 1.5×ATR (وللدايفرجنس تحت قاع الدايفرجنس)، وأقصى احتفاظ 60 شمعة.</div><table class="sgtb"><tr><th></th><th>المرحلة الأولى</th><th>الأخيرة</th></tr>'
         +'<tr><td>الصفقات</td><td>'+N(r.is.n)+'</td><td>'+N(r.oo.n)+'</td></tr>'
         +'<tr><td>متوسط الصفقة ($100)</td><td>'+d$(r.is.m)+'</td><td>'+d$(r.oo.m)+'</td></tr>'
         +'<tr><td>رابحة</td><td>'+N(Math.round(r.is.wr*100))+'%</td><td>'+N(Math.round(r.oo.wr*100))+'%</td></tr>'
@@ -1983,7 +2015,7 @@ function labRender(){
     });
     h+='</table>';
     if(pick){var po=lbStat(R.V.filter(function(v){return v.id===pick.v.id&&v.f===pick.v.f})[0].OOS);h+='<div class="sgl"><b>اختبار الاختيار:</b> الأفضل في المرحلة الأولى كانت «'+esc(lbName(pick.v))+'» ('+d$(pick.is.m)+' للصفقة). في المرحلة الأخيرة، التي لم تُختر عليها، صارت '+d$(po.m)+' للصفقة.</div>'}
-    h+='<div class="sub" style="margin-top:6px">«نجحت» تعني: ربحًا بعد التكلفة في المرحلتين، و150 صفقة فأكثر في الأخيرة، وثقة t ≥ 2.5، وربحًا في 60% من العملات. العملات تتحرك معًا، فالثقة الحقيقية أقل من المعروضة. النتيجة تخص هذه الفترة فقط وقد تتغير مع تغيّر السوق، فأعد الاختبار من حين لآخر. ولا أحد يضمن المستقبل.</div>';
+    h+='<div class="sub" style="margin-top:6px">«نجحت» تعني: ربحًا بعد التكلفة في المرحلتين، و150 صفقة فأكثر في الأخيرة، وثقة t ≥ 3، وربحًا في 60% من العملات. العملات تتحرك معًا، فالثقة الحقيقية أقل من المعروضة. النتيجة تخص هذه الفترة فقط وقد تتغير مع تغيّر السوق، فأعد الاختبار من حين لآخر. ولا أحد يضمن المستقبل.</div>';
   }
   e.innerHTML=h;
 }
