@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 99</div>
+<div class="note" style="text-align:center" id="foot">النسخة 100</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -2127,6 +2127,60 @@ function evSim(X,bar,ent,stop,tp,hz,cost){
   return {net:(xp*(1-cost))/(ent*(1+cost))-1,res:res};
 }
 var EVT=[0.5,1];
+/* ---- allocation study: same events, different splits of the budget across levels, equal total risk (1R = loss if every planned order fills and the common stop is hit) ---- */
+var EAS=[{id:"eq",n:"ثلاثة أجزاء متساوية (الحالي)"},{id:"two",n:"مستويان فقط: 50% و61.8%"},{id:"pyr",n:"هرمي: 20/30/50 (صغير أولًا)"},{id:"rk",n:"حسب المخاطرة (أكبر حجمًا في الأعمق)"},{id:"mk",n:"20% بالسوق عند أول لمسة + الباقي متدرجًا"}];
+var EAM=[{id:"P",n:"هدف لكل أمر"},{id:"A",n:"هدف واحد من متوسط التكلفة"}];
+function evAlPlan(sc,lv,stop,oMk){
+  var pl=[],tot=0;
+  var add=function(p,w,m){if(w>0&&p>stop){pl.push({p:p,w:w,m:m});tot+=w}};
+  if(sc==="eq")lv.forEach(function(l){add(l.p,1,0)});
+  else if(sc==="two")lv.forEach(function(l){if(l.r<0.7)add(l.p,1,0)});
+  else if(sc==="pyr")lv.forEach(function(l){add(l.p,l.r<0.55?2:(l.r<0.7?3:5),0)});
+  else if(sc==="rk")lv.forEach(function(l){add(l.p,l.p/(l.p-stop),0)});
+  else if(sc==="mk"){var ok=oMk>stop;if(ok)add(oMk,0.2,1);lv.forEach(function(l){add(l.p,(ok?0.8:1)/lv.length,0)})}
+  pl.forEach(function(q){q.w/=tot});
+  return pl;
+}
+function evAlSim(X,ev,peak,pl,stop,K,cost,W24,endI,mode){
+  var n=X.n,c0=ev.cI,hz=Math.min(n-1,endI+W24),fl=[],j,k,done=false;
+  if(!pl.length)return null;
+  var den=0;pl.forEach(function(q){q.f=null;den+=q.w*(q.p-stop)/q.p});
+  if(!(den>0))return null;
+  var close=function(f,res,x){f.d=1;f.res=res;f.x=x;f.r=(x*(1-cost))/(f.p*(1+cost))-1};
+  for(j=c0+1;j<=hz;j++){
+    if(j<=endI&&!done){pl.forEach(function(q){if(q.f)return;
+      if(q.m){if(j===c0+1){q.f={p:X.o[j],i:j,w:q.w,d:0};fl.push(q.f)}}
+      else if(X.l[j]<=q.p){q.f={p:Math.min(q.p,X.o[j]),i:j,w:q.w,d:0};fl.push(q.f)}})}
+    var act=fl.filter(function(f){return !f.d});
+    if(!act.length)continue;
+    if(mode==="P"){
+      act.forEach(function(f){
+        if(X.l[j]<=stop)close(f,2,(f.i===j&&X.o[j]<=stop)?X.o[j]:stop);
+        else{var T=f.p+0.5*K*Math.max(0,peak-f.p);if(f.i<j&&X.h[j]>=T)close(f,1,T);else if(j-f.i>=W24)close(f,0,X.c[j])}
+      });
+    }else{
+      var sw=0,sp=0,fi=fl[0].i,prior=fl.filter(function(f){return f.i<j});
+      act.forEach(function(f){sw+=f.w;sp+=f.w*f.p});
+      if(X.l[j]<=stop){act.forEach(function(f){close(f,2,(f.i===j&&X.o[j]<=stop)?X.o[j]:stop)});done=true}
+      else if(prior.length){var pw=0,pp=0;prior.forEach(function(f){pw+=f.w;pp+=f.w*f.p});var av=pp/pw,T=av+0.5*K*Math.max(0,peak-av);
+        if(X.h[j]>=T){act.forEach(function(f){close(f,1,f.i<j?T:Math.max(T,f.p))});done=true}
+        else if(j-fi>=W24){act.forEach(function(f){close(f,0,X.c[j])});done=true}}
+    }
+  }
+  var open=fl.some(function(f){return !f.d});
+  if(open){if(endI+W24>n-1)return null;fl.forEach(function(f){if(!f.d)close(f,0,X.c[hz])})}
+  var num=0,fw=0,hw=0,sw2=0;fl.forEach(function(f){num+=f.w*f.r;fw+=f.w;if(f.res===1)hw+=f.w;if(f.res===2)sw2+=f.w});
+  return {R:num/den,fw:fw,hw:fw?hw/fw:0,sw:fw?sw2/fw:0,nf:fl.length};
+}
+function evAlloc(X,ev,peak,lv,cost,W24,endI,K){
+  var o={},c0=ev.cI,oMk=c0+1<X.n?X.o[c0+1]:0;
+  for(var a=0;a<EAS.length;a++)for(var b=0;b<EAM.length;b++){
+    var pl=evAlPlan(EAS[a].id,lv,ev.stop,oMk),r=evAlSim(X,ev,peak,pl,ev.stop,K,cost,W24,endI,EAM[b].id);
+    if(!r)return null;o[EAS[a].id+EAM[b].id]=r;
+  }
+  return o;
+}
+
 /* scans one coin. out.cal: only collect rebound ratios. otherwise collects trades (out.tr), ladder details (out.det), current state (out.cur) */
 function evScan(X,cfg,out,coin){
   var n=X.n,iv=X.t[1]-X.t[0],W24=Math.round(864e5/iv),W1=Math.max(2,Math.round(36e5/iv)),R=3,cost=cfg.c/100,th=EVP[cfg.p],K=cfg.kk||0.35;
@@ -2179,6 +2233,7 @@ function evScan(X,cfg,out,coin){
       det.ex.push({t:lt,p:xp,res:res,net:net,hit:Math.round(hf[q2]*nf),stp:Math.round(sf[q2]*nf),n:nf});
     }
     out.det.push(det);out.lastEv=det;
+    if(cfg.al&&!dataEnd&&out.alE&&Ld.lv.length){var al=evAlloc(X,ev,peak,Ld.lv,cost,W24,i,K);if(al)out.alE.push({t:X.t[ev.cI],R:al})}
     if(nf&&det.ex[0].res!==3)out.tr.lad.push({t:det.fills[0].t,ev:ev.id,net:det.ex.map(function(e){return e.net}),res:det.ex.map(function(e){return e.res}),hf:hf,sf:sf,coin:coin,nf:nf});
   };
   for(i=W24+60;i<n;i++){
@@ -2249,9 +2304,18 @@ function evCalK(Xs,cfg){
   if(out.mfe.length<30)return {k:0.35,n:out.mfe.length};
   var a=out.mfe.slice().sort(function(x,y){return x-y}),m=a[Math.floor(a.length/2)];return {k:Math.min(1,Math.max(0.1,m)),n:a.length,ne:out.ev.length};
 }
+function evAlAgg(E){
+  var ts=E.map(function(e){return e.t}).sort(function(a,b){return a-b}),split=ts.length?ts[Math.floor(ts.length*0.6)]:0,o={n:E.length,rows:[]};
+  EAS.forEach(function(sc){EAM.forEach(function(md){
+    var k=sc.id+md.id,r={k:k,sc:sc.id,md:md.id,n:0,nf:0,sR:0,sR2:0,hw:0,sw:0,wo:0,fs:0,dn:0,ds:0,ds2:0,dl:0,dln:0};
+    E.forEach(function(e){var x=e.R[k],b=e.R.eqP;if(!x||!b)return;r.n++;r.sR+=x.R;r.sR2+=x.R*x.R;if(x.R<r.wo)r.wo=x.R;
+      if(x.nf){r.nf++;r.hw+=x.hw;r.sw+=x.sw}var d=x.R-b.R;r.dn++;r.ds+=d;r.ds2+=d*d;if(e.t>=split){r.dl+=d;r.dln++}});
+    o.rows.push(r)})});
+  return o;
+}
 function evRun(){
   if(EV.busy)return;EV.busy=true;EV.stop=false;EV.msg="جارٍ اختيار العملات…";evRender();
-  var cfg={tf:EVC.tf,n:EVC.n,k:EVC.k,p:EVC.p,c:EVC.c},out={tr:{},ev:[],evn:0,det:[],nofill:0},used=0,done=0,skipped=0,days=0,q,kinfo={k:0.35,n:0};
+  var cfg={tf:EVC.tf,n:EVC.n,k:EVC.k,p:EVC.p,c:EVC.c,al:1},out={tr:{},ev:[],evn:0,det:[],nofill:0,alE:[]},used=0,done=0,skipped=0,days=0,q,kinfo={k:0.35,n:0};
   EVV.forEach(function(v){out.tr[v.id]=[]});
   var one=function(X,s){used++;days=Math.max(days,(X.t[X.n-1]-X.t[0])/864e5);evScan(X,cfg,out,s)};
   lbUniverse(cfg.k).then(function(list){
@@ -2284,7 +2348,8 @@ function evRun(){
           var b=evb[t.ev];if(b&&b.n[0]){var d=t.net[0]-b.net[0]/b.n[0];o.dn++;o.ds+=d;o.ds2+=d*d;if(t.t>=split){o.dl+=d;o.dln++}}});
         return o;
       });
-      EV.res={t:Date.now(),cfg:cfg,used:used,skipped:skipped,days:days,events:out.ev.length,nofill:out.nofill,kk:kinfo.k,kn:kinfo.n,bs:bs,V:V};try{LS.s("evr",JSON.stringify(EV.res))}catch(e){}
+      var AL=evAlAgg(out.alE);
+      EV.res={t:Date.now(),cfg:cfg,used:used,skipped:skipped,days:days,events:out.ev.length,nofill:out.nofill,kk:kinfo.k,kn:kinfo.n,bs:bs,V:V,AL:AL};try{LS.s("evr",JSON.stringify(EV.res))}catch(e){}
     }
     EV.msg=EV.stop?"أُوقف الاختبار":(used?"":"لم تتوفر بيانات كافية.");
   },function(e){EV.msg="تعذّر الاختبار: "+(e&&e.message||"")}).then(function(){EV.busy=false;evRender()});
@@ -2317,6 +2382,18 @@ function evRender(){
         +'<tr><td>الفرق في آخر 40% زمنيًا</td><td colspan="2">'+(o.dln?d$(o.dl/o.dln):'—')+' ('+N(o.dln)+' صفقة)</td></tr>'
         +'<tr><td>الثقة الإحصائية للفرق (t)</td><td colspan="2">'+N(r.t.toFixed(1))+'</td></tr></table></td></tr>'}
     });
+    if(R.AL&&R.AL.n>=10){
+      var AL=R.AL,rs=AL.rows.slice().map(function(r){var m=r.n?r.sR/r.n:0,dm=r.dn?r.ds/r.dn:0,sd=r.dn>1?Math.sqrt(Math.max(0,(r.ds2-r.dn*dm*dm)/(r.dn-1))):0,t=sd>0?dm/(sd/Math.sqrt(r.dn)):0,dl=r.dln?r.dl/r.dln:0,vd;
+        if(r.k==="eqP")vd={t:"المرجع",c:""};else if(dm>0&&t>=3&&dl>0)vd={t:"✓ أفضل",c:"ok"};else if(dm<0&&t<=-3)vd={t:"✗ أسوأ",c:"bd"};else vd={t:"◐ غير حاسم",c:"wn"};
+        return {r:r,m:m,dm:dm,t:t,vd:vd}});
+      var rR=function(x){return ltr(N((x>=0?"+":"−")+Math.abs(x).toFixed(2)))+"R"};
+      h+='<div class="sgvd"><b>توزيع الأوامر بنفس المخاطرة ('+N(AL.n)+' حدثًا)</b></div><div class="sub" style="margin:4px 0">كل طريقة تستعمل الوقف نفسه ومجموع مخاطرة واحدًا (1R = الخسارة لو امتلأت كل الأوامر وضُرب الوقف). الأرقام لكل حدث لا لكل أمر. في «هدف واحد» يُلغى ما لم يمتلئ بعد أول خروج.</div>';
+      h+='<table class="sgtb"><tr><th>الطريقة</th><th>متوسط الحدث</th><th>دخل</th><th>أسوأ حدث</th><th>الحكم عن الحالي</th></tr>';
+      rs.sort(function(a,b){return b.m-a.m}).forEach(function(x){var r=x.r,sc=EAS.filter(function(e){return e.id===r.sc})[0],md=EAM.filter(function(e){return e.id===r.md})[0],key="a"+r.k,op=EV.open[key];
+        h+='<tr data-evx="'+key+'" style="cursor:pointer"><td style="text-align:right">'+esc(sc.n)+'<div class="sub">'+esc(md.n)+'</div></td><td>'+rR(x.m)+'</td><td>'+pcn(r.nf/Math.max(1,r.n))+'</td><td>'+rR(r.wo)+'</td><td><b class="'+(x.vd.c==="ok"?"up":x.vd.c==="bd"?"down":"")+'">'+x.vd.t+'</b> '+(op?'⌃':'⌄')+'</td></tr>';
+        if(op)h+='<tr><td colspan="5" style="text-align:right"><div class="sub">وصل للهدف (من الأوامر الممتلئة): '+pcn(r.nf?r.hw/r.nf:0)+' · ضرب الوقف: '+pcn(r.nf?r.sw/r.nf:0)+'<br>الفرق عن «الحالي»: '+rR(x.dm)+' (t = '+N(x.t.toFixed(1))+') · في آخر 40% زمنيًا: '+(r.dln?rR(r.dl/r.dln):'—')+' ('+N(r.dln)+' حدثًا)<br>لو خاطرت 1% من رأس المال في الحدث: متوسط الحدث '+ltr(N((x.m>=0?"+":"−")+Math.abs(x.m).toFixed(2)))+'% من رأس المال.</div></td></tr>'});
+      h+='</table><div class="sub" style="margin-top:6px">«دخل»: نسبة الأحداث التي امتلأ فيها أي أمر؛ الباقي صفر. الأحداث من العملة نفسها وأيام السوق نفسها غير مستقلة تمامًا، و10 طرق للمقارنة تزيد احتمال فوز بالصدفة، فلا تعتمد فرقًا صغيرًا.</div>';
+    }
     h+='</table><div class="sub" style="margin-top:6px"><b>الحكم يقارن كل صفقة بمتوسط الدخول العشوائي داخل التصحيح نفسه.</b> «تتفوق» تعني: فرقًا موجبًا بثقة t ≥ 3، وموجبًا في آخر 40% زمنيًا، ومتوسط صفقة موجبًا بعد التكلفة، و50 صفقة فأكثر. <b>تحيّز البقاء:</b> العملات المتاحة هي التي ما زالت تتداول، أما التي هبطت ولم تعد فغير موجودة، فالنتائج أفضل من الواقع غالبًا. الأحداث تتجمع في أيام السوق الصاعد. ولا نتيجة تضمن المستقبل.</div>';
   }
   e.innerHTML=h;
