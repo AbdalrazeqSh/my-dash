@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 87</div>
+<div class="note" style="text-align:center" id="foot">النسخة 88</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -2068,7 +2068,7 @@ var EVT=[0.5,1];
 /* scans one coin. out.cal: only collect rebound ratios. otherwise collects trades (out.tr), ladder details (out.det), current state (out.cur) */
 function evScan(X,cfg,out,coin){
   var n=X.n,iv=X.t[1]-X.t[0],W24=Math.round(864e5/iv),W1=Math.max(2,Math.round(36e5/iv)),R=3,cost=cfg.c/100,th=EVP[cfg.p],K=cfg.kk||0.35;
-  out.cur=null;if(!(iv>0)||n<W24*2+80)return;
+  out.cur=null;out.lastEv=null;if(!(iv>0)||n<W24*2+80)return;
   var m24=evSlide(X.l,W24),m1=evSlide(X.l,W1),VP=[0],i,k;for(i=0;i<n;i++)VP.push(VP[i]+X.v[i]);
   var st=0,start=0,sI=0,peak=0,pkI=0,cI=0,cool=0,ev=null,nid=0;
   var los=function(q,p){var a=X.rsi[q],b=X.rsi[p];for(var j=q+1;j<p;j++){if(X.rsi[j]<a+(b-a)*(j-q)/(p-q))return false}return true};
@@ -2107,7 +2107,7 @@ function evScan(X,cfg,out,coin){
       if(Ld.fills.length&&!ps.d){if(dataEnd){ps.res=3;ps.x=X.c[i];ps.xi=i}else{ps.res=0;ps.x=X.c[i];ps.xi=i}ps.d=1}
       if(Ld.fills.length)det.ex.push({t:X.t[ps.xi],p:ps.x,res:ps.res,net:(ps.x*(1-cost))/(Ld.avg*(1+cost))-1});
     }
-    out.det.push(det);
+    out.det.push(det);out.lastEv=det;
     if(!Ld.fills.length){out.nofill++;return}
     if(det.ex[0].res===3)return;
     out.tr.lad.push({t:det.fills[0].t,ev:ev.id,net:det.ex.map(function(e){return e.net}),res:det.ex.map(function(e){return e.res}),coin:coin,nf:Ld.fills.length});
@@ -2132,7 +2132,7 @@ function evScan(X,cfg,out,coin){
       if(!out.cal)ladStep(ev,i);
       if(X.h[i]>peak){if(!out.cal)evEnd(ev,i,false);peak=X.h[i];pkI=i;st=1;ev=null;continue}
       var L=peak-start;
-      if(X.c[i]<start||i-pkI>W24){if(!out.cal)evEnd(ev,i,false);st=0;cool=i+W24;ev=null;continue}
+      if(X.c[i]<start||i-pkI>W24*3){if(!out.cal)evEnd(ev,i,false);st=0;cool=i+W24;ev=null;continue}
       if(X.l[i]<ev.mn)ev.mn=X.l[i];
       var rc=(peak-X.c[i])/L,at=X.atr[i];if(at==null)continue;
       var stp=ev.stop;
@@ -2260,7 +2260,7 @@ function evChart(st){
   if(st._evd&&st._evd.key===key)return st._evd;
   var X=lbPrep(k.map(function(x){return [x[0],x[2],x[3],x[4],x[1],x[5]]})),out={tr:{},ev:[],det:[],nofill:0,cur:null};EVV.forEach(function(v){out.tr[v.id]=[]});
   evScan(X,{tf:st.tf,c:EVC.c,p:EVC.p,kk:(EV.res&&EV.res.kk)||0.35},out,st.sym);
-  return st._evd={key:key,det:out.det,cur:out.cur,kk:(EV.res&&EV.res.kk)||0.35,nofill:out.nofill,span:(X.t[X.n-1]-X.t[0])/864e5};
+  return st._evd={key:key,det:out.det,cur:out.cur,lastEv:out.lastEv,kk:(EV.res&&EV.res.kk)||0.35,nofill:out.nofill,span:(X.t[X.n-1]-X.t[0])/864e5};
 }
 var KCO={};
 function chExt(st,need){
@@ -2478,14 +2478,31 @@ function sgHtmlD(st){
   if(!st.k)return '';
   if(!evOk(st))return '<div class="sgw"><div class="sgr">'+sel+'<span class="sub" style="margin:0">تعمل على 5 و15 و30 دقيقة فقط</span></div></div>';
   var ed=evChart(st);if(!ed)return '';
-  var c=ed.cur,held=!!(snap&&snap.assets.some(function(x){return x.sym===st.sym&&x.val>=1})),v,op=!!st.sgo,ltr=function(x){return '<bdi dir="ltr">'+x+'</bdi>'};
-  if(!c)v={t:"لا ارتفاع كبير حديث",c:"wn",x:""};
-  else if(c.st===1)v={t:"ارتفاع جارٍ +"+Math.round(c.pct)+"%",c:"wn",x:"انتظر التصحيح"};
-  else if(c.dead)v=held?{t:"اخرج",c:"bd",x:"كسر القاع الأساسي"}:{t:"انتهت الفكرة",c:"bd",x:"كسر القاع الأساسي"};
-  else if(c.retr<0.382)v={t:"تصحيح مبكر "+Math.round(c.retr*100)+"%",c:"wn",x:"قبل منطقة الدخول"};
-  else if(c.retr<=0.886)v=held?{t:"ابقَ حتى الهدف",c:"ok",x:"تصحيح "+Math.round(c.retr*100)+"%"}:{t:"منطقة الدخول المتدرج",c:"ok",x:"تصحيح "+Math.round(c.retr*100)+"%"};
-  else v={t:"تصحيح عميق "+Math.round(c.retr*100)+"%",c:"bd",x:"قرب كسر القاع"};
+  var c=ed.cur,held=!!(snap&&snap.assets.some(function(x){return x.sym===st.sym&&x.val>=1})),v,rec,op=!!st.sgo,ltr=function(x){return '<bdi dir="ltr">'+x+'</bdi>'};
+  var nowT=st.k[st.k.length-1][0],ago=function(t){var h=Math.max(0,Math.round((nowT-t)/36e5));return h>=48?N(Math.round(h/24))+" أيام":h>=24?"يوم":N(h)+" ساعة"};
+  var lp=function(l){return N(px(l.p))};
+  if(!c){
+    var le=ed.lastEv;
+    v={t:"لا توصية",c:"wn",x:le&&nowT-le.pT<=2592e5?"آخر ارتفاع انتهى":"لا ارتفاع كبير آخر 3 أيام"};
+    rec=le&&nowT-le.pT<=2592e5?"لا شراء الآن. آخر ارتفاع (+"+N(Math.round((le.pP/le.sP-1)*100))+"% قبل "+ago(le.pT)+") انتهت فكرته"+(le.fills.length&&le.ex[0]?(le.ex[0].res===1?" بتحقيق الهدف.":le.ex[0].res===2?" بكسر الوقف.":"."):" دون أن يصل السعر لمنطقة الدخول.")+" انتظر ارتفاعًا جديدًا.":"لا شراء الآن. لم يظهر ارتفاع كبير (+20% في يوم أو +10% في ساعة بحجم أعلى) في آخر 3 أيام.";
+  }else if(c.st===1){
+    v={t:"انتظر",c:"wn",x:"ارتفاع جارٍ +"+Math.round(c.pct)+"%"};
+    rec="لا تشترِ أثناء الارتفاع. انتظر أن يهبط السعر 20% على الأقل من مسافته ثم تُوضع أوامر التدرج.";
+  }else if(c.dead||c.last<=c.start){
+    v=held?{t:"اخرج",c:"bd",x:"كُسر القاع الأساسي"}:{t:"تجنّب",c:"bd",x:"كُسر القاع الأساسي"};
+    rec=held?"اخرج من مركزك: السعر كسر القاع الأساسي ("+N(px(c.stop))+") والفكرة فشلت.":"لا تشترِ: السعر كسر القاع الأساسي ("+N(px(c.stop))+") والفكرة فشلت.";
+  }else if(c.retr<0.382){
+    v={t:"انتظر",c:"wn",x:"تصحيح مبكر "+Math.round(c.retr*100)+"%"};
+    rec="الارتفاع قبل "+ago(c.pT)+" (+"+N(Math.round(c.pct))+"%) والتصحيح لم يصل منطقة الشراء. ضع أوامر محددة عند "+c.lv.map(lp).join(" / ")+"، والوقف "+N(px(c.stop))+"، والهدف "+N(px(c.T[0]))+".";
+  }else if(c.retr<=0.886){
+    v=held?{t:"ابقَ للهدف",c:"ok",x:"الوقف "+N(px(c.stop))}:{t:"شراء متدرج",c:"ok",x:"تصحيح "+Math.round(c.retr*100)+"%"};
+    rec=(held?"ابقَ حتى الهدف "+N(px(c.T[0]))+" ولا تخرج قبله إلا بكسر "+N(px(c.stop))+".":"السعر في منطقة الشراء (تصحيح "+Math.round(c.retr*100)+"% بعد ارتفاع قبل "+ago(c.pT)+"). اشترِ بالتدرج عند "+c.lv.map(lp).join(" / ")+"، الوقف "+N(px(c.stop))+"، الهدف "+N(px(c.T[0]))+".")+(c.fills?" امتلأ "+N(c.fills)+" من الأوامر.":"");
+  }else{
+    v={t:"خطر",c:"bd",x:"قرب كسر القاع"};
+    rec="التصحيح عميق ("+Math.round(c.retr*100)+"%) والسعر قريب من القاع الأساسي ("+N(px(c.stop))+"). لا تدخل إلا بحجم صغير، وإن كُسر فالفكرة انتهت.";
+  }
   var h='<div class="sgw"><div class="sgr">'+sel+'<button class="sgv '+v.c+'" data-sgx="'+st.id+'" aria-expanded="'+op+'"><span><b>'+v.t+'</b>'+(v.x?' · '+v.x:'')+'</span><i>'+(op?'⌃':'⌄')+'</i></button></div>';
+  h+='<div class="sgl" style="margin-top:6px"><b>التوصية:</b> '+rec+'</div>';
   if(op){
     var d='<div class="sub" style="margin:0 0 6px">إطار '+st.tf+' · تاريخ محمّل '+N(Math.round(ed.span))+' يومًا</div>';
     if(c){
@@ -2497,7 +2514,7 @@ function sgHtmlD(st){
         if(c.T)d+='<div class="sgl"><b>الهدف:</b> '+N(px(c.T[0]))+' <span class="sub">(نصف الارتداد المتوقع)</span> · المتوقع كاملًا '+N(px(c.T[1]))+'</div>';
         d+='<div class="sub" style="margin:4px 0">الارتداد المتوقع = '+N(Math.round(ed.kk*100))+'% من مسافة الهبوط (وسيط مقاس من دراسة المختبر؛ افتراضي حتى تشغّلها).</div>';
       }else d+='<div class="sgl sub">لا تدخل أثناء الارتفاع؛ انتظر التصحيح.</div>';
-    }else d+='<div class="sgl sub">لا يوجد ارتفاع كبير (+20% في 24 ساعة أو +10% في ساعة) في آخر الشموع.</div>';
+    }else d+='<div class="sgl sub">لا يوجد ارتفاع كبير نشط الآن (يبقى التصحيح مراقبًا حتى 3 أيام بعد القمة).</div>';
     var det=ed.det.slice().reverse();
     d+='<div style="margin-top:8px"><b>الارتفاعات السابقة لهذه العملة ('+N(det.length)+')</b></div>';
     if(!det.length)d+='<div class="sgl sub">لم أجد ارتفاعات سابقة في التاريخ المحمّل.</div>';
