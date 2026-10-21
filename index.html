@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 95</div>
+<div class="note" style="text-align:center" id="foot">النسخة 96</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1901,12 +1901,12 @@ function chOpen(st,sym){st.sym=sym;st.tf=CHTF;st.k=null;st.cr=null;st.err=false;
 function chHtml(st){
   var id=st.id,o='<div class="chw" id="'+id+'"><div class="chc"><select class="chsel" data-chtf="'+id+'" aria-label="الفريم">';
   TFS.forEach(function(x){o+='<option value="'+x+'"'+(x===st.tf?' selected':'')+'>'+x+'</option>'});
-  return o+'</select><span class="chip" data-chty="'+id+'" id="'+id+'_ty" style="margin:0">'+(CHTY==="c"?"شموع":"خط")+'</span><select class="chsel" data-chpn="'+id+'" aria-label="المؤشر السفلي"><option value="n"'+(CHPN==="n"?" selected":"")+'>بدون</option><option value="v"'+(CHPN==="v"?" selected":"")+'>VOL</option><option value="m"'+(CHPN==="m"?" selected":"")+'>MACD</option></select><span class="chip" data-chrf="'+id+'" id="'+id+'_rf" style="margin:0">↻</span><span class="chip" data-chev="'+id+'" id="'+id+'_ev" style="margin:0'+(evOk(st)?'':';display:none')+'">علامات التصحيح</span><span class="sub" id="'+id+'_t" style="margin:0"></span></div><div id="'+id+'_s" data-chs="'+id+'" class="chs"><div style="position:relative"><div id="'+id+'_ms">'+chSvg(st)+'</div><div id="'+id+'_i" style="position:absolute;left:10px;right:10px;bottom:26px;pointer-events:none">'+chInfo(st)+'</div></div><div id="'+id+'_p">'+chPane(st)+'</div></div><div class="sub" id="'+id+'_cap" style="text-align:center;margin:2px 0 6px">'+chCap(st)+'</div><div id="'+id+'_sg">'+sgHtml(st)+'</div></div>';
+  return o+'</select><span class="chip" data-chty="'+id+'" id="'+id+'_ty" style="margin:0">'+(CHTY==="c"?"شموع":"خط")+'</span><select class="chsel" data-chpn="'+id+'" aria-label="المؤشر السفلي"><option value="n"'+(CHPN==="n"?" selected":"")+'>بدون</option><option value="v"'+(CHPN==="v"?" selected":"")+'>VOL</option><option value="m"'+(CHPN==="m"?" selected":"")+'>MACD</option></select><span class="chip" data-chrf="'+id+'" id="'+id+'_rf" style="margin:0">↻</span><span class="chip" data-chmag="'+id+'" id="'+id+'_mg" style="margin:0">مغناطيس</span><span class="chip" data-chev="'+id+'" id="'+id+'_ev" style="margin:0'+(evOk(st)?'':';display:none')+'">علامات التصحيح</span><span class="sub" id="'+id+'_t" style="margin:0"></span></div><div id="'+id+'_s" data-chs="'+id+'" class="chs"><div style="position:relative"><div id="'+id+'_ms">'+chSvg(st)+'</div><div id="'+id+'_i" style="position:absolute;left:10px;right:10px;bottom:26px;pointer-events:none">'+chInfo(st)+'</div></div><div id="'+id+'_p">'+chPane(st)+'</div></div><div class="sub" id="'+id+'_cap" style="text-align:center;margin:2px 0 6px">'+chCap(st)+'</div><div id="'+id+'_sg">'+sgHtml(st)+'</div></div>';
 }
 function chDraw(st){
   var g=function(x){return document.getElementById(st.id+x)};if(!g("_ms"))return;
   g("_ms").innerHTML=chSvg(st);g("_p").innerHTML=chPane(st);var ty=g("_ty");if(ty)ty.textContent=CHTY==="c"?"شموع":"خط";var ps=document.querySelector('[data-chpn="'+st.id+'"]');if(ps&&ps.value!==CHPN)ps.value=CHPN;
-  g("_i").innerHTML=chInfo(st);g("_cap").innerHTML=chCap(st);sgDraw(st);var ec=g("_ev");if(ec){ec.classList.toggle("on",EVM);ec.style.display=evOk(st)?"":"none"}
+  g("_i").innerHTML=chInfo(st);g("_cap").innerHTML=chCap(st);sgDraw(st);var mg=g("_mg");if(mg)mg.classList.toggle("on",MAG);var ec=g("_ev");if(ec){ec.classList.toggle("on",EVM);ec.style.display=evOk(st)?"":"none"}
   g("_rf").textContent=st.busy?"…":"↻";g("_t").innerHTML=st.t?'آخر تحديث '+N(hm(st.t)):'';
   var sel=document.querySelector('[data-chtf="'+st.id+'"]');if(sel&&sel.value!==st.tf)sel.value=st.tf;
 }
@@ -2651,7 +2651,9 @@ function chSvg(st){
   cx.orders.forEach(function(r){var rp=opx(r),ir=inr(rp),yy=ir?y(rp):edge(rp).y,buy=r.side==="BUY",col=buy?"var(--buy)":"var(--sell)",d=(rp/last-1)*100;
     var sl=st.sel&&String(st.sel.id)===String(r.id);
     if(ir&&sl)o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+yy+'" y2="'+yy+'" style="stroke:'+col+';stroke-width:9;stroke-opacity:.25"/>';
-    if(ir)o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+yy+'" y2="'+yy+'" style="stroke:'+col+';stroke-width:'+(sl?4:2)+(isStop(r)?';stroke-dasharray:6 4':'')+'"/>';
+    if(ir)o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+yy+'" y2="'+yy+'" style="stroke:'+col+';stroke-width:'+(sl?4:2)+(isStop(r)?';stroke-dasharray:6 4':'')+(sl&&st.drag?';opacity:.35':'')+'"/>';
+    if(ir&&sl&&!st.drag)o+='<g><rect x="'+(x0+pw-34)+'" y="'+(yy-10)+'" width="30" height="20" rx="6" style="fill:'+col+'"/><path d="M'+(x0+pw-24)+' '+(yy-3)+'h10M'+(x0+pw-24)+' '+yy+'h10M'+(x0+pw-24)+' '+(yy+3)+'h10" style="stroke:var(--s);stroke-width:1.4;stroke-linecap:round"/></g>';
+    if(sl&&st.drag){var gp=st.drag.p,gy=y(gp),gd=(gp/opx(r)-1)*100;o+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+gy+'" y2="'+gy+'" style="stroke:'+col+';stroke-width:3"/><rect x="'+(x0+pw-112)+'" y="'+(gy-26)+'" width="108" height="20" rx="10" style="fill:'+col+'"/><text x="'+(x0+pw-58)+'" y="'+(gy-12)+'" text-anchor="middle" style="fill:var(--s);font-size:10.5px;font-weight:700;font-family:inherit">'+px(gp)+'  '+(gd>=0?"+":"−")+Math.abs(gd).toFixed(2)+'%'+(st.drag.snap?' ⌖':'')+'</text>'}
     labs.push({y:yy,t:(ir?"":edge(rp).a)+px(rp)+"  "+(d>0?"+":"−")+Math.abs(d).toFixed(1)+"%",c:col})});
   if(cx.rk&&cx.draft){[[cx.rk.x,"var(--down)","var(--downbg)"],[cx.rk.t,"var(--up)","var(--upbg)"]].forEach(function(z){var zp=z[0];if(!zp)return;var za=Math.min(Math.max(cx.draft,lo),hi),zb=Math.min(Math.max(zp,lo),hi),ya1=y(za),ya2=y(zb),zi=inr(zp);
       o+='<rect x="'+x0+'" y="'+Math.min(ya1,ya2)+'" width="'+pw+'" height="'+Math.abs(ya2-ya1)+'" style="fill:'+z[2]+'"/>';
@@ -2774,6 +2776,7 @@ function chPane(st){
 }
 /* chart gestures: drag = pan, two fingers/wheel = zoom, tap = persistent crosshair, long-press = crosshair that follows the finger */
 var CP={};
+var MAG=LS.g("mag")!=="0";
 function chOf(el){var w=el.closest&&el.closest("[data-chs]");return w?{w:w,st:CHS[w.getAttribute("data-chs")]}:null}
 function chFrac(st,w,cx){var sv=w.querySelector&&w.querySelector("svg"),r=(sv||w).getBoundingClientRect(),g=st.rg;if(!g||!r.width)return null;var vx=(cx-r.left)/r.width*g.W;return {f:(vx-g.x0)/g.pw,vx:vx,r:r}}
 function chZoom(st,fac,frac){var sp=st.v1-st.v0,ns=sp*fac,c=st.v0+sp*frac;st.v0=c-ns*frac;st.v1=st.v0+ns;chClamp(st)}
@@ -2783,16 +2786,30 @@ function chCross(st,w,cx,cy,keep){
   var i=Math.max(0,Math.min(st.k.length-1,Math.round(st.v0+f*(st.v1-st.v0)))),pr=g.lo+(1-Math.max(0,Math.min(1,(vy-g.top)/(g.H-g.top-g.bot))))*(g.hi-g.lo);
   st.cr={i:i,p:pr,keep:!!keep,x:cx,y:cy};chDraw(st);return true;
 }
+function chPxY(st,w,p){var sv=w.querySelector&&w.querySelector("svg"),r=(sv||w).getBoundingClientRect(),g=st.rg;if(!g||!r.height)return null;return r.top+(g.top+(1-(p-g.lo)/(g.hi-g.lo))*(g.H-g.bot-g.top))*r.height/g.H}
+function chNearLine(st,w,cy,o,th){var y=chPxY(st,w,opx(o));return y!=null&&Math.abs(y-cy)<=th}
+function chDragPrice(st,w,cy,sel){
+  var sv=w.querySelector&&w.querySelector("svg"),r=(sv||w).getBoundingClientRect(),g=st.rg,k=st.k;if(!g||!r.height||!k)return null;
+  var ph=(g.H-g.top-g.bot)*r.height/g.H,vy=(cy-r.top)/r.height*g.H,t=Math.max(0,Math.min(1,(vy-g.top)/(g.H-g.top-g.bot))),pr=g.lo+(1-t)*(g.hi-g.lo),per=(g.hi-g.lo)/ph,res={p:pr,snap:0};
+  if(!MAG)return res;
+  var cand=[],i0=Math.max(3,Math.floor(st.v0)),i1=Math.min(k.length-4,Math.ceil(st.v1)),i,j;
+  for(i=i0;i<=i1;i++){var hh=true,ll=true;for(j=i-3;j<=i+3;j++){if(j===i)continue;if(k[j][3]>k[i][3])hh=false;if(k[j][4]<k[i][4])ll=false}if(hh)cand.push(k[i][3]);if(ll)cand.push(k[i][4])}
+  var cx=st.ctx();(cx.orders||[]).forEach(function(o){if(!sel||String(o.id)!==String(sel.id))cand.push(opx(o))});if(cx.avg)cand.push(cx.avg);if(cx.last)cand.push(cx.last);
+  var best=0,bd=9*per;cand.forEach(function(c){var d=Math.abs(c-pr);if(d<bd){bd=d;best=c}});
+  if(best){res.p=best;res.snap=1}return res;
+}
 document.addEventListener("pointerdown",function(ev){
   var c=chOf(ev.target);if(!c||!c.st||!c.st.k)return;
   var p=CP[ev.pointerId]={x:ev.clientX,sx:ev.clientX,sy:ev.clientY,st:c.st,w:c.w,t:Date.now(),moved:false,holding:false};
   try{c.w.setPointerCapture(ev.pointerId)}catch(e){}
   var ids=Object.keys(CP).filter(function(i){return CP[i].st===c.st});
   if(ids.length>=2){var a=CP[ids[0]],b=CP[ids[1]];c.st.pz={d:Math.max(8,Math.abs(a.x-b.x)),v0:c.st.v0,v1:c.st.v1,cx:(a.x+b.x)/2};c.st.pinched=true;ids.forEach(function(i){clearTimeout(CP[i].tm);CP[i].holding=false});if(c.st.cr&&!c.st.cr.keep){c.st.cr=null}return}
+  if(c.st.sel&&CAN){var so0=chSelGet(c.st);if(so0&&chNearLine(c.st,c.w,ev.clientY,so0,18)){p.drag=true;p.dy0=ev.clientY;return}}
   p.tm=setTimeout(function(){if(CP[ev.pointerId]===p&&!p.moved&&!c.st.pinched){p.holding=true;try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}chCross(c.st,c.w,p.sx,p.sy,false)}},260);
 });
 document.addEventListener("pointermove",function(ev){
   var p=CP[ev.pointerId];if(!p)return;var st=p.st,ids=Object.keys(CP).filter(function(i){return CP[i].st===st});
+  if(p.drag){if(Math.abs(ev.clientY-p.dy0)>4||st.drag){var so1=chSelGet(st),dr=so1&&chDragPrice(st,p.w,ev.clientY,so1);if(dr){st.drag={p:dr.p,snap:dr.snap,y:ev.clientY};st.cr=null;chDraw(st)}}return}
   if(p.holding){chCross(st,p.w,ev.clientX,ev.clientY,false);return}
   if(ids.length>=2&&st.pz){
     p.x=ev.clientX;var a=CP[ids[0]],b=CP[ids[1]],d=Math.max(8,Math.abs(a.x-b.x)),z=st.pz,sp0=z.v1-z.v0,ns=sp0*z.d/d,fz=chFrac(st,p.w,z.cx);if(!fz)return;
@@ -2804,10 +2821,11 @@ document.addEventListener("pointermove",function(ev){
     p.x=ev.clientX;st.v0-=di;st.v1-=di;chClamp(st);if(st.cr)st.cr=null;chDraw(st);
   }
 });
-document.addEventListener("touchmove",function(ev){for(var i in CP)if(CP[i].holding){ev.preventDefault();return}},{passive:false});
+document.addEventListener("touchmove",function(ev){for(var i in CP)if(CP[i].holding||CP[i].drag){ev.preventDefault();return}},{passive:false});
 function chEnd(ev){
   var p=CP[ev.pointerId];if(!p)return;clearTimeout(p.tm);delete CP[ev.pointerId];var st=p.st;
   var left=Object.keys(CP).filter(function(i){return CP[i].st===st}).length;
+  if(p.drag){if(st.drag){var dd=st.drag;st.drag=null;st.cr={i:st.k.length-1,p:dd.p,keep:true,x:p.sx,y:ev.clientY,drag:true};chDraw(st)}else if(ev.type==="pointerup"){chTap(st,p.w,p.sx,p.sy)}return}
   if(left===0){var pinched=st.pinched;st.pinched=false;st.pz=null;
     if(p.holding){if(st.cr&&!st.cr.keep){st.cr=null;chDraw(st)}}
     else if(ev.type==="pointerup"&&!p.moved&&!pinched&&Date.now()-p.t<700)chTap(st,p.w,p.sx,p.sy)}
@@ -2833,9 +2851,10 @@ document.addEventListener("change",function(ev){
   var st=CHS[id];if(!st)return;CHTF=el.value;LS.s("chtf",CHTF);st.tf=CHTF;st.k=null;st.cr=null;st.v0=st.v1=0;st.rq++;st.busy=false;chDraw(st);chLoad(st);
 });
 document.addEventListener("click",function(ev){
-  var el=ev.target.closest&&ev.target.closest("[data-chrf],[data-chx],[data-chuse],[data-chgo],[data-lvadd],[data-lvmv],[data-chmv],[data-chmc]");if(!el)return;
+  var el=ev.target.closest&&ev.target.closest("[data-chrf],[data-chx],[data-chuse],[data-chgo],[data-lvadd],[data-lvmv],[data-chmv],[data-chmc],[data-chmag]");if(!el)return;
+  if(el.hasAttribute("data-chmag")){MAG=!MAG;LS.s("mag",MAG?"1":"0");Object.keys(CHS).forEach(function(q){chDraw(CHS[q])});return}
   var mc=el.getAttribute("data-chmc");if(mc!==null){var s1=CHS[mc];if(s1){s1.sel=null;s1.cr=null;s1.msg="";chDraw(s1)}return}
-  var mv=el.getAttribute("data-chmv");if(mv!==null){var pr2=mv.split("|"),s2=CHS[pr2[0]];if(s2)mkConfirm(el,"اضغط مرة أخرى للتأكيد",function(){chMvGo(s2,pr2[1])});return}
+  var mv=el.getAttribute("data-chmv");if(mv!==null){var pr2=mv.split("|"),s2=CHS[pr2[0]];if(s2)chMvGo(s2,pr2[1]);return}
   var id=el.getAttribute("data-chrf");if(id){return chLoad(CHS[id],true)}
   id=el.getAttribute("data-chx");if(id){CHS[id].cr=null;return chDraw(CHS[id])}
   var u=el.getAttribute("data-chuse");
@@ -2892,9 +2911,9 @@ function chSelInfo(st){
     return null;
   }
   var k=chSelKind(so),lab=chSelLab(so,k),cur=opx(so),c=st.cr,bt='style="pointer-events:auto;flex:1;min-height:34px"';
-  if(!c||!c.keep)return '<div style="display:flex;gap:8px;align-items:center;pointer-events:auto"><div class="sub" style="flex:2;margin:0;background:var(--s);padding:6px 10px;border-radius:10px">تعديل '+lab+' (الآن '+px(cur)+'): المس الشارت عند السعر الجديد</div><button class="sm" data-chmc="'+st.id+'" '+bt+'>إلغاء</button></div>';
+  if(!c||!c.keep)return '<div style="display:flex;gap:8px;align-items:center;pointer-events:auto"><div class="sub" style="flex:2;margin:0;background:var(--s);padding:6px 10px;border-radius:10px">تعديل '+lab+' (الآن '+px(cur)+'): اسحب الخط (أو المس السعر الجديد)</div><button class="sm" data-chmc="'+st.id+'" '+bt+'>إلغاء</button></div>';
   var d=(c.p/cur-1)*100;
-  return '<div style="display:flex;gap:8px"><button class="sm go" data-chmv="'+st.id+'|'+so.id+'" '+bt+'>انقل '+lab+' إلى '+px(c.p)+' ('+(d>=0?"+":"−")+Math.abs(d).toFixed(2)+'%)</button><button class="sm" data-chmc="'+st.id+'" '+bt+'>إلغاء</button></div>';
+  return '<div style="display:flex;gap:8px"><button class="sm go" data-chmv="'+st.id+'|'+so.id+'" '+bt+'>'+(c.drag?'ثبّت ':'انقل ')+lab+' عند '+px(c.p)+' ('+(d>=0?"+":"−")+Math.abs(d).toFixed(2)+'%)</button><button class="sm" data-chmc="'+st.id+'" '+bt+'>إلغاء</button></div>';
 }
 function chMvDone(st,ok,msg){
   MKB=false;st.sel=null;st.cr=null;st.msg=(ok?'<b class="up">✓</b> ':'<b class="down">✗</b> ')+msg;chDraw(st);
