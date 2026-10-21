@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 97</div>
+<div class="note" style="text-align:center" id="foot">النسخة 98</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -2690,10 +2690,11 @@ function chSvg(st){
       o+='<g clip-path="url(#'+cid+')"'+(dim?' opacity=".3"':'')+'>';
       o+='<rect x="'+fp(xp)+'" y="'+fp(y(d.pP))+'" width="'+fp(Math.max(3,xc-xp))+'" height="'+fp(Math.max(1,y(selE?d.stop:lowP)-y(d.pP)))+'" style="fill:var(--gold);fill-opacity:'+(selE?".09":".06")+'"/>';
       o+='<line x1="'+fp(ex_(d.sT))+'" y1="'+fp(y(d.sP))+'" x2="'+fp(xp)+'" y2="'+fp(y(d.pP))+'" style="stroke:var(--gold);stroke-width:1.3;stroke-dasharray:3 3"/>';
-      o+=pill(xp,y(d.pP)-13,"+"+Math.round((d.pP/d.sP-1)*100)+"%","var(--gold)");
+      if(selE)o+=pill(xp,y(d.pP)-13,"+"+Math.round((d.pP/d.sP-1)*100)+"%","var(--gold)");
+      else o+='<path d="M'+fp(xp-4.5)+' '+fp(y(d.pP)-4)+'L'+fp(xp+4.5)+' '+fp(y(d.pP)-4)+'L'+fp(xp)+' '+fp(y(d.pP)+3)+'Z" style="fill:var(--gold);stroke:var(--s);stroke-width:1"/>';
       if(selE||(!st.evs&&d.ex.length&&d.ex[0].res===3)){
-        d.lv.forEach(function(l){o+='<line x1="'+fp(ex_(d.cT))+'" x2="'+fp(xc)+'" y1="'+fp(y(l.p))+'" y2="'+fp(y(l.p))+'" style="stroke:'+(l.f?"var(--buy)":"var(--dim)")+';stroke-width:1.2;stroke-dasharray:'+(l.f?"0":"2 3")+'"/><text x="'+fp(xc)+'" y="'+fp(y(l.p)-3)+'" text-anchor="end" style="fill:'+(l.f?"var(--buy)":"var(--dim)")+';font-size:8.5px;font-family:inherit">'+px(l.p)+'</text>'});
-        o+='<line x1="'+fp(ex_(d.cT))+'" x2="'+fp(xc)+'" y1="'+fp(y(d.stop))+'" y2="'+fp(y(d.stop))+'" style="stroke:var(--down);stroke-width:1.3;stroke-dasharray:5 3"/><text x="'+fp(xc)+'" y="'+fp(y(d.stop)+10)+'" text-anchor="end" style="fill:var(--down);font-size:8.5px;font-family:inherit">وقف '+px(d.stop)+'</text>';
+        d.lv.forEach(function(l){o+='<line x1="'+fp(ex_(d.cT))+'" x2="'+fp(xc)+'" y1="'+fp(y(l.p))+'" y2="'+fp(y(l.p))+'" style="stroke:'+(l.f?"var(--buy)":"var(--dim)")+';stroke-width:1.2;stroke-dasharray:'+(l.f?"0":"2 3")+'"/>'+(selE?'<text x="'+fp(xc)+'" y="'+fp(y(l.p)-3)+'" text-anchor="end" style="fill:'+(l.f?"var(--buy)":"var(--dim)")+';font-size:8.5px;font-family:inherit">'+px(l.p)+'</text>':'')});
+        o+='<line x1="'+fp(ex_(d.cT))+'" x2="'+fp(xc)+'" y1="'+fp(y(d.stop))+'" y2="'+fp(y(d.stop))+'" style="stroke:var(--down);stroke-width:1.3;stroke-dasharray:5 3"/>'+(selE?'<text x="'+fp(xc)+'" y="'+fp(y(d.stop)+10)+'" text-anchor="end" style="fill:var(--down);font-size:8.5px;font-family:inherit">'+px(d.stop)+'</text>':'');
         d.fills.forEach(function(f){
           var e0=f.x[0],col=e0.res===1?"var(--up)":e0.res===2?"var(--down)":"var(--dim)";
           o+='<line x1="'+fp(ex_(f.t))+'" x2="'+fp(ex_(e0.t))+'" y1="'+fp(y(f.T[0]))+'" y2="'+fp(y(f.T[0]))+'" style="stroke:var(--up);stroke-width:1.2;stroke-dasharray:5 3"/>';
@@ -2701,8 +2702,8 @@ function chSvg(st){
           o+='<circle cx="'+fp(ex_(f.t))+'" cy="'+fp(y(f.p))+'" r="3.6" style="fill:var(--buy);stroke:var(--s);stroke-width:1"/>';
           o+='<circle cx="'+fp(ex_(e0.t))+'" cy="'+fp(y(e0.p))+'" r="3.6" style="fill:'+col+';stroke:var(--s);stroke-width:1"/>'});
       }
-      if(d.fills.length){var e1=d.ex[0],pc1=e1.res===1?"var(--up)":e1.res===2?"var(--down)":e1.res===4?"var(--gold)":"var(--dim)";o+=pill(ex_(e1.t),y(e1.p)+(e1.net>=0?-13:13),(e1.res===3?"جارية ":"")+sg_(e1.net*100),pc1)}
-      else o+=pill(ex_(d.cT)+2,y(lowP)+13,"لم يُنفَّذ","var(--dim)");
+      if(d.fills.length){var e1=d.ex[0],pc1=e1.res===1?"var(--up)":e1.res===2?"var(--down)":e1.res===4?"var(--gold)":"var(--dim)";if(selE)o+=pill(ex_(e1.t),y(e1.p)+(e1.net>=0?-13:13),(e1.res===3?"… ":"")+sg_(e1.net*100),pc1);else o+='<circle cx="'+fp(ex_(e1.t))+'" cy="'+fp(y(e1.p))+'" r="4.6" style="fill:'+pc1+';stroke:var(--s);stroke-width:1.2"/>'}
+      else if(selE)o+=pill(ex_(d.cT)+2,y(lowP)+13,"—","var(--dim)");else o+='<circle cx="'+fp(ex_(d.cT)+2)+'" cy="'+fp(y(lowP))+'" r="4" style="fill:none;stroke:var(--dim);stroke-width:1.4"/>';
       o+='</g>'});
   }
   if(cx.fills&&cx.fills.length&&sp<=500){
@@ -2901,8 +2902,8 @@ function chEvHit(st,w,cx,cy){
   var ed=evChart(st);if(!ed)return null;var g=st.rg,r=fr.r,k=st.k,sp=st.v1-st.v0||1,sx=r.width/g.W,sy=r.height/g.H,best=null,bd=20;
   var X=function(t){return r.left+(g.x0+g.pw*(chIx(k,t)-st.v0)/sp)*sx},Y=function(p){return r.top+(g.top+(1-(p-g.lo)/(g.hi-g.lo))*(g.H-g.bot-g.top))*sy};
   ed.det.forEach(function(d){
-    var pts=[[X(d.pT),Y(d.pP)-13*sy]];
-    if(d.fills.length)pts.push([X(d.ex[0].t),Y(d.ex[0].p)+(d.ex[0].net>=0?-13:13)*sy]);else pts.push([X(d.cT)+2,Y(d.lv.length?d.lv[d.lv.length-1].p:d.stop)+13*sy]);
+    var pts=[[X(d.pT),Y(d.pP)-6*sy]];
+    if(d.fills.length)pts.push([X(d.ex[0].t),Y(d.ex[0].p)]);else pts.push([X(d.cT)+2,Y(d.lv.length?d.lv[d.lv.length-1].p:d.stop)]);
     pts.forEach(function(q){var dd=Math.hypot(q[0]-cx,q[1]-cy);if(dd<bd){bd=dd;best=d}})});
   return best;
 }
