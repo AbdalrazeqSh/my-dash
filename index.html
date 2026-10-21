@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 91</div>
+<div class="note" style="text-align:center" id="foot">النسخة 92</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1471,13 +1471,13 @@ function lpSave(){
   var bad=function(m){out.innerHTML='<div class="err">'+m+'</div>'};
   var np=parseFloat($("lp_p").value);if(!(np>0))return bad("أدخل سعر الدخول");
   b.disabled=true;exInfo(LP.sym).then(function(r){
-    b.disabled=false;var f=r.f,last=r.last,ps=flo(np,f.tick),q=flo(LP.w.qty,f.step),x=LP.x?LP.x.sp:0,t=LP.t?LP.t.price:0;
+    b.disabled=false;var f=r.f,last=r.last,ps=flo(np,f.tick),q=flo(LP.w.price*LP.w.qty/(+flo(np,f.tick)||np),f.step),x=LP.x?LP.x.sp:0,t=LP.t?LP.t.price:0;
     if(x>0&&!(x<+ps))return bad("الوقف "+px(x)+" ليس تحت سعر الدخول");
     if(t>0&&!(t>+ps))return bad("الهدف "+px(t)+" ليس فوق سعر الدخول");
     if(f.dn&&+ps<last*f.dn*1.03)return bad("السعر تحت الحد الذي تقبله بايننس");
     if(+ps*+q<f.minN)return bad("قيمة الأمر أقل من الحد الأدنى");
     if(+ps*+q>freeUsdt()+LP.w.price*LP.w.qty+1e-9)return bad("السيولة المتاحة لا تكفي");
-    var build=function(price){
+    var build=function(price,q){
       var prm={symbol:LP.sym+"USDT",workingType:LP.w.t==="LIMIT_MAKER"?"LIMIT_MAKER":"LIMIT",workingSide:"BUY",workingPrice:price,workingQuantity:q,pendingSide:"SELL",newOrderRespType:"ACK",listClientOrderId:"le"+Date.now().toString(36)+Math.random().toString(36).slice(2,4)},path;
       if(prm.workingType==="LIMIT")prm.workingTimeInForce="GTC";
       if(x>0&&t>0){path="/api/v3/orderList/opoco";prm.pendingAboveType="LIMIT_MAKER";prm.pendingAbovePrice=flo(t,f.tick);prm.pendingBelowType="STOP_LOSS_LIMIT";prm.pendingBelowStopPrice=flo(x,f.tick);prm.pendingBelowPrice=flo(LP.x.price,f.tick);prm.pendingBelowTimeInForce="GTC"}
@@ -1487,10 +1487,10 @@ function lpSave(){
     };
     MKB=true;b.disabled=true;b.textContent="…";
     call("/api/v3/orderList",{symbol:LP.sym+"USDT",orderListId:LP.lid},true,0,"DELETE").then(function(){
-      return build(ps).then(function(){
-        openSheet('<div class="sum up">تم تعديل سعر الدخول ✓</div><div class="sub" style="margin:8px 0">دخول '+N(px(+ps))+' · الحماية كما هي</div><button id="tclose" style="width:100%">إغلاق</button>');MKB=false;refresh();
+      return build(ps,q).then(function(){
+        openSheet('<div class="sum up">تم تعديل سعر الدخول ✓</div><div class="sub" style="margin:8px 0">دخول '+N(px(+ps))+' · الكمية '+N(+q)+' (المبلغ نفسه تقريبًا '+N(usd(+ps*+q))+') · الحماية كما هي</div><button id="tclose" style="width:100%">إغلاق</button>');MKB=false;refresh();
       },function(e){
-        return build(flo(LP.w.price,f.tick)).then(function(){
+        return build(flo(LP.w.price,f.tick),flo(LP.w.qty,f.step)).then(function(){
           bad("رفضته بايننس: "+esc(e.message)+". أُعيد الأمر الأصلي كما كان.");b.disabled=false;b.textContent="تعديل";MKB=false;refresh();
         },function(e2){
           bad("أُلغي الأمر الأصلي ولم يُنشأ الجديد: "+esc(e.message)+". تعذّرت الاستعادة أيضًا ("+esc(e2.message)+"). ضعه من جديد من صفحة الأوامر.");b.disabled=false;MKB=false;refresh();
