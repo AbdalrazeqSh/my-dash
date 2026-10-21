@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 96</div>
+<div class="note" style="text-align:center" id="foot">النسخة 97</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -2229,7 +2229,7 @@ function evScan(X,cfg,out,coin){
   if(!out.cal){
     var lastC=X.c[n-1];
     if(st===1)out.cur={st:1,start:start,peak:peak,sT:X.t[sI],pT:X.t[pkI],pct:(peak/start-1)*100,last:lastC,drop:(peak-lastC)/(peak-start)};
-    else if(st===2&&ev){evEnd(ev,n-1,true);var Ld=ev.lad;out.cur={st:2,start:start,peak:peak,sT:X.t[sI],pT:X.t[pkI],pct:(peak/start-1)*100,last:lastC,retr:(peak-lastC)/(peak-start),lv:Ld.lv.map(function(l){return {p:l.p,f:l.f,r:l.r}}),stop:ev.stop,avg:Ld.avg||null,tl:Ld.lv.map(function(l){return tg(l.p,peak)[0]}),T:tg(Ld.lv.length?Ld.lv[0].p:lastC,peak),fills:Ld.fills.length,dead:lastC<=ev.stop}}
+    else if(st===2&&ev){evEnd(ev,n-1,true);var Ld=ev.lad;out.cur={st:2,start:start,peak:peak,sT:X.t[sI],pT:X.t[pkI],pct:(peak/start-1)*100,last:lastC,retr:(peak-lastC)/(peak-start),lv:Ld.lv.map(function(l){return {p:l.p,f:l.f,r:l.r}}),stop:ev.stop,avg:Ld.avg||null,tl:Ld.lv.map(function(l){return tg(l.p,peak)[0]}),mt:tg(lastC,peak)[0],T:tg(Ld.lv.length?Ld.lv[0].p:lastC,peak),fills:Ld.fills.length,dead:lastC<=ev.stop}}
   }
 }
 function evCalK(Xs,cfg){
@@ -2546,6 +2546,8 @@ function sgHtmlD(st){
   var c=ed.cur,held=!!(snap&&snap.assets.some(function(x){return x.sym===st.sym&&x.val>=1})),v,rec,op=!!st.sgo,ltr=function(x){return '<bdi dir="ltr">'+x+'</bdi>'};
   var nowT=st.k[st.k.length-1][0],ago=function(t){var h=Math.max(0,Math.round((nowT-t)/36e5));return h>=48?N(Math.round(h/24))+" أيام":h>=24?"يوم":N(h)+" ساعة"};
   var lp=function(l){return N(px(l.p))};
+  var mkR=function(c){var r=(c.last-c.stop)/c.last,w=(c.mt-c.last)/c.last;return r>0?w/r:0};
+  var mktTxt=function(c){var r=(c.last-c.stop)/c.last*100,w=(c.mt-c.last)/c.last*100,q=mkR(c);return "نزل السعر تحت كل مستويات الدخول (تصحيح "+Math.round(c.retr*100)+"%) فلا أمر محدد متبقٍ. لو دخلت الآن بسعر السوق "+N(px(c.last))+": الوقف "+N(px(c.stop))+" (−"+N(r.toFixed(1))+"%)، والهدف "+N(px(c.mt))+" (+"+N(w.toFixed(1))+"%)، والعائد إلى المخاطرة "+N(q.toFixed(2))+". "+(q>=1?"مقبول نظريًا، والقرار لك.":"العائد أقل من المخاطرة، فلا أنصح بالدخول.")};
   if(!c){
     var le=ed.lastEv;
     v={t:"لا توصية",c:"wn",x:le&&nowT-le.pT<=2592e5?"آخر ارتفاع انتهى":"لا ارتفاع كبير آخر 3 أيام"};
@@ -2561,11 +2563,11 @@ function sgHtmlD(st){
     rec="الارتفاع قبل "+ago(c.pT)+" (+"+N(Math.round(c.pct))+"%) والتصحيح لم يصل منطقة الشراء. ضع أوامر محددة عند "+c.lv.map(lp).join(" / ")+"، والوقف "+N(px(c.stop))+"، والأهداف (لكل أمر هدفه) "+c.tl.map(function(t){return N(px(t))}).join(" / ")+".";
   }else if(c.retr<=0.886){
     var pend=c.lv.map(function(l,i){return {p:l.p,t:c.tl[i],f:l.f}}).filter(function(z){return !z.f}),gone=c.lv.length-pend.length;
-    v=held?{t:"ابقَ للهدف",c:"ok",x:"الوقف "+N(px(c.stop))}:(pend.length?{t:"شراء متدرج",c:"ok",x:"تصحيح "+Math.round(c.retr*100)+"%"}:{t:"فات الدخول",c:"wn",x:"كل المستويات لُمست"});
+    v=held?{t:"ابقَ للهدف",c:"ok",x:"الوقف "+N(px(c.stop))}:(pend.length?{t:"شراء متدرج",c:"ok",x:"تصحيح "+Math.round(c.retr*100)+"%"}:(mkR(c)>=1?{t:"فات الدخول",c:"wn",x:"سوق: الوقف والهدف أدناه"}:{t:"لا تدخل",c:"wn",x:"العائد أقل من المخاطرة"}));
     var pt=pend.map(function(z){return N(px(z.p))}).join(" / "),tt=pend.map(function(z){return N(px(z.t))}).join(" / ");
     rec=held?"ابقَ حتى الهدف "+N(px(c.tl[0]))+" ولا تخرج قبله إلا بكسر "+N(px(c.stop))+".":
       pend.length?"السعر في منطقة الشراء (تصحيح "+Math.round(c.retr*100)+"% بعد ارتفاع قبل "+ago(c.pT)+")."+(gone?" نزل السعر تحت "+N(gone)+" من مستويات الدخول فلا تُوضع (ستُنفَّذ فورًا بسعر السوق). ":" ")+"اشترِ بأمر محدد عند "+pt+"، الوقف "+N(px(c.stop))+"، الأهداف (لكل أمر هدفه) "+tt+".":
-      "نزل السعر تحت كل مستويات الدخول (تصحيح "+Math.round(c.retr*100)+"%) فلا أمر محدد متبقٍ. الدخول الآن بسعر السوق ممكن لكنه أقرب للوقف "+N(px(c.stop))+" ومخاطرته أعلى.";
+      mktTxt(c);
   }else{
     v={t:"خطر",c:"bd",x:"قرب كسر القاع"};
     rec="التصحيح عميق ("+Math.round(c.retr*100)+"%) والسعر قريب من القاع الأساسي ("+N(px(c.stop))+"). لا تدخل إلا بحجم صغير، وإن كُسر فالفكرة انتهت.";
@@ -2689,7 +2691,7 @@ function chSvg(st){
       o+='<rect x="'+fp(xp)+'" y="'+fp(y(d.pP))+'" width="'+fp(Math.max(3,xc-xp))+'" height="'+fp(Math.max(1,y(selE?d.stop:lowP)-y(d.pP)))+'" style="fill:var(--gold);fill-opacity:'+(selE?".09":".06")+'"/>';
       o+='<line x1="'+fp(ex_(d.sT))+'" y1="'+fp(y(d.sP))+'" x2="'+fp(xp)+'" y2="'+fp(y(d.pP))+'" style="stroke:var(--gold);stroke-width:1.3;stroke-dasharray:3 3"/>';
       o+=pill(xp,y(d.pP)-13,"+"+Math.round((d.pP/d.sP-1)*100)+"%","var(--gold)");
-      if(selE){
+      if(selE||(!st.evs&&d.ex.length&&d.ex[0].res===3)){
         d.lv.forEach(function(l){o+='<line x1="'+fp(ex_(d.cT))+'" x2="'+fp(xc)+'" y1="'+fp(y(l.p))+'" y2="'+fp(y(l.p))+'" style="stroke:'+(l.f?"var(--buy)":"var(--dim)")+';stroke-width:1.2;stroke-dasharray:'+(l.f?"0":"2 3")+'"/><text x="'+fp(xc)+'" y="'+fp(y(l.p)-3)+'" text-anchor="end" style="fill:'+(l.f?"var(--buy)":"var(--dim)")+';font-size:8.5px;font-family:inherit">'+px(l.p)+'</text>'});
         o+='<line x1="'+fp(ex_(d.cT))+'" x2="'+fp(xc)+'" y1="'+fp(y(d.stop))+'" y2="'+fp(y(d.stop))+'" style="stroke:var(--down);stroke-width:1.3;stroke-dasharray:5 3"/><text x="'+fp(xc)+'" y="'+fp(y(d.stop)+10)+'" text-anchor="end" style="fill:var(--down);font-size:8.5px;font-family:inherit">وقف '+px(d.stop)+'</text>';
         d.fills.forEach(function(f){
