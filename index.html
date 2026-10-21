@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 98</div>
+<div class="note" style="text-align:center" id="foot">النسخة 99</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -739,19 +739,24 @@ function scnRun(force){
   if(SCN.busy||!MK.d)return;if(!force&&SCN.rows&&Date.now()-SCN.t<3e5)return;
   var list=scnCand(MK.d),rows=[],px0={};(MK.d.all||[]).forEach(function(x){px0[x.s]=x.p});
   SCN.busy=true;SCN.err="";SCN.done=0;SCN.total=list.length;mkRender();
-  var kk=(EV.res&&EV.res.kk)||0.35;
+  var Xs=[];
   var one=function(sym){
     return call("/api/v3/klines",{symbol:sym+"USDT",interval:"15m",limit:600},false).then(function(ks){
       if(!Array.isArray(ks)||ks.length<300)return;
-      var X=lbPrep(ks.map(function(x){return [+x[0],+x[1],+x[2],+x[3],+x[4],+x[5]]})),out={tr:{},ev:[],det:[],nofill:0,cur:null,lastEv:null};
-      EVV.forEach(function(v){out.tr[v.id]=[]});
-      evScan(X,{tf:"15m",c:EVC.c,p:EVC.p,kk:kk},out,sym);
-      if(out.cur)rows.push({s:sym,c:out.cur,p:px0[sym]||out.cur.last,t:X.t[X.n-1]});
+      Xs.push({s:sym,X:lbPrep(ks.map(function(x){return [+x[0],+x[1],+x[2],+x[3],+x[4],+x[5]]}))});
     },function(){})
   };
   var i=0;
   var worker=function(){if(i>=list.length)return Promise.resolve();var s=list[i++];return one(s).then(function(){SCN.done++;if(SCN.done%6===0)mkRender()}).then(worker)};
   Promise.all([worker(),worker(),worker(),worker()]).then(function(){
+    var ci=evCalK(Xs.map(function(z){return z.X}),{tf:"15m",c:EVC.c,p:EVC.p});
+    if(ci.n>=30&&ci.ne>=8){KCAL={k:ci.k,n:ci.n,ne:ci.ne,t:Date.now()};try{LS.s("kcal",JSON.stringify(KCAL))}catch(e){}}
+    var kk=evK().k;
+    Xs.forEach(function(z){
+      var out={tr:{},ev:[],det:[],nofill:0,cur:null,lastEv:null};EVV.forEach(function(v){out.tr[v.id]=[]});
+      evScan(z.X,{tf:"15m",c:EVC.c,p:EVC.p,kk:kk},out,z.s);
+      if(out.cur)rows.push({s:z.s,c:out.cur,p:px0[z.s]||out.cur.last,t:z.X.t[z.X.n-1]});
+    });
     rows.forEach(function(r){var c=r.c,pend=(c.lv||[]).map(function(l,i){return {p:l.p,t:c.tl&&c.tl[i],f:l.f}}).filter(function(z){return !z.f});r.pend=pend;
       r.g=c.st===1?3:(c.dead||c.last<=c.start||c.retr>0.886)?4:(c.retr<0.382?2:(pend.length?0:1))});
     rows=rows.filter(function(r){return r.g<4});
@@ -765,9 +770,10 @@ function scnHtml(){
   if(SCN.err&&!SCN.rows)return '<div class="sub" style="margin:0">'+esc(SCN.err)+'</div>';
   if(!SCN.rows)return '<div class="sub" style="margin:0">اضغط «فحص» لبدء المسح</div>';
   var h='<div class="sub" style="margin:0 0 4px">عملات مباحة ارتفعت كثيرًا (+20% يوميًا أو +10% في ساعة بحجم أعلى) وتصحّح الآن، حسب قاعدة التراجع التصحيحي على 15 دقيقة، آخر 3 أيام. '+(SCN.busy?'جارٍ التحديث… '+N(SCN.done)+'/'+N(SCN.total):'')+'</div>';
-  if(!SCN.rows.length)return h+'<div class="sub" style="margin:0">لا توجد عملة في تصحيح مناسب الآن (فُحصت '+N(SCN.total)+' عملة).</div>';
+  var KI=evK(),kt='<div class="sub" style="margin:6px 0 0">الارتداد المتوقع المستعمل في الأهداف: '+N(Math.round(KI.k*100))+'% من مسافة الهبوط ('+(KI.m?'مقاس من '+(KI.ne?N(KI.ne)+' حدثًا':N(KI.n)+' قياسًا'):'افتراضي، لم تكفِ البيانات لقياسه بعد')+').</div>';
+  if(!SCN.rows.length)return h+'<div class="sub" style="margin:0">لا توجد عملة في تصحيح مناسب الآن (فُحصت '+N(SCN.total)+' عملة).</div>'+kt;
   return h+SCN.rows.slice(0,8).map(function(r){var c=r.c,p0=r.pend[0];
-    return '<div class="mkr"'+(CAN?' data-t="'+r.s+'" style="cursor:pointer"':'')+'><b>'+esc(r.s)+'</b><span class="p n">$'+px(r.p)+'</span><span class="mkv" style="min-width:0;text-align:end;flex:2">'+(c.st===1?'ارتفاع جارٍ <bdi dir="ltr">+'+N(Math.round(c.pct))+'%</bdi>':'<b class="'+(r.g<=1?"up":"")+'">'+G[r.g]+' '+N(Math.round(c.retr*100))+'%</b> · بعد <bdi dir="ltr">+'+N(Math.round(c.pct))+'%</bdi> قبل '+ago(c.pT)+(p0?'<br>أمر عند '+N(px(p0.p))+' ← هدف '+N(px(p0.t)):''))+'</span></div>'}).join("");
+    return '<div class="mkr"'+(CAN?' data-t="'+r.s+'" style="cursor:pointer"':'')+'><b>'+esc(r.s)+'</b><span class="p n">$'+px(r.p)+'</span><span class="mkv" style="min-width:0;text-align:end;flex:2">'+(c.st===1?'ارتفاع جارٍ <bdi dir="ltr">+'+N(Math.round(c.pct))+'%</bdi>':'<b class="'+(r.g<=1?"up":"")+'">'+G[r.g]+' '+N(Math.round(c.retr*100))+'%</b> · بعد <bdi dir="ltr">+'+N(Math.round(c.pct))+'%</bdi> قبل '+ago(c.pT)+(p0?'<br>أمر عند '+N(px(p0.p))+' ← هدف '+N(px(p0.t)):''))+'</span></div>'}).join("")+kt;
 }
 function mkRender(){
   var el=$("mkt");if(!el)return;
@@ -2232,11 +2238,16 @@ function evScan(X,cfg,out,coin){
     else if(st===2&&ev){evEnd(ev,n-1,true);var Ld=ev.lad;out.cur={st:2,start:start,peak:peak,sT:X.t[sI],pT:X.t[pkI],pct:(peak/start-1)*100,last:lastC,retr:(peak-lastC)/(peak-start),lv:Ld.lv.map(function(l){return {p:l.p,f:l.f,r:l.r}}),stop:ev.stop,avg:Ld.avg||null,tl:Ld.lv.map(function(l){return tg(l.p,peak)[0]}),mt:tg(lastC,peak)[0],T:tg(Ld.lv.length?Ld.lv[0].p:lastC,peak),fills:Ld.fills.length,dead:lastC<=ev.stop}}
   }
 }
+var KCAL=(function(){try{var j=JSON.parse(LS.g("kcal")||"null");return j&&j.k>0&&j.n>=30&&j.ne>=8?j:null}catch(e){return null}})();
+function evK(){
+  var r=EV.res,a=(r&&r.kk&&r.kn>=30)?{k:r.kk,n:r.kn,m:1,src:"المختبر"}:null,b=KCAL?{k:KCAL.k,n:KCAL.n,m:1,src:"فحص الرئيسية",ne:KCAL.ne}:null;
+  if(a&&b)return a.n>=b.n?a:b;return a||b||{k:0.35,n:(r&&r.kn)||0,m:0,src:""};
+}
 function evCalK(Xs,cfg){
   var out={mfe:[],ev:[],tr:{},det:[],nofill:0,cal:true};EVV.forEach(function(v){out.tr[v.id]=[]});
   Xs.forEach(function(X){evScan(X,cfg,out,"")});
   if(out.mfe.length<30)return {k:0.35,n:out.mfe.length};
-  var a=out.mfe.slice().sort(function(x,y){return x-y}),m=a[Math.floor(a.length/2)];return {k:Math.min(1,Math.max(0.1,m)),n:a.length};
+  var a=out.mfe.slice().sort(function(x,y){return x-y}),m=a[Math.floor(a.length/2)];return {k:Math.min(1,Math.max(0.1,m)),n:a.length,ne:out.ev.length};
 }
 function evRun(){
   if(EV.busy)return;EV.busy=true;EV.stop=false;EV.msg="جارٍ اختيار العملات…";evRender();
@@ -2319,11 +2330,11 @@ document.addEventListener("change",function(ev){var el=ev.target,m=el.id&&/^ev_(
 /* per-coin events for the chart and the rule line */
 function evOk(st){return st&&st.k&&(st.tf==="5m"||st.tf==="15m"||st.tf==="30m")}
 function evChart(st){
-  if(!evOk(st))return null;var k=st.k,key=st.sym+"|"+st.tf+"|"+k.length+"|"+k[k.length-1][0]+"|"+EVC.p;
+  if(!evOk(st))return null;var k=st.k,key=st.sym+"|"+st.tf+"|"+k.length+"|"+k[k.length-1][0]+"|"+EVC.p+"|"+evK().k;
   if(st._evd&&st._evd.key===key)return st._evd;
   var X=lbPrep(k.map(function(x){return [x[0],x[2],x[3],x[4],x[1],x[5]]})),out={tr:{},ev:[],det:[],nofill:0,cur:null};EVV.forEach(function(v){out.tr[v.id]=[]});
-  evScan(X,{tf:st.tf,c:EVC.c,p:EVC.p,kk:(EV.res&&EV.res.kk)||0.35},out,st.sym);
-  return st._evd={key:key,det:out.det,cur:out.cur,lastEv:out.lastEv,kk:(EV.res&&EV.res.kk)||0.35,nofill:out.nofill,span:(X.t[X.n-1]-X.t[0])/864e5};
+  var KI=evK();evScan(X,{tf:st.tf,c:EVC.c,p:EVC.p,kk:KI.k},out,st.sym);
+  return st._evd={key:key,det:out.det,cur:out.cur,lastEv:out.lastEv,kk:KI.k,km:KI.m,kn:KI.n,ke:KI.ne,ks:KI.src,nofill:out.nofill,span:(X.t[X.n-1]-X.t[0])/864e5};
 }
 var KCO={};
 function chExt(st,need){
@@ -2572,6 +2583,7 @@ function sgHtmlD(st){
     v={t:"خطر",c:"bd",x:"قرب كسر القاع"};
     rec="التصحيح عميق ("+Math.round(c.retr*100)+"%) والسعر قريب من القاع الأساسي ("+N(px(c.stop))+"). لا تدخل إلا بحجم صغير، وإن كُسر فالفكرة انتهت.";
   }
+  if(c&&!ed.km)rec+=' (تنبيه: الأهداف تقديرية لأن الارتداد المتوقع لم يُقَس بعد، افتراضي '+N(Math.round(ed.kk*100))+'%.)';
   var h='<div class="sgw"><div class="sgr">'+sel+'<button class="sgv '+v.c+'" data-sgx="'+st.id+'" aria-expanded="'+op+'"><span><b>'+v.t+'</b>'+(v.x?' · '+v.x:'')+'</span><i>'+(op?'⌃':'⌄')+'</i></button></div>';
   h+='<div class="sgl" style="margin-top:6px"><b>التوصية:</b> '+rec+'</div>';
   if(c&&c.st===2&&!c.dead&&c.last>c.start&&c.retr<=0.886&&c.lv.some(function(l){return !l.f})&&!held&&c.tl)h+='<button class="sm go" data-evfill="1" style="margin-top:8px;width:100%">عبّئ التوصية في شاشة التداول</button><div class="sub" style="margin-top:4px">يملأ الأوامر والوقف والهدف ولا يرسل شيئًا. اكتب المبلغ وراجع ثم أرسل.</div>';
@@ -2584,7 +2596,7 @@ function sgHtmlD(st){
         d+='<div class="sgl"><b>أوامر الشراء المتدرج:</b> '+c.lv.map(function(l){return N(Math.round(l.r*1000)/10)+'% ← '+N(px(l.p))+(l.f?' (فات)':'')}).join(' · ')+'</div>';
         d+='<div class="sgl"><b>الوقف:</b> '+N(px(c.stop))+' <span class="sub">(تحت القاع الأساسي مباشرة، وتحت آخر أمر)</span></div>';
         if(c.tl)d+='<div class="sgl"><b>الأهداف:</b> '+c.lv.map(function(l,i){return N(px(l.p))+' ← '+N(px(c.tl[i]))+' ('+ltr(N(pc((c.tl[i]/l.p-1)*100)))+')'}).join(' · ')+' <span class="sub">(لكل أمر هدفه: دخوله + نصف الارتداد المتوقع)</span></div>';
-        d+='<div class="sub" style="margin:4px 0">الارتداد المتوقع = '+N(Math.round(ed.kk*100))+'% من مسافة الهبوط (وسيط مقاس من دراسة المختبر؛ افتراضي حتى تشغّلها).</div>';
+        d+='<div class="sub" style="margin:4px 0">الارتداد المتوقع = '+N(Math.round(ed.kk*100))+'% من مسافة الهبوط ('+(ed.km?'مقاس من '+(ed.ke?N(ed.ke)+' حدثًا':N(ed.kn)+' قياسًا')+'، المصدر: '+ed.ks:'افتراضي، لم يُقَس بعد: افتح «فحص» في الرئيسية أو شغّل دراسة المختبر')+').</div>';
       }else d+='<div class="sgl sub">لا تدخل أثناء الارتفاع؛ انتظر التصحيح.</div>';
     }else d+='<div class="sgl sub">لا يوجد ارتفاع كبير نشط الآن (يبقى التصحيح مراقبًا حتى 3 أيام بعد القمة).</div>';
     var det=ed.det.slice().reverse();

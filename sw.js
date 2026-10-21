@@ -1,4 +1,4 @@
-var C="dash-v98",F=["./","index.html","manifest.webmanifest","icon-192.png","tracker.html"];
+var C="dash-v99",F=["./","index.html","manifest.webmanifest","icon-192.png","tracker.html"];
 self.addEventListener("install",function(e){self.skipWaiting();e.waitUntil(caches.open(C).then(function(c){return c.addAll(F.map(function(u){return new Request(u,{cache:"reload"})}))}))});
 self.addEventListener("activate",function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(function(x){return x!==C}).map(function(x){return caches.delete(x)}))}).then(function(){return self.clients.claim()}))});
 /* app shell: cache first (opens instantly even on a weak network), refreshed in the background.
