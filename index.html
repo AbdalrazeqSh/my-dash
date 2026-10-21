@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 88</div>
+<div class="note" style="text-align:center" id="foot">النسخة 89</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -2166,7 +2166,7 @@ function evScan(X,cfg,out,coin){
   if(!out.cal){
     var lastC=X.c[n-1];
     if(st===1)out.cur={st:1,start:start,peak:peak,sT:X.t[sI],pT:X.t[pkI],pct:(peak/start-1)*100,last:lastC,drop:(peak-lastC)/(peak-start)};
-    else if(st===2&&ev){evEnd(ev,n-1,true);var Ld=ev.lad;out.cur={st:2,start:start,peak:peak,sT:X.t[sI],pT:X.t[pkI],pct:(peak/start-1)*100,last:lastC,retr:(peak-lastC)/(peak-start),lv:Ld.lv.map(function(l){return {p:l.p,f:l.f,r:l.r}}),stop:ev.stop,avg:Ld.avg||null,T:Ld.T||(function(){var e=lastC;return tg(e,peak)})(),fills:Ld.fills.length,dead:lastC<=ev.stop}}
+    else if(st===2&&ev){evEnd(ev,n-1,true);var Ld=ev.lad;out.cur={st:2,start:start,peak:peak,sT:X.t[sI],pT:X.t[pkI],pct:(peak/start-1)*100,last:lastC,retr:(peak-lastC)/(peak-start),lv:Ld.lv.map(function(l){return {p:l.p,f:l.f,r:l.r}}),stop:ev.stop,avg:Ld.avg||null,T:Ld.T||(function(){var e=lastC,q=Ld.lv.length;if(q){e=0;Ld.lv.forEach(function(l){e+=l.p});e/=q}return tg(e,peak)})(),fills:Ld.fills.length,dead:lastC<=ev.stop}}
   }
 }
 function evCalK(Xs,cfg){
@@ -2279,10 +2279,12 @@ function chExt(st,need){
   return go();
 }
 document.addEventListener("click",function(ev){
-  var el=ev.target.closest&&ev.target.closest("[data-chev],[data-evgo],[data-evmore]");if(!el)return;
+  var el=ev.target.closest&&ev.target.closest("[data-chev],[data-evgo],[data-evmore],[data-evfill]");if(!el)return;
   if(el.hasAttribute("data-chev")){EVM=!EVM;LS.s("evm",EVM?"1":"0");Object.keys(CHS).forEach(function(q){var st=CHS[q];if(EVM&&evOk(st))chExt(st,10000);chDraw(st)});return}
   var w=el.closest(".sgw"),id=w&&w.parentNode&&w.parentNode.id.replace(/_sg$/,""),st=CHS[id];if(!st)return;
   if(el.hasAttribute("data-evmore")){return chExt(st,10000)}
+  if(el.hasAttribute("data-evfill")){var ed2=evChart(st),c2=ed2&&ed2.cur;if(!c2||c2.st!==2||!c2.lv.length||!c2.T)return;
+    return ftRun({sym:st.sym,side:"BUY",entries:c2.lv.map(function(l){return l.p}),stop:c2.stop,targets:[c2.T[0]],amount:0,qty:0,empty:true})}
   var t=+el.getAttribute("data-evgo"),k=st.k;if(!k||!t)return;var ix=chIx(k,t),sp=Math.max(60,st.v1-st.v0);st.v0=Math.max(0,ix-sp*0.3);st.v1=st.v0+sp;chClamp(st);chDraw(st);
 });
 /* ---- signal line: trend rules on the displayed frame (closed candles only) ---- */
@@ -2503,6 +2505,7 @@ function sgHtmlD(st){
   }
   var h='<div class="sgw"><div class="sgr">'+sel+'<button class="sgv '+v.c+'" data-sgx="'+st.id+'" aria-expanded="'+op+'"><span><b>'+v.t+'</b>'+(v.x?' · '+v.x:'')+'</span><i>'+(op?'⌃':'⌄')+'</i></button></div>';
   h+='<div class="sgl" style="margin-top:6px"><b>التوصية:</b> '+rec+'</div>';
+  if(c&&c.st===2&&!c.dead&&c.last>c.start&&c.retr<=0.886&&c.lv.length&&!c.fills&&!held&&c.T)h+='<button class="sm go" data-evfill="1" style="margin-top:8px;width:100%">عبّئ التوصية في شاشة التداول</button><div class="sub" style="margin-top:4px">يملأ الأوامر والوقف والهدف ولا يرسل شيئًا. اكتب المبلغ وراجع ثم أرسل.</div>';
   if(op){
     var d='<div class="sub" style="margin:0 0 6px">إطار '+st.tf+' · تاريخ محمّل '+N(Math.round(ed.span))+' يومًا</div>';
     if(c){
@@ -3524,6 +3527,7 @@ function ftRun(o){RRLK=true;
       else if(a>0&&x>0&&x<a)lrFix();
       else if(a>0&&t>a){var sx=rrStop(a,t,O.rr,tk);if(sx){$("lx").value=sx;L.sd=true}}
       lrAuto();lRgSync();
+      if(o.empty){L.rd=false;$("lv").value="";$("lq").value="";L.rows=null;ladHint()}
     };
     enter();lLoad(true);return;
   }
