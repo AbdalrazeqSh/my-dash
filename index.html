@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 106</div>
+<div class="note" style="text-align:center" id="foot">النسخة 107</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -2193,6 +2193,41 @@ function evAlSim(X,ev,peak,pl,stop,K,cost,W24,endI,mode){
   var num=0,fw=0,hw=0,sw2=0;fl.forEach(function(f){num+=f.w*f.r;fw+=f.w;if(f.res===1)hw+=f.w;if(f.res===2)sw2+=f.w});
   return {R:num/den,fw:fw,hw:fw?hw/fw:0,sw:fw?sw2/fw:0,nf:fl.length};
 }
+
+/* ---- exit-policy study: same ladder fills, different exit rules (targets, break-even stop, time limit) ---- */
+var EAX=[
+ {id:"x0",n:"الحالي: هدف واحد (نصف المتوقع)، مهلة 24 ساعة",parts:[[1,0.5]],be:null,to:24},
+ {id:"x1",n:"هدف واحد أبعد: المتوقع كاملًا",parts:[[1,1]],be:null,to:24},
+ {id:"x2",n:"نصف الكمية عند نصف المتوقع، والنصف عند المتوقع كاملًا",parts:[[0.5,0.5],[0.5,1]],be:null,to:24},
+ {id:"x3",n:"مثل السابق + نقل الوقف للمتوسط بعد الجزء الأول",parts:[[0.5,0.5],[0.5,1]],be:"t1",to:24},
+ {id:"x4",n:"هدف واحد + نقل الوقف للمتوسط عند منتصف الطريق للهدف",parts:[[1,0.5]],be:"half",to:24},
+ {id:"x5",n:"هدف واحد، مهلة 12 ساعة",parts:[[1,0.5]],be:null,to:12},
+ {id:"x6",n:"هدف واحد، مهلة 6 ساعات",parts:[[1,0.5]],be:null,to:6}
+];
+function evExPol(X,ev,peak,pl,stop,K,cost,endI,pol){
+  var n=X.n,c0=ev.cI,iv=X.t[1]-X.t[0],TO=Math.round(pol.to*36e5/iv),fl=[],den=0,j;
+  pl.forEach(function(q){den+=q.w*(q.p-stop)/q.p});if(!(den>0))return null;
+  pl.forEach(function(q){if(q.m)return;for(j=c0+1;j<=endI&&j<n;j++){if(X.l[j]<=q.p){fl.push({p:Math.min(q.p,X.o[j]),i:j,w:q.w});break}}});
+  if(!fl.length)return {R:0,fw:0,hw:0,sw:0,nf:0,hold:0};
+  var num=0,fw=0,hw=0,sw=0,hd=0;
+  for(var a=0;a<fl.length;a++){
+    var f=fl[a],d0=Math.max(0,peak-f.p),parts=pol.parts.map(function(p){return {fr:p[0],T:f.p+p[1]*K*d0,d:0}}),T1=f.p+0.5*K*d0,cur=stop,pend=null,be=false,hz=f.i+TO,lim=Math.min(n-1,hz);
+    for(j=f.i;j<=lim;j++){
+      if(pend!=null){cur=pend;pend=null}
+      var rem=parts.filter(function(p){return !p.d});if(!rem.length)break;
+      if(X.l[j]<=cur){var xp=(f.i===j&&X.o[j]<=cur)?X.o[j]:cur;rem.forEach(function(p){p.d=1;p.x=xp;p.res=2;p.j=j});break}
+      if(j>f.i){
+        rem.forEach(function(p){if(X.h[j]>=p.T){p.d=1;p.x=p.T;p.res=1;p.j=j;if(pol.be==="t1"&&!be){be=true;pend=f.p}}});
+        if(pol.be==="half"&&!be&&X.h[j]>=f.p+0.5*(T1-f.p)){be=true;pend=f.p}
+      }
+      if(j-f.i>=TO){parts.forEach(function(p){if(!p.d){p.d=1;p.x=X.c[j];p.res=0;p.j=j}});break}
+    }
+    if(parts.some(function(p){return !p.d})){if(hz>n-1)return null;parts.forEach(function(p){if(!p.d){p.d=1;p.x=X.c[lim];p.res=0;p.j=lim}})}
+    var ret=0,h1=0,s1=0,hh=0;parts.forEach(function(p){ret+=p.fr*((p.x*(1-cost))/(f.p*(1+cost))-1);if(p.res===1)h1+=p.fr;if(p.res===2)s1+=p.fr;hh+=p.fr*(p.j-f.i)*iv/36e5});
+    num+=f.w*ret;fw+=f.w;hw+=f.w*h1;sw+=f.w*s1;hd+=f.w*hh;
+  }
+  return {R:num/den,fw:fw,hw:fw?hw/fw:0,sw:fw?sw/fw:0,nf:fl.length,hold:fw?hd/fw:0};
+}
 function evAlloc(X,ev,peak,lv,cost,W24,endI,K){
   var o={},c0=ev.cI,oMk=c0+1<X.n?X.o[c0+1]:0;
   for(var a=0;a<EAS.length;a++)for(var b=0;b<EAM.length;b++){
@@ -2204,6 +2239,8 @@ function evAlloc(X,ev,peak,lv,cost,W24,endI,K){
     var lv2=lv.map(function(l){return {r:l.r,p:EAO[q].f(l.p,atr)}}),pl2=evAlPlan("eq",lv2,ev.stop,oMk),r2=evAlSim(X,ev,peak,pl2,ev.stop,K,cost,W24,endI,"P");
     if(!r2)return null;o[EAO[q].id+"P"]=r2;
   }
+  var plx=evAlPlan("eq",lv,ev.stop,0);
+  for(var u=0;u<EAX.length;u++){var rx=evExPol(X,ev,peak,plx,ev.stop,K,cost,endI,EAX[u]);if(!rx)return null;o[EAX[u].id]=rx}
   /* near miss of the deepest level: did the low come within half an ATR above it without touching? */
   var dl=lv[lv.length-1];if(dl&&atr>0){var mn=1e99,j;for(j=c0+1;j<=endI&&j<X.n;j++)if(X.l[j]<mn)mn=X.l[j];o.nm={f:mn<=dl.p,near:mn>dl.p&&mn-dl.p<=0.5*atr}}
   return o;
@@ -2261,7 +2298,7 @@ function evScan(X,cfg,out,coin){
       det.ex.push({t:lt,p:xp,res:res,net:net,hit:Math.round(hf[q2]*nf),stp:Math.round(sf[q2]*nf),n:nf});
     }
     out.det.push(det);out.lastEv=det;
-    if(cfg.al&&!dataEnd&&out.alE&&Ld.lv.length){var al=evAlloc(X,ev,peak,Ld.lv,cost,W24,i,K);if(al)out.alE.push({t:X.t[ev.cI],R:al})}
+    if(cfg.al&&!dataEnd&&out.alE&&Ld.lv.length){var al=evAlloc(X,ev,peak,Ld.lv,cost,W24,i,K);if(al)out.alE.push({t:X.t[ev.cI],R:al,pump:det.pump})}
     if(nf&&det.ex[0].res!==3)out.tr.lad.push({t:det.fills[0].t,ev:ev.id,net:det.ex.map(function(e){return e.net}),res:det.ex.map(function(e){return e.res}),hf:hf,sf:sf,coin:coin,nf:nf});
   };
   for(i=W24+60;i<n;i++){
@@ -2359,6 +2396,9 @@ function evAlAgg(E){
     o.rows.push(r)})});
   EAO.forEach(function(oo){var k=oo.id+"P",r={k:k,sc:oo.id,md:"P",n:0,nf:0,sR:0,sR2:0,hw:0,sw:0,wo:0,fs:0,dn:0,ds:0,ds2:0,dl:0,dln:0};
     E.forEach(function(e){var x=e.R[k],b=e.R.eqP;if(!x||!b)return;r.n++;r.sR+=x.R;r.sR2+=x.R*x.R;if(x.R<r.wo)r.wo=x.R;if(x.nf){r.nf++;r.hw+=x.hw;r.sw+=x.sw}var d=x.R-b.R;r.dn++;r.ds+=d;r.ds2+=d*d;if(e.t>=split){r.dl+=d;r.dln++}});o.rows.push(r)});
+  EAX.forEach(function(pp){var k=pp.id,r={k:k,sc:pp.id,md:"X",n:0,nf:0,sR:0,sR2:0,hw:0,sw:0,wo:0,hd:0,dn:0,ds:0,ds2:0,dl:0,dln:0};
+    E.forEach(function(e){var x=e.R[k],b=e.R.x0;if(!x||!b)return;r.n++;r.sR+=x.R;r.sR2+=x.R*x.R;if(x.R<r.wo)r.wo=x.R;if(x.nf){r.nf++;r.hw+=x.hw;r.sw+=x.sw;r.hd+=x.hold}var d=x.R-b.R;r.dn++;r.ds+=d;r.ds2+=d*d;if(e.t>=split){r.dl+=d;r.dln++}});o.xrows=(o.xrows||[]);o.xrows.push(r)});
+  o.pf=[["40% فأكثر",1,0],["40% فأكثر",1,1],["أقل من 40%",0,0],["أقل من 40%",0,1]].map(function(g){var r={l:g[0],half:g[2]?"الأحدث":"الأقدم",n:0,nf:0,sR:0};E.forEach(function(e){var x=e.R.x0;if(!x)return;if(((e.pump>=40)?1:0)!==g[1])return;if(((e.t>=split)?1:0)!==g[2])return;r.n++;r.sR+=x.R;if(x.nf)r.nf++});return r});
   o.nm={n:0,f:0,near:0};E.forEach(function(e){if(e.R.nm){o.nm.n++;if(e.R.nm.f)o.nm.f++;else if(e.R.nm.near)o.nm.near++}});
   return o;
 }
@@ -2467,6 +2507,20 @@ function evRender(){
         h+='<tr><td style="text-align:right">'+esc(nm)+'</td><td>'+rR(x.m)+'</td><td>'+pcn(r.nf/Math.max(1,r.n))+'</td><td>'+rR(r.wo)+'</td><td><b class="'+(x.vd.c==="ok"?"up":x.vd.c==="bd"?"down":"")+'">'+x.vd.t+'</b></td></tr>'});
       h+='</table>';
       if(AL.nm&&AL.nm.n>=10)h+='<div class="sub" style="margin-top:6px">أعمق مستوى: لم يُلمس في '+pcn((AL.nm.n-AL.nm.f)/AL.nm.n)+' من الأحداث، منها '+pcn(AL.nm.near/AL.nm.n)+' كان أدنى سعر فيها أعلى منه بأقل من نصف ATR (أي «فاتك بمسافة قصيرة»).</div>';
+      if(AL.xrows){
+        var xr=AL.xrows.map(function(r){var m=r.n?r.sR/r.n:0,dm=r.dn?r.ds/r.dn:0,sd=r.dn>1?Math.sqrt(Math.max(0,(r.ds2-r.dn*dm*dm)/(r.dn-1))):0,t=sd>0?dm/(sd/Math.sqrt(r.dn)):0,dl=r.dln?r.dl/r.dln:0,vd;
+          if(r.k==="x0")vd={t:"المرجع",c:""};else if(dm>=0.02&&t>=3&&dl>0)vd={t:"✓ أفضل",c:"ok"};else if(dm<=-0.02&&t<=-3)vd={t:"✗ أسوأ",c:"bd"};else vd={t:"◐ غير حاسم",c:"wn"};
+          return {r:r,m:m,vd:vd}});
+        h+='<div class="sgvd" style="margin-top:10px"><b>سياسات الخروج (الدخول: ثلاثة أجزاء متساوية)</b></div><div class="sub" style="margin:4px 0">نفس الأحداث ونفس الدخول والوقف، والاختلاف في الخروج فقط. «الاحتفاظ» متوسط الساعات حتى الخروج.</div><table class="sgtb"><tr><th>السياسة</th><th>متوسط الحدث</th><th>احتفاظ</th><th>وصل للهدف</th><th>الحكم</th></tr>';
+        xr.forEach(function(x){var r=x.r,pp=EAX.filter(function(e){return e.id===r.k})[0];
+          h+='<tr><td style="text-align:right">'+esc(pp.n)+'</td><td>'+rR(x.m)+'</td><td>'+(r.nf?N((r.hd/r.nf).toFixed(1))+' س':'—')+'</td><td>'+(r.nf?pcn(r.hw/r.nf):'—')+'</td><td><b class="'+(x.vd.c==="ok"?"up":x.vd.c==="bd"?"down":"")+'">'+x.vd.t+'</b></td></tr>'});
+        h+='</table>';
+      }
+      if(AL.pf){
+        h+='<div class="sgvd" style="margin-top:10px"><b>اختبار شرط حجم الارتفاع (الحالي: هدف واحد)</b></div><div class="sub" style="margin:4px 0">متوسط الحدث بوحدة R في نصف الأحداث الأقدم ونصفها الأحدث. شرط يصح عندما يتفق النصفان.</div><table class="sgtb"><tr><th>الارتفاع</th><th>الفترة</th><th>أحداث</th><th>دخل</th><th>متوسط الحدث</th></tr>';
+        AL.pf.forEach(function(g){h+='<tr><td style="text-align:right">'+esc(g.l)+'</td><td>'+g.half+'</td><td>'+N(g.n)+'</td><td>'+(g.n?pcn(g.nf/g.n):'—')+'</td><td>'+(g.n<8?'عيّنة قليلة':rR(g.sR/g.n))+'</td></tr>'});
+        h+='</table>';
+      }
     }
     if(R.ST&&R.ST.n>=30){
       var ST=R.ST;
