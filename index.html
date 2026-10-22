@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 108</div>
+<div class="note" style="text-align:center" id="foot">النسخة 109</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -2413,11 +2413,11 @@ function evPill(){
 }
 setInterval(evPill,1000);
 function evBtc(cfg,tn){
-  tn=tn||0;
-  return evWait().then(function(){return lbFetch("BTCUSDT",cfg.tf,cfg.n)}).then(function(k){
-    if(k.length>1000){var Xb=lbPrep(k);cfg.btc={t:Xb.t,c:Xb.c,w:Math.round(864e5/(Xb.t[1]-Xb.t[0]))}}
-    else if(tn<2)return new Promise(function(r){setTimeout(r,1500)}).then(function(){return evBtc(cfg,tn+1)})
-  },function(){if(tn<2)return new Promise(function(r){setTimeout(r,1500*(tn+1))}).then(function(){return evBtc(cfg,tn+1)})});
+  tn=tn||0;var iv=cfg.tf==="5m"?3e5:9e5,need=Math.min(6000,Math.ceil(cfg.n*iv/36e5)+72);
+  return evWait().then(function(){return lbFetch("BTCUSDT","1h",need)}).then(function(k){
+    if(k.length>200){var Xb=lbPrep(k);cfg.btc={t:Xb.t,c:Xb.c,w:24};EV.btcErr=""}
+    else{EV.btcErr="بيانات قليلة ("+k.length+")";if(tn<2)return new Promise(function(r){setTimeout(r,1500)}).then(function(){return evBtc(cfg,tn+1)})}
+  },function(e){EV.btcErr=(e&&e.message)||"خطأ";if(tn<2)return new Promise(function(r){setTimeout(r,1500*(tn+1))}).then(function(){return evBtc(cfg,tn+1)})});
 }
 function evRun(){
   if(EV.busy)return;EV.busy=true;EV.stop=false;EV.msg="جارٍ اختيار العملات…";evWake(true);evRender();
@@ -2457,7 +2457,7 @@ function evRun(){
         return o;
       });
       var AL=evAlAgg(out.alE),ST=evStrat(out.det);
-      var btcOk=!!cfg.btc;delete cfg.btc;EV.res={t:Date.now(),btcOk:btcOk,cfg:cfg,used:used,skipped:skipped,days:days,events:out.ev.length,nofill:out.nofill,kk:kinfo.k,kn:kinfo.n,bs:bs,V:V,AL:AL,ST:ST};try{LS.s("evr",JSON.stringify(EV.res))}catch(e){}
+      var btcOk=!!cfg.btc,btcErr=EV.btcErr||"";delete cfg.btc;EV.res={t:Date.now(),btcOk:btcOk,btcErr:btcErr,cfg:cfg,used:used,skipped:skipped,days:days,events:out.ev.length,nofill:out.nofill,kk:kinfo.k,kn:kinfo.n,bs:bs,V:V,AL:AL,ST:ST};try{LS.s("evr",JSON.stringify(EV.res))}catch(e){}
     }
     EV.msg=EV.stop?"أُوقف الاختبار":(used?"":"لم تتوفر بيانات كافية.");
   },function(e){EV.msg="تعذّر الاختبار: "+(e&&e.message||"")}).then(function(){EV.busy=false;evWake(false);evRender();evPill()});
@@ -2527,7 +2527,7 @@ function evRender(){
       var ST=R.ST;
       h+='<div class="sgvd"><b>الشراء المتدرج حسب الظروف ('+N(ST.n)+' حدثًا دخل فيها)</b></div><div class="sub" style="margin:4px 0">للاستكشاف لا للحكم: كل صف يقارن متوسط الحدث ($ لكل 100$) بالمتوسط العام '+d$(ST.mean)+'. الصفوف التي أقل من 15 حدثًا لا تُعتمد.</div><table class="sgtb"><tr><th>الحالة</th><th>أحداث</th><th>متوسط الحدث</th><th>الأقدم</th><th>الأحدث</th></tr>';
       ST.g.forEach(function(G){h+='<tr><td colspan="5" style="text-align:right"><b>'+esc(G.n)+'</b></td></tr>';
-        if(G.k==="btc"&&!R.btcOk){h+='<tr><td colspan="5" style="text-align:right">تعذّر تحميل بيانات البيتكوين في هذه الدراسة، أعد التشغيل.</td></tr>';return}
+        if(G.k==="btc"&&!R.btcOk){h+='<tr><td colspan="5" style="text-align:right">تعذّر تحميل بيانات البيتكوين في هذه الدراسة'+(R.btcErr?' ('+esc(R.btcErr)+')':'')+'، أعد التشغيل.</td></tr>';return}
         G.rows.forEach(function(r){var low=r.n<15,cell=function(n,m){return n<8?'—':d$(m)};h+='<tr><td style="text-align:right">'+esc(r.l)+'</td><td>'+N(r.n)+'</td><td>'+(low?'عيّنة قليلة':'<span class="'+(r.m>ST.mean?"up":"down")+'">'+d$(r.m)+'</span>')+'</td><td>'+(low?'—':cell(r.n1,r.m1))+'</td><td>'+(low?'—':cell(r.n2,r.m2))+'</td></tr>'})});
       h+='</table><div class="sub" style="margin-top:6px">كثرة التقسيمات تزيد احتمال أن يبدو فرق ما حقيقيًا وهو صدفة. اعتبر النتيجة فرضية تحتاج إعادة الاختبار على فترة مختلفة قبل أن تغيّر بها قاعدتك.'+'</div>';
     }
