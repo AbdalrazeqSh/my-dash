@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' wss://ws-api.binance.com:443 wss://ws-api.binance.com:9443 https://api.binance.com https://api1.binance.com https://api2.binance.com https://api3.binance.com https://api4.binance.com https://data-api.binance.vision https://www.binance.com https://api.ipify.org https://api64.ipify.org; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark light"><meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E9DE"><meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0F1A14"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600&family=IBM+Plex+Mono:wght@500;600&display=swap"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="حسابي"><title>حسابي</title>
 <style>
@@ -70,7 +70,7 @@ input[data-ghost]::placeholder{color:var(--dimmer);opacity:.85}
 .bsb small{font-size:.7rem;font-weight:400;opacity:.9}
 .bsb.buy{background:var(--buybg);color:var(--buy);border-color:var(--buy)}.bsb.sell{background:var(--sellbg);color:var(--sellt);border-color:var(--sell)}
 .bsb.buy.on{background:var(--buy);color:var(--onbs)}.bsb.sell.on{background:var(--sell);color:var(--onbs)}
-.chw{margin:4px 0}.chc{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px}
+.chw{margin:4px 0}.chc{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 8px;margin-bottom:4px}.chc .chbr{flex-basis:100%;height:0}.chc .chip,.chc .chsel{flex:0 0 auto}@media(min-width:620px){.chc .chbr{display:none}}
 .sgw{margin:2px 0 8px}.sgr{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.sgv{flex:1;min-width:150px;display:flex;justify-content:space-between;align-items:center;gap:6px;border-radius:12px;padding:6px 12px;min-height:34px;font:inherit;font-size:.86rem;background:var(--s2);border:1px solid var(--bd);color:var(--fg);cursor:pointer}.sgv i{font-style:normal;color:var(--dim)}.sgv.ok{border-color:var(--up)}.sgv.ok b{color:var(--up)}.sgv.wn{border-color:var(--gold)}.sgv.wn b{color:var(--gold)}.sgv.bd{border-color:var(--down)}.sgv.bd b{color:var(--down)}.sgd{margin-top:8px;padding:8px 12px;border-radius:12px;background:var(--s2);font-size:.86rem}.sgl{margin:3px 0}.sgt{margin-top:10px}.sgc{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0}.sgn{width:96px;background:var(--s);color:var(--fg);border:1px solid var(--bd);border-radius:10px;padding:6px 8px;font:inherit;min-height:34px;direction:ltr}.sgtb{width:100%;border-collapse:collapse;margin:6px 0;font-size:.84rem}.sgtb th{color:var(--dim);font-weight:500;text-align:center;padding:3px 4px}.sgtb td{padding:5px 4px;border-top:1px solid var(--bd);text-align:center}.sgtb td:first-child{text-align:right;color:var(--dim)}.sgvd{padding:6px 10px;border-radius:10px;background:var(--s2);border:1px solid var(--bd)}.sgvd.ok{border-color:var(--up)}.sgvd.wn{border-color:var(--gold)}.sgvd.bd{border-color:var(--down)}.sgb{margin-top:8px;padding:8px 10px;border-radius:10px;background:var(--s);line-height:1.7}
 .chsel{background:var(--s2);color:var(--fg);border:1px solid var(--bd);border-radius:99px;padding:4px 12px;font:inherit;font-size:.82rem;min-height:32px;direction:ltr}
 .chs{touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:crosshair}
@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 100</div>
+<div class="note" style="text-align:center" id="foot">النسخة 101</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -539,7 +539,7 @@ function render(){
   $("ordsum").textContent=snap.orders.length?snap.orders.length+" أمر · "+osyms.length+" عملات":"لا يوجد";
   $("ords").innerHTML=osyms.length?osyms.map(function(k){
     var arr=og[k],last=snap.px[k]||0,nm=k.replace(/USDT$/,""),sn=arr.filter(function(o){return o.side!=="BUY"}).length,bn=arr.length-sn;
-    var h='<div class="row" data-og="'+esc(k)+'" style="cursor:pointer"><div class="l"><b>'+esc(nm)+'</b><small>'+(sn?'بيع ×'+sn:'')+(sn&&bn?' · ':'')+(bn?'شراء ×'+bn:'')+'</small></div><div class="r"><small class="flat">'+(openOrd[k]?"إخفاء":"عرض")+'</small></div></div>';
+    var h='<div class="row" data-og="'+esc(k)+'" style="cursor:pointer"><div class="l"><b><span class="chip" data-ogc="'+esc(nm)+'" data-ogs="'+(bn?"BUY":"SELL")+'" style="margin:0" aria-label="افتح الشارت">'+esc(nm)+' 📈</span></b><small>'+(sn?'بيع ×'+sn:'')+(sn&&bn?' · ':'')+(bn?'شراء ×'+bn:'')+'</small></div><div class="r"><small class="flat">'+(openOrd[k]?"إخفاء":"عرض")+'</small></div></div>';
     if(openOrd[k]){
       h+='<div class="sub2">'+arr.sort(function(x,y){return opx(y)-opx(x)}).map(function(o){return ordRow(o,last)}).join("")+'</div>';
     }
@@ -1907,7 +1907,7 @@ function chOpen(st,sym){st.sym=sym;st.tf=CHTF;st.k=null;st.cr=null;st.err=false;
 function chHtml(st){
   var id=st.id,o='<div class="chw" id="'+id+'"><div class="chc"><select class="chsel" data-chtf="'+id+'" aria-label="الفريم">';
   TFS.forEach(function(x){o+='<option value="'+x+'"'+(x===st.tf?' selected':'')+'>'+x+'</option>'});
-  return o+'</select><span class="chip" data-chty="'+id+'" id="'+id+'_ty" style="margin:0">'+(CHTY==="c"?"شموع":"خط")+'</span><select class="chsel" data-chpn="'+id+'" aria-label="المؤشر السفلي"><option value="n"'+(CHPN==="n"?" selected":"")+'>بدون</option><option value="v"'+(CHPN==="v"?" selected":"")+'>VOL</option><option value="m"'+(CHPN==="m"?" selected":"")+'>MACD</option></select><span class="chip" data-chrf="'+id+'" id="'+id+'_rf" style="margin:0">↻</span><span class="chip" data-chmag="'+id+'" id="'+id+'_mg" style="margin:0">مغناطيس</span><span class="chip" data-chev="'+id+'" id="'+id+'_ev" style="margin:0'+(evOk(st)?'':';display:none')+'">علامات التصحيح</span><span class="sub" id="'+id+'_t" style="margin:0"></span></div><div id="'+id+'_s" data-chs="'+id+'" class="chs"><div style="position:relative"><div id="'+id+'_ms">'+chSvg(st)+'</div><div id="'+id+'_i" style="position:absolute;left:10px;right:10px;bottom:26px;pointer-events:none">'+chInfo(st)+'</div></div><div id="'+id+'_p">'+chPane(st)+'</div></div><div class="sub" id="'+id+'_cap" style="text-align:center;margin:2px 0 6px">'+chCap(st)+'</div><div id="'+id+'_sg">'+sgHtml(st)+'</div></div>';
+  return o+'</select><span class="chip" data-chty="'+id+'" id="'+id+'_ty" style="margin:0">'+(CHTY==="c"?"شموع":"خط")+'</span><select class="chsel" data-chpn="'+id+'" aria-label="المؤشر السفلي"><option value="n"'+(CHPN==="n"?" selected":"")+'>بدون</option><option value="v"'+(CHPN==="v"?" selected":"")+'>VOL</option><option value="m"'+(CHPN==="m"?" selected":"")+'>MACD</option></select><span class="chip" data-chrf="'+id+'" id="'+id+'_rf" style="margin:0">↻</span><i class="chbr"></i><span class="chip" data-chmag="'+id+'" id="'+id+'_mg" style="margin:0">مغناطيس</span><span class="chip" data-chev="'+id+'" id="'+id+'_ev" style="margin:0'+(evOk(st)?'':';display:none')+'">علامات التصحيح</span><span class="sub" id="'+id+'_t" style="margin:0"></span></div><div id="'+id+'_s" data-chs="'+id+'" class="chs"><div style="position:relative"><div id="'+id+'_ms">'+chSvg(st)+'</div><div id="'+id+'_i" style="position:absolute;left:10px;right:10px;bottom:26px;pointer-events:none">'+chInfo(st)+'</div></div><div id="'+id+'_p">'+chPane(st)+'</div></div><div class="sub" id="'+id+'_cap" style="text-align:center;margin:2px 0 6px">'+chCap(st)+'</div><div id="'+id+'_sg">'+sgHtml(st)+'</div></div>';
 }
 function chDraw(st){
   var g=function(x){return document.getElementById(st.id+x)};if(!g("_ms"))return;
@@ -4208,6 +4208,7 @@ function loadToday(){
 document.addEventListener("click",function(ev){
   var t=ev.target;if(!t.closest)return;
   var fe=t.closest("[data-f]");if(fe){var cd=fe.parentNode;cd.classList.toggle("closed");try{var F=JSON.parse(LS.g("fold")||"{}");F[fe.getAttribute("data-f")]=cd.classList.contains("closed");LS.s("fold",JSON.stringify(F))}catch(e){}return}
+  var ogc=t.closest("[data-ogc]");if(ogc)return oOpen(ogc.getAttribute("data-ogc"),ogc.getAttribute("data-ogs")||"BUY");
   var og2=t.closest("[data-og]");if(og2){var kk=og2.getAttribute("data-og");openOrd[kk]=!openOrd[kk];render();return}
   if(t.id==="avgall")return avgAll();
   var lb=t.closest("#lcw button");
@@ -4267,5 +4268,32 @@ if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostnam
   var hadC=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",function(){if(hadC&&!window.__rl){window.__rl=1;location.reload()}});
   navigator.serviceWorker.addEventListener("message",function(m){if(m.data==="updated"&&!document.getElementById("upd")){var d=document.createElement("div");d.id="upd";d.className="upd";d.textContent="نسخة جديدة جاهزة، اضغط للتحديث";d.onclick=function(){location.reload()};document.body.appendChild(d)}})}catch(e){}
 }
+/* ---- bidi guard: signed numbers (+5%, −0.3, -2.1%) inside Arabic text are isolated as LTR so the sign stays on the left of the number ---- */
+(function(){
+  var SK=/^(SCRIPT|STYLE|SVG|TEXTAREA|INPUT|OPTION|SELECT|BDI|CODE)$/i,RE=/[+\u2212\-]\$?\d[\d,.]*%?/g;
+  function skip(n){for(var p=n.parentNode;p&&p!==document.body;p=p.parentNode){if(p.nodeType!==1)continue;if(SK.test(p.nodeName)||(p.classList&&p.classList.contains("n")))return true;if(p.getAttribute&&p.getAttribute("dir")==="ltr")return true}return false}
+  function fixText(t){
+    var v=t.nodeValue;if(!v||!/[+\u2212\-]/.test(v)||!/\d/.test(v)||skip(t))return;
+    var m,last=0,fr=null;RE.lastIndex=0;
+    while((m=RE.exec(v))){var pv=m.index>0?v.charAt(m.index-1):"";if(pv&&/[A-Za-z0-9_\u0660-\u0669\u0600-\u06FF]/.test(pv))continue;
+      if(!fr)fr=document.createDocumentFragment();
+      if(m.index>last)fr.appendChild(document.createTextNode(v.slice(last,m.index)));
+      var b=document.createElement("bdi");b.setAttribute("dir","ltr");b.textContent=m[0];fr.appendChild(b);last=m.index+m[0].length}
+    if(fr){if(last<v.length)fr.appendChild(document.createTextNode(v.slice(last)));t.parentNode.replaceChild(fr,t)}
+  }
+  function fixNode(n){
+    if(n.nodeType===3)return fixText(n);
+    if(n.nodeType!==1||SK.test(n.nodeName)||n.nodeName==="svg")return;
+    var w=document.createTreeWalker(n,4),a=[],x;while((x=w.nextNode()))a.push(x);a.forEach(fixText);
+  }
+  try{
+    var mo=new MutationObserver(function(rs){rs.forEach(function(r){
+      if(r.type==="characterData"){fixText(r.target);return}
+      for(var i=0;i<r.addedNodes.length;i++)fixNode(r.addedNodes[i])})});
+    mo.observe(document.body,{childList:true,subtree:true,characterData:true});
+    fixNode(document.body);
+  }catch(e){}
+})();
+
 })();
 </script></body></html>
