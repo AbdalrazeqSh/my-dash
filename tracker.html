@@ -140,8 +140,35 @@ th{color:var(--fg-dim); font-weight:600; font-size:.75rem}
 .sec{font-size:.78rem; color:var(--fg-dim); font-weight:700; letter-spacing:.03em; margin:22px 0 8px; padding-inline-start:2px}
 .pair>.hero-side{gap:14px}
 .empty{color:var(--fg-dim); font-size:.88rem; text-align:center; padding:20px 0}
+
+/* v113: same palette and flat cards as the main app */
+:root{--bg:#0F1A14;--surface:#16241C;--surface2:#1D2E24;--fg:#E3EBDF;--fg-dim:#93A596;--fg-dimmer:#8A9B8E;--accent:#6FB087;--accent-soft:rgba(111,176,135,.16);--gold:#C9C25A;--gold-soft:rgba(201,194,90,.14);--danger:#EE7F8E;--danger-soft:rgba(238,127,142,.14);--border:rgba(227,235,223,.13);--shadow:none;--onacc:#0D1812}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#E4E9DE;--surface:#EEF2E9;--surface2:#D9E0D1;--fg:#1B2820;--fg-dim:#4B5A50;--fg-dimmer:#667569;--accent:#375F46;--accent-soft:rgba(63,107,79,.18);--gold:#5F5B17;--gold-soft:rgba(95,91,23,.14);--danger:#9E3240;--danger-soft:rgba(158,50,64,.12);--border:rgba(27,40,32,.14);--shadow:none;--onacc:#fff}}
+:root[data-theme="light"]{--bg:#E4E9DE;--surface:#EEF2E9;--surface2:#D9E0D1;--fg:#1B2820;--fg-dim:#4B5A50;--fg-dimmer:#667569;--accent:#375F46;--accent-soft:rgba(63,107,79,.18);--gold:#5F5B17;--gold-soft:rgba(95,91,23,.14);--danger:#9E3240;--danger-soft:rgba(158,50,64,.12);--border:rgba(27,40,32,.14);--shadow:none;--onacc:#fff;color-scheme:light}
+:root[data-theme="dark"]{--bg:#0F1A14;--surface:#16241C;--surface2:#1D2E24;--fg:#E3EBDF;--fg-dim:#93A596;--fg-dimmer:#8A9B8E;--accent:#6FB087;--accent-soft:rgba(111,176,135,.16);--gold:#C9C25A;--gold-soft:rgba(201,194,90,.14);--danger:#EE7F8E;--danger-soft:rgba(238,127,142,.14);--border:rgba(227,235,223,.13);--shadow:none;--onacc:#0D1812;color-scheme:dark}
+body{font-family:"Readex Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-block:12px 40px;padding-inline:2px}#roadSvg{overflow:visible}
+.top{margin-bottom:10px}.top h1{font-size:1.25rem}
+.card,.hero-main,.stat-tile{border-radius:14px}
+.card{padding:14px;margin-bottom:10px}
+.hero{gap:10px;display:flex;flex-direction:column}
+.hero-main{padding:12px 16px;background:linear-gradient(155deg,var(--surface),var(--surface2))}
+.hero-main .big{font-size:2.1rem;margin-block:2px 0;line-height:1.2}
+#balWrap{min-height:64px!important;margin-top:8px!important}
+.hero-side{display:grid!important;grid-template-columns:1fr 1fr;gap:10px}
+.stat-tile{padding:10px 12px}.stat-tile .label{line-height:1.35}.stat-tile .value{font-size:1.15rem}
+.pair{gap:10px;display:flex;flex-direction:column}
+.sec{margin:16px 0 6px}
+button{color:var(--onacc);min-height:44px;border-radius:12px}
+button.ghost{color:var(--fg-dim)}
+form.entry button{flex:1 1 100%}
+.field input{min-height:44px;border-radius:12px}
+#historyTable{min-width:470px}#historyTable th{white-space:nowrap;padding:9px 8px;font-size:.76rem}#historyTable td{padding:9px 8px;white-space:nowrap;font-size:.84rem}
+.scrollbox{max-height:340px}
+.settings-toggle{color:var(--fg-dim);min-height:44px;color:var(--fg-dim)}
+.del-btn{min-width:36px;min-height:36px}
 </style>
 
+<script>(function(){function sy(){try{var t=parent!==window&&parent.document.documentElement.getAttribute("data-theme");if(t)document.documentElement.setAttribute("data-theme",t);else document.documentElement.removeAttribute("data-theme")}catch(e){}}sy();window.addEventListener("focus",sy);document.addEventListener("visibilitychange",sy);setInterval(sy,3000)})()</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 
 <div class="top">
@@ -457,7 +484,7 @@ th{color:var(--fg-dim); font-weight:600; font-size:.75rem}
       var p = xy(tOf(v));
       var passed = currentProfit >= v && v>0;
       html += '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="5" fill="'+(passed?"var(--accent)":"var(--surface2)")+'" stroke="'+(passed?"var(--accent)":"var(--border)")+'" stroke-width="2"/>';
-      html += '<text x="'+p[0]+'" y="'+(p[1]-10)+'" font-size="10" fill="var(--fg-dimmer)" text-anchor="middle" font-family="IBM Plex Mono, monospace">'+fmt$(v)+'</text>';
+      html += '<text x="'+p[0]+'" y="'+(p[1]-10)+'" font-size="16" fill="var(--fg-dimmer)" text-anchor="middle" font-family="IBM Plex Mono, monospace">'+fmt$(v)+'</text>';
     });
     html += '<circle cx="'+curXY[0]+'" cy="'+curXY[1]+'" r="8" fill="var(--gold)" stroke="var(--bg)" stroke-width="2"/>';
     // live label that travels with the dot: current net profit in dollars
@@ -467,7 +494,7 @@ th{color:var(--fg-dim); font-weight:600; font-size:.75rem}
     var ly = Math.min(y0 + 12, curXY[1] + 8);
     var neg = currentProfit < 0;
     html += '<rect x="'+lx+'" y="'+ly+'" width="'+lw+'" height="'+lh+'" rx="10" fill="'+(neg?"var(--danger-soft)":"var(--gold-soft)")+'" stroke="'+(neg?"var(--danger)":"var(--gold)")+'" stroke-width="1"/>';
-    html += '<text x="'+(lx+lw/2)+'" y="'+(ly+14)+'" font-size="12" font-weight="700" fill="'+(neg?"var(--danger)":"var(--gold)")+'" text-anchor="middle" font-family="IBM Plex Mono, monospace">'+lbl+'</text>';
+    html += '<text x="'+(lx+lw/2)+'" y="'+(ly+14)+'" font-size="18" font-weight="700" fill="'+(neg?"var(--danger)":"var(--gold)")+'" text-anchor="middle" font-family="IBM Plex Mono, monospace">'+lbl+'</text>';
     svg.innerHTML = html;
   }
 

@@ -130,6 +130,20 @@ h3.plain{margin-bottom:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
 #rf.spin #rfi{animation:sp .8s linear infinite}
 [hidden]{display:none!important}
+
+/* v113 detail pass */
+.ftrow{justify-content:flex-start;gap:8px;margin:8px 0 6px}.ftrow .chip{margin:0}
+.chip.chtg{margin:0;color:var(--fg);background:var(--s2);border-color:var(--bd)}.chip.chtg.on{background:var(--tabon);color:var(--fg);border-color:var(--up)}.chip.chtg svg{color:var(--up)}
+button.dng{background:transparent;color:var(--sellt);border:1.5px solid var(--sell);font-weight:600}
+.tag.nt{background:transparent;border:1px solid var(--bd);color:var(--fg)}
+.coin .nm>span:first-child{font-size:.55rem;vertical-align:middle;margin-inline-end:2px}
+.coin .vl{font-weight:600}.coin .t{margin-top:8px}
+.ogt{display:inline-block;padding:8px 2px;font-size:.84rem}
+#lchc{display:grid;grid-template-columns:1fr 1fr;gap:8px}#lchc .chip{margin:0;text-align:center}#lchc .chip:first-child{grid-column:1/-1}
+#ordp[data-tone=BUY] #orev,#lad[data-tone=BUY] #lprev{background:var(--buy);color:var(--onbs)}
+#ordp[data-tone=SELL] #orev,#lad[data-tone=SELL] #lprev{background:var(--sell);color:var(--onbs)}
+.brow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}.brow>button{width:100%}.brow .full{grid-column:1/-1}
+details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;color:var(--dim);font-size:.84rem;min-height:30px}details.more>summary::-webkit-details-marker{display:none}details.more>summary::after{content:" ‹ المزيد";color:var(--up);font-weight:600;white-space:nowrap}details.more[open]>summary::after{content:" ⌃ أقل"}details.more>div{margin-top:6px}
 </style></head><body>
 <div class="top"><div class="tt"><b>حسابي</b><span class="age"><span id="age"></span> <span class="badge" id="perm" hidden></span></span></div><div><button id="rf" class="ico" hidden aria-label="تحديث" title="تحديث"><span id="rfi" style="display:inline-block">↻</span></button></div></div>
 <div id="err" class="err" hidden></div>
@@ -140,7 +154,7 @@ h3.plain{margin-bottom:6px}
   <div class="sub" style="margin:0 0 6px">مفتاح بايننس: <b>قراءة</b> + <b>تداول Spot</b>. <b>السحب مغلق</b>. يُحفظ في هذا الجوال فقط.</div>
   <label for="k">API Key</label><input id="k" autocomplete="off" autocapitalize="off" spellcheck="false">
   <label for="s">Secret</label><input id="s" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
-  <label for="cap">أقصى قيمة للأمر الواحد (USDT)</label><input id="cap" inputmode="decimal" value="300"><div style="display:flex;gap:8px;margin-top:12px"><button class="go" id="save">حفظ وتحديث</button><button id="clr">حذف المفتاح من الجوال</button></div><div style="margin-top:10px"><button id="diag">فحص الاتصال</button></div><div class="sum" id="diagout" hidden style="direction:ltr;text-align:left;font-size:.8rem;white-space:pre-wrap"></div>
+  <label for="cap">أقصى قيمة للأمر الواحد (USDT)</label><input id="cap" inputmode="decimal" value="300"><div class="brow" style="margin-top:12px"><button class="go full" id="save">حفظ وتحديث</button><button id="clr">حذف المفتاح</button><button id="diag">فحص الاتصال</button></div><div class="sum" id="diagout" hidden style="direction:ltr;text-align:left;font-size:.8rem;white-space:pre-wrap"></div>
 
   <div class="sum" style="margin-top:14px"><div class="row"><div class="l">عنوان IP الحالي</div><div class="r"><b class="n" id="ipv" dir="ltr">…</b></div></div>
     <div style="display:flex;gap:8px;margin-top:8px"><button class="sm go" id="ipcp" style="flex:1">نسخ</button><button class="sm" id="iprf" style="flex:1">تحديث</button></div>
@@ -163,7 +177,7 @@ h3.plain{margin-bottom:6px}
   <div id="hcoins"></div>
 </div>
 <div id="main" hidden>
-  <div class="c"><h3 class="plain">العملات</h3><div style="margin-bottom:4px"><button class="sm" id="avgall">احسب الربح لكل العملات</button> <button class="sm sell" id="swbtn" hidden>تقليص المراكز</button></div><div id="coins"></div></div>
+  <div class="c"><h3 class="plain">العملات</h3><div style="margin-bottom:4px"><button class="sm" id="avgall">احسب الربح لكل العملات</button> <button class="sm dng" id="swbtn" hidden>تقليص المراكز</button></div><div id="coins"></div></div>
   <div class="c closed" id="cord"><h3 class="fold" data-f="cord"><span>الأوامر المفتوحة <span class="sm2" id="ordsum"></span></span><span class="chev">›</span></h3><div class="fb"><div id="ords"></div><div id="newo" style="margin-top:10px" hidden><button class="sm" id="newbtn">+ أمر جديد</button></div></div></div>
   <div class="c closed" id="ctod"><h3 class="fold" data-f="ctod"><span>صفقات اليوم <span class="sm2" id="todsum"></span></span><span class="chev">›</span></h3><div class="fb"><div id="today"><div class="sub">اضغط «تحميل» لعرض صفقات اليوم</div></div><div style="margin-top:10px"><button class="sm" id="tdbtn">تحميل صفقات اليوم</button></div></div></div>
 </div>
@@ -172,9 +186,9 @@ h3.plain{margin-bottom:6px}
     <div class="seg segs tmode" data-tmode="1"><button type="button" data-tm="one">واحد</button><button type="button" data-tm="eq">متدرج</button><button type="button" data-tm="cus">يدوي</button></div>
     <div style="display:flex;gap:10px;align-items:flex-end">
       <div style="flex:1"><label for="os" style="margin-top:0">العملة</label><input id="os" autocapitalize="characters" autocomplete="off" placeholder="مثل REQ"></div>
-      <div id="ost" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 1.5v13"/><rect x="2.5" y="4.5" width="3" height="5.5" rx=".6" fill="currentColor"/><path d="M12 1.5v13"/><rect x="10.5" y="3.5" width="3" height="6" rx=".6"/></svg>Chart</span>
+      <div id="ost" style="padding-bottom:9px;min-width:84px"></div>
     </div>
-<div class="ftrow"><span class="chip ftb" data-ft="1"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h7l3 3v8H3z"/><path d="M5.5 8h5M5.5 10.5h3.5"/></svg>Free text</span></div>
+<div class="ftrow"><span class="chip chtg" data-chtg="1"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 1.5v13"/><rect x="2.5" y="4.5" width="3" height="5.5" rx=".6" fill="currentColor"/><path d="M12 1.5v13"/><rect x="10.5" y="3.5" width="3" height="6" rx=".6"/></svg>Chart</span><span class="chip ftb" data-ft="1"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h7l3 3v8H3z"/><path d="M5.5 8h5M5.5 10.5h3.5"/></svg>Free text</span></div>
     <div id="osyms" style="margin:6px 0 2px"></div>
     <div id="ochart"></div>
     <div class="sub" id="opx"></div>
@@ -235,9 +249,8 @@ h3.plain{margin-bottom:6px}
     <div class="c"><div class="seg segs tmode" style="margin-bottom:10px" data-tmode="1"><button type="button" data-tm="one">واحد</button><button type="button" data-tm="eq">متدرج</button><button type="button" data-tm="cus">يدوي</button></div>
       <div style="display:flex;gap:10px;align-items:flex-end">
         <div style="flex:1"><label for="ls" style="margin-top:0">العملة</label><input id="ls" autocapitalize="characters" autocomplete="off" placeholder="مثل REQ"></div>
-        <div id="lst" style="padding-bottom:9px;min-width:84px"></div><span class="chip chtg" data-chtg="1"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 1.5v13"/><rect x="2.5" y="4.5" width="3" height="5.5" rx=".6" fill="currentColor"/><path d="M12 1.5v13"/><rect x="10.5" y="3.5" width="3" height="6" rx=".6"/></svg>Chart</span>
-      </div>
-<div class="ftrow"><span class="chip ftb" data-ft="1"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h7l3 3v8H3z"/><path d="M5.5 8h5M5.5 10.5h3.5"/></svg>Free text</span></div>
+        <div id="lst" style="padding-bottom:9px;min-width:84px"></div></div>
+<div class="ftrow"><span class="chip chtg" data-chtg="1"><svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 1.5v13"/><rect x="2.5" y="4.5" width="3" height="5.5" rx=".6" fill="currentColor"/><path d="M12 1.5v13"/><rect x="10.5" y="3.5" width="3" height="6" rx=".6"/></svg>Chart</span><span class="chip ftb" data-ft="1"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h7l3 3v8H3z"/><path d="M5.5 8h5M5.5 10.5h3.5"/></svg>Free text</span></div>
       <div class="sub" id="lpxl"></div>
       <div id="lchart"></div>
       <div class="bs"><button class="bsb buy on" data-ls="BUY"><b>شراء <span id="lsn1"></span></b></button><button class="bsb sell" data-ls="SELL"><b>بيع <span id="lsn2"></span></b></button></div>
@@ -297,7 +310,7 @@ h3.plain{margin-bottom:6px}
   </div>
   <div id="lab" hidden>
     <div class="c"><h3 class="plain">مختبر الاستراتيجيات</h3>
-      <div class="sub" style="margin:0 0 8px">يجلب شموع عملاتك المباحة الأعلى سيولة ويختبر عليها استراتيجيات مشهورة بإعدادات ثابتة، على مرحلتين: الأولى والأخيرة (لم تُضبط عليها). التكلفة محسوبة، وما ينجح فقط يستحق أن نبني عليه.</div>
+      <details class="more"><summary>يختبر استراتيجيات مشهورة على شموع عملاتك المباحة بإعدادات ثابتة.</summary><div class="sub">يجلب شموع عملاتك المباحة الأعلى سيولة ويختبر عليها استراتيجيات مشهورة بإعدادات ثابتة، على مرحلتين: الأولى والأخيرة (لم تُضبط عليها). التكلفة محسوبة، وما ينجح فقط يستحق أن نبني عليه.</div></details>
       <div class="g2"><div><label for="lab_tf">الإطار</label><select id="lab_tf" class="chsel" style="width:100%"><option value="5m">5 دقائق</option><option value="15m">15 دقيقة</option><option value="30m">30 دقيقة</option><option value="1h">ساعة</option><option value="4h">4 ساعات</option></select></div>
       <div><label for="lab_n">عدد الشموع لكل عملة</label><select id="lab_n" class="chsel" style="width:100%"><option value="3000">3000</option><option value="5000">5000</option><option value="10000">10000</option></select></div></div>
       <div class="g2" style="margin-top:8px"><div><label for="lab_k">عدد العملات</label><select id="lab_k" class="chsel" style="width:100%"><option value="20">20</option><option value="40">40</option></select></div>
@@ -307,7 +320,7 @@ h3.plain{margin-bottom:6px}
       <div id="lab_out" style="margin-top:8px"></div>
     </div>
     <div class="c"><h3 class="plain">دراسة التراجع التصحيحي بعد الارتفاع</h3>
-      <div class="sub" style="margin:0 0 8px">تفحص عملات مباحة بحثًا عن ارتفاع كبير بسيولة ثم تصحيح، وتقيس هل علامات القاع (دايفرجنس، حجم، قاع أعلى، شمعة انعكاس، أمر محدد عند فيبوناتشي) تصل إلى هدف نصف مسافة الارتفاع قبل ضرب الوقف، مقارنة بالدخول العشوائي داخل التصحيح نفسه.</div>
+      <details class="more"><summary>يقيس أي طريقة دخول تنجح في التصحيح بعد ارتفاع كبير.</summary><div class="sub">تفحص عملات مباحة بحثًا عن ارتفاع كبير بسيولة ثم تصحيح، وتقيس هل علامات القاع (دايفرجنس، حجم، قاع أعلى، شمعة انعكاس، أمر محدد عند فيبوناتشي) تصل إلى هدف نصف مسافة الارتفاع قبل ضرب الوقف، مقارنة بالدخول العشوائي داخل التصحيح نفسه.</div></details>
       <div class="g2"><div><label for="ev_tf">الإطار</label><select id="ev_tf" class="chsel" style="width:100%"><option value="5m">5 دقائق</option><option value="15m">15 دقيقة</option></select></div>
       <div><label for="ev_n">عدد الشموع لكل عملة</label><select id="ev_n" class="chsel" style="width:100%"><option value="5000">5000</option><option value="10000">10000</option><option value="20000">20000</option></select></div></div>
       <div class="g2" style="margin-top:8px"><div><label for="ev_k">عدد العملات</label><select id="ev_k" class="chsel" style="width:100%"><option value="60">60</option><option value="100">100</option><option value="150">150</option></select></div>
@@ -329,7 +342,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 112</div>
+<div class="note" style="text-align:center" id="foot">النسخة 113</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -519,10 +532,10 @@ function render(){
     var p=a.avg?(a.price/a.avg-1)*100:null,pv=a.avg?(a.price-a.avg)*a.qty:null,oi=ordInfo(a.sym),share=tot>0?a.val/tot*100:0;
     var tg='';
     if(oi.sn)tg+='<span class="tag ts" style="margin:0">بيع ×'+oi.sn+(oi.sd!=null?' · أقرب '+pc(oi.sd):'')+'</span>';
-    if(oi.xn)tg+='<span class="tag g" style="margin:0">وقف'+(oi.xd!=null?' · '+pc(oi.xd):'')+'</span>';
+    if(oi.xn)tg+='<span class="tag nt" style="margin:0">وقف'+(oi.xd!=null?' · '+pc(oi.xd):'')+'</span>';
     else if(PLAN[a.sym]&&a.free>0&&a.free*a.price>=5)tg+='<span class="tag g" style="margin:0;cursor:pointer" data-prot="'+esc(a.sym)+'">حماية جاهزة ›</span>';
     if(oi.bn)tg+='<span class="tag tb" style="margin:0">شراء ×'+oi.bn+(oi.bd!=null?' · أقرب '+pc(oi.bd):'')+'</span>';
-    var sf=symFlag(a.sym,"SELL");if(sf)tg+='<span class="tag s" style="margin:0">⚠ '+sf.sh+'</span>';
+    var sf=symFlag(a.sym,"SELL");if(sf)tg+='<span class="tag s" style="margin:0">'+sf.sh+'</span>';
     var hh=halS(a.sym);if(hh==='no')tg+='<span class="tag s" style="margin:0">ممنوعة</span>';else if(hh==='rev')tg+='<span class="tag g" style="margin:0">مراجعة</span>';else if(!hh&&!STABLE[a.sym])tg+='<span class="tag g" style="margin:0">خارج القائمة</span>';
     return '<div class="coin"><div class="a"><span class="nm" data-cd="'+esc(a.sym)+'" style="cursor:pointer"><span style="color:'+COL[Math.min(i,5)]+'">●</span> '+esc(a.sym)+'<span class="sh">'+share.toFixed(share<10?1:0)+'%</span> <span class="flat">›</span></span>'+(a.val>=DUST&&!STABLE[a.sym]&&a.price>0?sp3Html(a.sym):'')+'<span class="vl n">'+usd(a.val)+'</span></div>'+
       '<div class="b"><span><span class="n">'+qt(a.qty)+'</span> × '+(a.price?'<span class="n">'+px(a.price)+'</span>':'لا يوجد سوق USDT')+'</span>'+
@@ -532,7 +545,7 @@ function render(){
   var ch=big.map(coinRow).join("");
   if(dust.length){
     var dv=dust.reduce(function(t,a){return t+a.val},0);
-    ch+='<div class="row" id="dusttg" style="cursor:pointer"><div class="l"><b>أرصدة صغيرة ('+dust.length+')</b><small>أقل من '+DUST+'$ لكل عملة · '+(dustOpen?"اضغط للإخفاء":"اضغط للعرض")+'</small></div><div class="r"><span class="n"><b>'+usd(dv)+'</b></span></div></div>';
+    ch+='<div class="row" id="dusttg" style="cursor:pointer"><div class="l"><span style="font-weight:600;display:block">أرصدة صغيرة ('+dust.length+')</span><small>أقل من '+DUST+'$ لكل عملة · '+(dustOpen?"اضغط للإخفاء":"اضغط للعرض")+'</small></div><div class="r"><span class="n flat">'+usd(dv)+'</span></div></div>';
     if(dustOpen)ch+=dust.map(function(a){return coinRow(a,5)}).join("");
   }
   $("coins").innerHTML=as.length?ch:'<div class="sub">لا توجد عملات</div>';
@@ -541,7 +554,7 @@ function render(){
   $("ordsum").textContent=snap.orders.length?snap.orders.length+" أمر · "+osyms.length+" عملات":"لا يوجد";
   $("ords").innerHTML=osyms.length?osyms.map(function(k){
     var arr=og[k],last=snap.px[k]||0,nm=k.replace(/USDT$/,""),sn=arr.filter(function(o){return o.side!=="BUY"}).length,bn=arr.length-sn;
-    var h='<div class="row" data-og="'+esc(k)+'" style="cursor:pointer"><div class="l"><b><span class="chip" data-ogc="'+esc(nm)+'" data-ogs="'+(bn?"BUY":"SELL")+'" style="margin:0" aria-label="افتح الشارت">'+esc(nm)+' 📈</span></b><small>'+(sn?'بيع ×'+sn:'')+(sn&&bn?' · ':'')+(bn?'شراء ×'+bn:'')+'</small></div><div class="r"><small class="flat">'+(openOrd[k]?"إخفاء":"عرض")+'</small></div></div>';
+    var h='<div class="row" data-og="'+esc(k)+'" style="cursor:pointer"><div class="l"><b><span class="chip" data-ogc="'+esc(nm)+'" data-ogs="'+(bn?"BUY":"SELL")+'" style="margin:0" aria-label="افتح الشارت">'+esc(nm)+' <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" style="vertical-align:-2px"><path d="M4 1.5v13"/><rect x="2.5" y="4.5" width="3" height="5.5" rx=".6" fill="currentColor"/><path d="M12 1.5v13"/><rect x="10.5" y="3.5" width="3" height="6" rx=".6"/></svg></span></b><small>'+(sn?'بيع ×'+sn:'')+(sn&&bn?' · ':'')+(bn?'شراء ×'+bn:'')+'</small></div><div class="r"><span class="flat ogt">'+(openOrd[k]?"إخفاء":"عرض")+' <span class="chev">'+(openOrd[k]?"⌃":"›")+'</span></span></div></div>';
     if(openOrd[k]){
       h+='<div class="sub2">'+arr.sort(function(x,y){return opx(y)-opx(x)}).map(function(o){return ordRow(o,last)}).join("")+'</div>';
     }
@@ -550,6 +563,7 @@ function render(){
   renderRisk(as,tot);renderHome(as,tot);
   ages();sp3Kick();
 }
+var CHI='<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" style="vertical-align:-2px"><path d="M4 1.5v13"/><rect x="2.5" y="4.5" width="3" height="5.5" rx=".6" fill="currentColor"/><path d="M12 1.5v13"/><rect x="10.5" y="3.5" width="3" height="6" rx=".6"/></svg>';
 function ages(){
   if(!snap){$("age").textContent="";return}
   var s=Math.round((Date.now()-snap.t)/1000);
@@ -1584,14 +1598,14 @@ function editSheet(id){
   if(o.lid&&(o.ps||(o.side==="BUY"&&snap.orders.some(function(x){return x.lid===o.lid&&x.ps})))){
     var lg0=snap.orders.filter(function(x){return x.lid===o.lid}),last0=snap.px[o.symbol]||0,wk0=lg0.filter(function(z){return !z.ps&&z.side==="BUY"})[0];
     openSheet('<h3 style="margin:0 0 4px">شراء مع حماية تلقائية · '+esc(sym)+'</h3><div class="sub" style="margin:0 0 8px">تُفعَّل الحماية عند اكتمال الشراء، وأيّهما نُفِّذ ألغى الآخر.</div>'+lg0.map(function(x){return ordRow(Object.assign({},x),last0).replace(/data-ed="[^"]*" style="cursor:pointer"/,"").replace(/<button[^>]*data-x[^>]*>[^<]*<\/button>/,"")}).join("")+
-      '<div class="g2" style="margin-top:10px"><div><label for="lp_p">سعر الدخول</label><input id="lp_p" inputmode="decimal" value="'+(wk0?wk0.price:"")+'"></div><div style="align-self:end"><button id="lpsave" style="width:100%">تعديل السعر</button></div></div><div id="lpout"></div><button class="go" id="lpmk" style="width:100%;margin-top:10px">اشترِ الآن بسعر السوق</button><div style="display:flex;gap:8px;margin-top:8px"><button class="sell" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'" style="flex:1">إلغاء الكل</button><button id="tclose" style="flex:1">رجوع</button></div>');
+      '<div class="g2" style="margin-top:10px"><div><label for="lp_p">سعر الدخول</label><input id="lp_p" inputmode="decimal" value="'+(wk0?wk0.price:"")+'"></div><div style="align-self:end"><button id="lpsave" style="width:100%">تعديل السعر</button></div></div><div id="lpout"></div><button class="go" id="lpmk" style="width:100%;margin-top:10px">اشترِ الآن بسعر السوق</button><div style="display:flex;gap:8px;margin-top:8px"><button class="dng" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'" style="flex:1">إلغاء الكل</button><button id="tclose" style="flex:1">رجوع</button></div>');
     LP=wk0?{sym:sym,lid:o.lid,w:wk0,x:lg0.filter(function(z){return z.ps&&z.sp>0})[0]||null,t:lg0.filter(function(z){return z.ps&&!(z.sp>0)&&z.price>0})[0]||null}:null;
     return;
   }
   if(o.lid){
     var legs=snap.orders.filter(function(x){return x.lid===o.lid}),last=snap.px[o.symbol]||0;
     openSheet('<h3 style="margin:0 0 4px">حماية مرتبطة (OCO) · '+esc(sym)+'</h3><div class="sub" style="margin:0 0 8px">أيّهما نُفِّذ ألغى الآخر.</div>'+legs.map(function(x){return ordRow(Object.assign({},x),last).replace(/data-ed="[^"]*" style="cursor:pointer"/,"").replace(/<button[^>]*data-x[^>]*>[^<]*<\/button>/,"")}).join("")+
-      '<div style="display:flex;gap:8px;margin-top:12px"><button class="go" data-prot2="'+esc(sym)+'|'+o.lid+'" style="flex:2">إعادة ضبط الحماية</button><button class="sell" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'" style="flex:1">إلغاء الزوج</button></div><button id="tclose" style="width:100%;margin-top:8px">رجوع</button>');
+      '<div style="display:flex;gap:8px;margin-top:12px"><button class="go" data-prot2="'+esc(sym)+'|'+o.lid+'" style="flex:2">إعادة ضبط الحماية</button><button class="dng" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'" style="flex:1">إلغاء الزوج</button></div><button id="tclose" style="width:100%;margin-top:8px">رجوع</button>');
     return;
   }
   openSheet('<div class="sub">جارٍ التحميل…</div>');
@@ -1604,7 +1618,7 @@ function drawEdit(){
   var h='<h3 style="margin:0 0 2px">تعديل أمر '+(buy?"شراء":"بيع")+(kd?" ("+kd+")":"")+' · '+esc(ED.sym)+'</h3><div class="sub" style="margin:0 0 8px">السعر الآن '+N(px(ED.last))+' · الحالي: '+N(qt(o.qty))+' عند '+N(px(opx(o)))+'</div>';
   h+='<div class="g2">'+(trig?'<div><label for="ed_s">سعر التفعيل</label><input id="ed_s" inputmode="decimal" value="'+flo(o.sp,f.tick)+'"></div>':'')+'<div><label for="ed_p">'+(trig?"سعر التنفيذ":"السعر")+'</label><input id="ed_p" inputmode="decimal" value="'+flo(o.price,f.tick)+'"></div><div><label for="ed_q">الكمية</label><input id="ed_q" inputmode="decimal" value="'+flo(o.qty,f.step)+'"></div></div>';
   h+='<div style="margin:6px 0">'+[0,-1,-3,-5,1,3,5].map(function(x){return '<span class="chip" data-edpp="'+x+'">'+(x===0?"سعر السوق":(x>0?"+":"−")+Math.abs(x)+"%")+'</span>'}).join("")+'</div>';
-  h+='<div id="edsum"></div><div id="ederr"></div><div style="display:flex;gap:8px;margin-top:10px"><button class="go" id="edgo" style="flex:2">تأكيد التعديل</button><button class="sell" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'" style="flex:1">إلغاء الأمر</button></div><button id="edmk" style="width:100%;margin-top:8px">'+(buy?"اشترِ":"بِع")+' الآن بسعر السوق</button><button id="tclose" style="width:100%;margin-top:8px">رجوع</button>';
+  h+='<div id="edsum"></div><div id="ederr"></div><div style="display:flex;gap:8px;margin-top:10px"><button class="go" id="edgo" style="flex:2">تأكيد التعديل</button><button class="dng" data-x="'+o.id+'" data-xs="'+esc(o.symbol)+'" style="flex:1">إلغاء الأمر</button></div><button id="edmk" style="width:100%;margin-top:8px">'+(buy?"اشترِ":"بِع")+' الآن بسعر السوق</button><button id="tclose" style="width:100%;margin-top:8px">رجوع</button>';
   openSheet(h);edCalc();
 }
 function edVal(){
@@ -2623,7 +2637,7 @@ function fwRender(){
   var h='<div class="sub" style="margin:0 0 8px">يسجّل التطبيق كل عملة تدخل منطقة الشراء بخطتها (المستويات والوقف والأهداف) قبل أن يُعرف شيء عن النتيجة، ثم يحسبها لاحقًا من الشموع الفعلية. هذا هو الاختبار الوحيد الذي لا يتأثر بالتحيّز لأنه على بيانات لم تُرَ من قبل. تحتاج 30 حدثًا ممتلئًا ومغلقًا على الأقل لتقرأ نتيجته.</div>';
   h+='<div class="sub" style="margin:0 0 6px"><b>الحالة:</b> مسجَّل '+N(S.logged)+' · ينتظر '+N(S.waiting)+' · مفتوح '+N(S.open)+' · لم يُنفَّذ '+N(S.nofill)+' · مغلق '+N(S.closed)+' من 30'+(S.closed?'<br>متوسط الحدث '+sgn(S.R,2,'R')+' · '+sgn(S.net,2,'$ لكل 100$')+' · وصل للهدف '+N(Math.round(S.hit*100))+'% · ضرب الوقف '+N(Math.round(S.stp*100))+'%':'')+'</div>';
   h+='<label style="display:flex;gap:8px;align-items:center;margin:6px 0;font-weight:400"><input type="checkbox" id="fw_on" style="width:auto"'+(FW.on?" checked":"")+'> مسح تلقائي كل 30 دقيقة أثناء فتح التطبيق</label>';
-  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0"><button class="sm" id="fw_scan"'+(SCN.busy?" disabled":"")+'>'+(SCN.busy?"…":"مسح الآن")+'</button><button class="sm" id="fw_res"'+(FW.busy?" disabled":"")+'>'+(FW.busy?"…":"تحديث النتائج")+'</button><button class="sm" id="fw_cp">نسخ السجل</button><button class="sm" id="fw_clr">'+(FW.clr?"اضغط ثانية للتأكيد":"مسح السجل")+'</button><span class="sub" id="fw_msg" style="margin:0;align-self:center"></span></div>';
+  h+='<div class="brow"><button class="sm" id="fw_scan"'+(SCN.busy?" disabled":"")+'>'+(SCN.busy?"…":"مسح الآن")+'</button><button class="sm" id="fw_res"'+(FW.busy?" disabled":"")+'>'+(FW.busy?"…":"تحديث النتائج")+'</button><button class="sm" id="fw_cp">نسخ السجل</button><button class="sm" id="fw_clr">'+(FW.clr?"اضغط ثانية للتأكيد":"مسح السجل")+'</button></div><div class="sub" id="fw_msg" style="margin:0 0 6px"></div>';
   var tag={waiting:"ينتظر",open:"مفتوح",nofill:"لم يُنفَّذ",closed:"مغلق"};
   if(FWL.length){h+='<table class="sgtb"><tr><th>العملة</th><th>سُجّلت</th><th>الحالة</th><th>النتيجة</th></tr>';
     FWL.slice(-15).reverse().forEach(function(e){var d=new Date(e.t),rs=e.r&&e.r.R!=null?sgn(e.r.R,2,'R'):(e.r?'جارية':'—');
@@ -4256,7 +4270,7 @@ function send(){
 }
 function cancelSheet(id,sym){
   var o=snap.orders.filter(function(x){return String(x.id)===String(id)})[0];if(!o)return;
-  openSheet('<div class="sum"><b>إلغاء أمر '+(o.side==="BUY"?"شراء":"بيع")+' '+esc(o.symbol.replace(/USDT$/,""))+'</b><br>الكمية <span class="n">'+qt(o.qty)+'</span> عند <span class="n">'+px(opx(o))+'</span>'+(o.lid?'<br><span class="age">هذا الأمر جزء من OCO، فيُلغى الزوج كاملًا.</span>':'')+'</div><div id="terr"></div><div style="display:flex;gap:8px"><button class="sell" id="xgo" data-id="'+id+'" data-s="'+esc(sym)+'">تأكيد الإلغاء</button><button id="tclose">رجوع</button></div>');
+  openSheet('<div class="sum"><b>إلغاء أمر '+(o.side==="BUY"?"شراء":"بيع")+' '+esc(o.symbol.replace(/USDT$/,""))+'</b><br>الكمية <span class="n">'+qt(o.qty)+'</span> عند <span class="n">'+px(opx(o))+'</span>'+(o.lid?'<br><span class="age">هذا الأمر جزء من OCO، فيُلغى الزوج كاملًا.</span>':'')+'</div><div id="terr"></div><div style="display:flex;gap:8px"><button class="dng" id="xgo" data-id="'+id+'" data-s="'+esc(sym)+'">تأكيد الإلغاء</button><button id="tclose">رجوع</button></div>');
 }
 document.addEventListener("click",function(ev){
   var t=ev.target;if(!t.closest)return;var el;
