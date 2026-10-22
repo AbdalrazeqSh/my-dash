@@ -149,6 +149,8 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
 @media(max-width:380px){.chc{flex-wrap:wrap}}
 .scm{display:inline-flex;gap:3px;vertical-align:middle;margin-inline-start:6px}.scm i{display:block;width:7px;height:14px;border-radius:2px;background:var(--bd);opacity:.9}.scm.up i.f{background:var(--up)}.scm.wn i.f{background:var(--gold)}.scm.dn i.f{background:var(--down)}
 </style></head><body>
+<div id="fatal" hidden style="position:fixed;inset-inline:12px;top:12px;z-index:99;background:#B03A48;color:#fff;border-radius:12px;padding:12px 14px;font-size:.86rem;direction:ltr;text-align:left;word-break:break-word"></div>
+<script>window.addEventListener("error",function(e){if(window.__ok)return;var f=document.getElementById("fatal");if(f){f.hidden=false;f.textContent="Startup error: "+(e.message||"")+" @ line "+(e.lineno||"?")}})</script>
 <div class="top"><div class="tt"><b>حسابي</b><span class="age"><span id="age"></span> <span class="badge" id="perm" hidden></span></span></div><div><button id="rf" class="ico" hidden aria-label="تحديث" title="تحديث"><span id="rfi" style="display:inline-block">↻</span></button></div></div>
 <div id="err" class="err" hidden></div>
 
@@ -344,7 +346,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 115</div>
+<div class="note" style="text-align:center" id="foot">النسخة 116</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -4511,7 +4513,7 @@ setTimeout(tkHashImport,300);
 $("ordp").addEventListener("input",function(ev){var id=ev.target.id;if(id==="os"){clearTimeout(oTm);oTm=setTimeout(oLoad,450);oCalc()}else{if(id==="ov")O.ed="v";else if(id==="oq")O.ed="q";if(id==="opc"){var pv=parseFloat($("opc").value);if(isFinite(pv))oPcSet(pv);return}if(id==="ox"){O.sd=false;rrFix();rrAuto()}else if(id==="ot"){var p9=oPx(),x9=parseFloat($("ox").value),t9=parseFloat($("ot").value),has9=p9>0&&x9>0&&x9<p9;if(RRLK&&O.f&&p9>0&&t9>p9&&(!has9||O.sd)){var sx=rrStop(p9,t9,O.rr,O.f.tick);if(sx){$("ox").value=sx;O.sd=true;rrAuto()}}else if(has9&&t9>p9){O.rr=Math.round(rrOf(p9,x9,t9)*100)/100;LS.s("orr_r",String(O.rr));rrChips()}}else if(id==="orr"){rrRisk(parseFloat($("orr").value));O.rd=true;rrAuto()}if(id==="op"){rrFix();rrAuto()}if(id==="ov"||id==="oq")O.rd=false;if(id==="ov"||id==="oq"||id==="op")oSync();if(id==="ov"||id==="oq")oRgSync();oCalc()}});
 $("rf").onclick=refresh;
 $("save").onclick=function(){var k=$("k").value.trim(),s=$("s").value.trim();if(!k||!s){err("أدخل المفتاح والسر");return}LS.s("bk",k);LS.s("bs",s);var cv=parseFloat($("cap").value);if(cv>0)LS.s("cap",String(cv));PERM=null;$("k").value="";$("s").value="";err("");forceCfg=false;show();refresh()};
-$("clr").onclick=function(){LS.d("bk");LS.d("bs");CAN=false;PERM=null;$("perm").hidden=true;LS.d("snap");LS.d("avg");snap=null;AVG={};forceCfg=false;err("");show()};
+$("clr").onclick=function(){var b=$("clr");if(!b._c){b._c=setTimeout(function(){b._c=0;b.textContent="حذف المفتاح"},4000);b.textContent="اضغط ثانية للتأكيد";return}clearTimeout(b._c);b._c=0;b.textContent="حذف المفتاح";LS.d("bk");LS.d("bs");CAN=false;PERM=null;$("perm").hidden=true;LS.d("snap");LS.d("avg");snap=null;AVG={};forceCfg=false;err("");show()};
 document.addEventListener("click",function(ev){
   var t=ev.target.closest&&ev.target.closest("[data-g]");if(!t)return;
   var s=t.getAttribute("data-g");t.textContent="…";
@@ -4559,5 +4561,6 @@ if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostnam
   }catch(e){}
 })();
 
+window.__ok=1;
 })();
 </script></body></html>
