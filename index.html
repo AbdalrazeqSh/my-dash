@@ -316,6 +316,7 @@ h3.plain{margin-bottom:6px}
       <button class="go" id="ev_go" style="width:100%">ابدأ الدراسة</button>
       <div id="ev_out" style="margin-top:8px"></div>
     </div>
+    <div class="c"><h3 class="plain">السجل الأمامي (اختبار حي)</h3><div id="fw_out"></div></div>
   </div>
   <div id="jr" hidden>
     <div class="c"><h3 class="plain">سجل الصفقات</h3>
@@ -327,7 +328,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 109</div>
+<div class="note" style="text-align:center" id="foot">النسخة 110</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -560,7 +561,7 @@ function show(){
   var secs={hm:has&&snap&&TAB==="home",main:has&&snap&&TAB==="wal",ordp:has&&TAB==="trd"&&sb.trd==="ord",lad:has&&TAB==="trd"&&sb.trd==="lad",calc:false,risk:has&&snap&&TAB==="ana"&&sb.ana==="risk",jr:has&&TAB==="ana"&&sb.ana==="jr",tr:has&&TAB==="ana"&&sb.ana==="tr",lab:has&&TAB==="ana"&&sb.ana==="lab",setup:!has||(TAB==="set"&&sb.set==="key"),stg:has&&TAB==="set"&&sb.set==="key",hal:has&&TAB==="set"&&sb.set==="hal",hload:ld};
   for(var k in secs)$(k).hidden=!secs[k];
   if(secs.setup)ipLoad(false);
-  if(secs.lab){["tf","n","k","c"].forEach(function(k){var e=$("lab_"+k);if(e)e.value=String(LABC[k])});["tf","n","k","p","c"].forEach(function(k){var e=$("ev_"+k);if(e)e.value=String(EVC[k])});labRender();evRender()}
+  if(secs.lab){["tf","n","k","c"].forEach(function(k){var e=$("lab_"+k);if(e)e.value=String(LABC[k])});["tf","n","k","p","c"].forEach(function(k){var e=$("ev_"+k);if(e)e.value=String(EVC[k])});labRender();evRender();fwRender()}
   $("tabs").hidden=!has;$("rf").hidden=!has;
   var sn=$("subnav"),l2=SUBL[TAB];
   if(has&&l2){sn.hidden=false;sn.innerHTML=l2.map(function(x){return '<button data-sub="'+x[0]+'"'+(sb[TAB]===x[0]?' class="on"':'')+'>'+x[1]+'</button>'}).join("")}else sn.hidden=true;
@@ -781,7 +782,7 @@ function scnRun(force){
       r.g=c.st===1?3:(c.dead||c.last<=c.start||c.retr>0.886)?4:(c.retr<0.382?2:(pend.length?0:1))});
     rows=rows.filter(function(r){return r.g<4});
     rows.sort(function(a,b){return a.g-b.g||(a.g===0?Math.abs(a.c.retr-0.618)-Math.abs(b.c.retr-0.618):b.c.pct-a.c.pct)});
-    SCN.rows=rows;SCN.t=Date.now();
+    SCN.rows=rows;SCN.t=Date.now();try{fwLog(rows,kk)}catch(e){}
   },function(e){SCN.err=(e&&e.message)||"تعذّر الفحص"}).then(function(){SCN.busy=false;mkRender()});
 }
 function scnHtml(){
@@ -2558,6 +2559,87 @@ document.addEventListener("click",function(ev){
   var k=el.getAttribute("data-evx");EV.open[k]=!EV.open[k];evRender();
 });
 document.addEventListener("change",function(ev){var el=ev.target,m=el.id&&/^ev_(tf|n|k|p|c)$/.exec(el.id);if(!m)return;var k=m[1],v=el.value;EVC[k]=(k==="tf"||k==="p")?v:+v;LS.s("evc",JSON.stringify(EVC));evRender()});
+
+/* ---- forward log: plans recorded live before the outcome is known, resolved later from real candles ---- */
+var FW={on:LS.g("fwon")!=="0",rt:0,busy:false,msg:"",clr:false};
+var FWL=(function(){try{var j=JSON.parse(LS.g("fwl")||"[]");return Array.isArray(j)?j:[]}catch(e){return[]}})();
+function fwSave(){try{if(FWL.length>400)FWL=FWL.slice(-400);LS.s("fwl",JSON.stringify(FWL))}catch(e){}}
+function fwLog(rows,kk){
+  var add=0,now=Date.now();
+  rows.forEach(function(r){var c=r.c;if(!c||c.st!==2||r.g>2||!r.pend||!r.pend.length)return;
+    var k=r.s+"|"+c.pT;if(FWL.some(function(e){return e.k===k}))return;
+    FWL.push({k:k,s:r.s,t:now,pT:c.pT,start:c.start,peak:c.peak,stop:c.stop,K:kk,lv:r.pend.map(function(z){return {p:z.p,tp:z.t}}),st:"waiting"});add++});
+  if(add)fwSave();fwRender();fwResolve(false);
+}
+/* simulate one logged plan on candles that opened after it was logged. cost = per side fraction */
+function fwSim(e,ks,cost){
+  var fills=[],pend=e.lv.slice(),ended=false,j,N=ks.length;
+  for(j=0;j<N;j++){var k=ks[j],t=+k[0],o=+k[1],h=+k[2],l=+k[3],c=+k[4];if(t<e.t)continue;
+    if(!ended)pend=pend.filter(function(q){if(l<=q.p){fills.push({p:Math.min(q.p,o),T:q.tp,j:j,d:0});return false}return true});
+    fills.forEach(function(f){if(f.d)return;
+      if(l<=e.stop){f.d=1;f.res=2;f.x=(f.j===j&&o<=e.stop)?o:e.stop;f.xj=j}
+      else if(j>f.j&&h>=f.T){f.d=1;f.res=1;f.x=f.T;f.xj=j}
+      else if(j-f.j>=96){f.d=1;f.res=0;f.x=c;f.xj=j}});
+    if(!ended&&(h>e.peak||c<e.start||t>e.pT+3*864e5)){ended=true;pend=[]}
+  }
+  fills.forEach(function(f){if(f.d)f.net=(f.x*(1-cost))/(f.p*(1+cost))-1});
+  var open=fills.some(function(f){return !f.d}),st;
+  if(!fills.length)st=ended?"nofill":"waiting";else st=(open||!ended&&pend.length)?"open":"closed";
+  var n=e.lv.length,den=0,num=0;e.lv.forEach(function(q){den+=(q.p-e.stop)/q.p/n});
+  fills.forEach(function(f){if(f.d)num+=f.net/n});
+  var done=fills.filter(function(f){return f.d});
+  return {st:st,nf:fills.length,fills:fills.map(function(f){return {p:f.p,x:f.x,res:f.res,net:f.net,d:f.d}}),R:den>0&&!open?num/den:null,net:done.length&&!open?done.reduce(function(a,f){return a+f.net},0)/done.length:null};
+}
+function fwResolve(force){
+  if(FW.busy)return;var now=Date.now();
+  var todo=FWL.filter(function(e){return e.st==="waiting"||e.st==="open"});if(!todo.length){fwRender();return}
+  if(!force&&now-FW.rt<6e5)return;
+  FW.busy=true;FW.rt=now;fwRender();var i=0,cost=EVC.c/100;
+  var one=function(e){
+    return call("/api/v3/klines",{symbol:e.s+"USDT",interval:"15m",startTime:Math.max(0,e.t-9e5),limit:1000},false).then(function(ks){
+      if(!Array.isArray(ks)||!ks.length)return;var r=fwSim(e,ks,cost);e.st=r.st;e.r=r.nf?{fills:r.fills,R:r.R,net:r.net}:null;e.ck=now;
+      if(now-e.t>8*864e5&&(e.st==="waiting"||e.st==="open")){e.st=e.r?"closed":"nofill"}
+    },function(){})};
+  var w=function(){if(i>=todo.length)return Promise.resolve();var e=todo[i++];return one(e).then(w)};
+  Promise.all([w(),w(),w()]).then(function(){fwSave()}).then(function(){FW.busy=false;fwRender()});
+}
+function fwStat(){
+  var cl=FWL.filter(function(e){return e.st==="closed"&&e.r&&e.r.R!=null}),n=cl.length,sR=0,sN=0,hit=0,stp=0,nf=0;
+  cl.forEach(function(e){sR+=e.r.R;sN+=e.r.net;e.r.fills.forEach(function(f){nf++;if(f.res===1)hit++;if(f.res===2)stp++})});
+  return {logged:FWL.length,waiting:FWL.filter(function(e){return e.st==="waiting"}).length,open:FWL.filter(function(e){return e.st==="open"}).length,nofill:FWL.filter(function(e){return e.st==="nofill"}).length,closed:n,R:n?sR/n:0,net:n?sN/n*100:0,hit:nf?hit/nf:0,stp:nf?stp/nf:0};
+}
+function fwRender(){
+  var el=document.getElementById("fw_out");if(!el)return;
+  var S=fwStat(),ltr=function(x){return '<bdi dir="ltr">'+x+'</bdi>'},sgn=function(x,d,u){return ltr((x>=0?"+":"−")+Math.abs(x).toFixed(d)+u)};
+  var h='<div class="sub" style="margin:0 0 8px">يسجّل التطبيق كل عملة تدخل منطقة الشراء بخطتها (المستويات والوقف والأهداف) قبل أن يُعرف شيء عن النتيجة، ثم يحسبها لاحقًا من الشموع الفعلية. هذا هو الاختبار الوحيد الذي لا يتأثر بالتحيّز لأنه على بيانات لم تُرَ من قبل. تحتاج 30 حدثًا ممتلئًا ومغلقًا على الأقل لتقرأ نتيجته.</div>';
+  h+='<div class="sub" style="margin:0 0 6px"><b>الحالة:</b> مسجَّل '+N(S.logged)+' · ينتظر '+N(S.waiting)+' · مفتوح '+N(S.open)+' · لم يُنفَّذ '+N(S.nofill)+' · مغلق '+N(S.closed)+' من 30'+(S.closed?'<br>متوسط الحدث '+sgn(S.R,2,'R')+' · '+sgn(S.net,2,'$ لكل 100$')+' · وصل للهدف '+N(Math.round(S.hit*100))+'% · ضرب الوقف '+N(Math.round(S.stp*100))+'%':'')+'</div>';
+  h+='<label style="display:flex;gap:8px;align-items:center;margin:6px 0;font-weight:400"><input type="checkbox" id="fw_on" style="width:auto"'+(FW.on?" checked":"")+'> مسح تلقائي كل 30 دقيقة أثناء فتح التطبيق</label>';
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0"><button class="sm" id="fw_scan"'+(SCN.busy?" disabled":"")+'>'+(SCN.busy?"…":"مسح الآن")+'</button><button class="sm" id="fw_res"'+(FW.busy?" disabled":"")+'>'+(FW.busy?"…":"تحديث النتائج")+'</button><button class="sm" id="fw_cp">نسخ السجل</button><button class="sm" id="fw_clr">'+(FW.clr?"اضغط ثانية للتأكيد":"مسح السجل")+'</button><span class="sub" id="fw_msg" style="margin:0;align-self:center"></span></div>';
+  var tag={waiting:"ينتظر",open:"مفتوح",nofill:"لم يُنفَّذ",closed:"مغلق"};
+  if(FWL.length){h+='<table class="sgtb"><tr><th>العملة</th><th>سُجّلت</th><th>الحالة</th><th>النتيجة</th></tr>';
+    FWL.slice(-15).reverse().forEach(function(e){var d=new Date(e.t),rs=e.r&&e.r.R!=null?sgn(e.r.R,2,'R'):(e.r?'جارية':'—');
+      h+='<tr><td style="text-align:right"><b>'+esc(e.s)+'</b><div class="sub">'+N(e.lv.length)+' مستويات</div></td><td>'+N(("0"+d.getDate()).slice(-2)+"/"+("0"+(d.getMonth()+1)).slice(-2)+" "+hm(e.t))+'</td><td>'+tag[e.st]+'</td><td>'+rs+'</td></tr>'});
+    h+='</table>'}
+  else h+='<div class="sub">لا سجلات بعد. شغّل «مسح الآن»، وكل عملة في تصحيح مناسب تُسجَّل تلقائيًا.</div>';
+  el.innerHTML=h;
+}
+function fwText(){
+  var S=fwStat(),L=["السجل الأمامي · "+(document.body.textContent.match(/النسخة \d+/)||[""])[0],"مسجَّل "+S.logged+" · ينتظر "+S.waiting+" · مفتوح "+S.open+" · لم يُنفَّذ "+S.nofill+" · مغلق "+S.closed,S.closed?"متوسط الحدث "+S.R.toFixed(2)+"R · "+S.net.toFixed(2)+"$ لكل 100$ · وصل للهدف "+Math.round(S.hit*100)+"% · ضرب الوقف "+Math.round(S.stp*100)+"%":"",""];
+  FWL.forEach(function(e){L.push([e.s,new Date(e.t).toISOString().slice(0,16).replace("T"," ")+"Z",e.st,"ارتفاع من "+e.start+" إلى "+e.peak,"وقف "+e.stop,"مستويات "+e.lv.map(function(q){return q.p.toPrecision(5)+"→"+q.tp.toPrecision(5)}).join(" , "),e.r&&e.r.R!=null?"R="+e.r.R.toFixed(2):""].join(" | "))});
+  return L.join("\n");
+}
+document.addEventListener("click",function(ev){
+  var t=ev.target,el=t.closest&&t.closest("#fw_scan,#fw_res,#fw_cp,#fw_clr");if(!el)return;
+  if(el.id==="fw_scan"){scnRun(true);fwRender();return}
+  if(el.id==="fw_res"){fwResolve(true);return}
+  if(el.id==="fw_cp"){var tx=fwText(),m=document.getElementById("fw_msg"),ok=function(){if(m){m.textContent="تم النسخ ✓";setTimeout(function(){var e=document.getElementById("fw_msg");if(e)e.textContent=""},3000)}},
+      fb=function(){try{var a=document.createElement("textarea");a.value=tx;a.setAttribute("readonly","");a.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(a);a.select();var r=document.execCommand("copy");document.body.removeChild(a);if(r)ok()}catch(e){}};
+    try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(tx).then(ok,fb);else fb()}catch(e){fb()}return}
+  if(el.id==="fw_clr"){if(!FW.clr){FW.clr=true;fwRender();setTimeout(function(){FW.clr=false;fwRender()},4000);return}FW.clr=false;FWL=[];fwSave();fwRender()}
+});
+document.addEventListener("change",function(ev){var el=ev.target;if(el&&el.id==="fw_on"){FW.on=!!el.checked;LS.s("fwon",FW.on?"1":"0")}});
+setInterval(function(){if(document.hidden||!FW.on||SCN.busy||!MK.d)return;if(Date.now()-(SCN.t||0)>18e5)scnRun(true);else fwResolve(false)},60000);
+setTimeout(function(){try{fwResolve(false)}catch(e){}},20000);
 /* per-coin events for the chart and the rule line */
 function evOk(st){return st&&st.k&&(st.tf==="5m"||st.tf==="15m"||st.tf==="30m")}
 function evChart(st){
