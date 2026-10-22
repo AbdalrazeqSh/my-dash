@@ -144,6 +144,7 @@ button.dng{background:transparent;color:var(--sellt);border:1.5px solid var(--se
 #ordp[data-tone=SELL] #orev,#lad[data-tone=SELL] #lprev{background:var(--sell);color:var(--onbs)}
 .brow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}.brow>button{width:100%}.brow .full{grid-column:1/-1}
 details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;color:var(--dim);font-size:.84rem;min-height:30px}details.more>summary::-webkit-details-marker{display:none}details.more>summary::after{content:" ‹ المزيد";color:var(--up);font-weight:600;white-space:nowrap}details.more[open]>summary::after{content:" ⌃ أقل"}details.more>div{margin-top:6px}
+.lb2{font-size:.8rem;color:var(--dim);margin:6px 0 2px}.rrc2{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:8px}.rrc2 .rrc,.rrc2 .rpx{margin:0}.rrc2 .rpx{margin-inline-start:auto}
 </style></head><body>
 <div class="top"><div class="tt"><b>حسابي</b><span class="age"><span id="age"></span> <span class="badge" id="perm" hidden></span></span></div><div><button id="rf" class="ico" hidden aria-label="تحديث" title="تحديث"><span id="rfi" style="display:inline-block">↻</span></button></div></div>
 <div id="err" class="err" hidden></div>
@@ -204,8 +205,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="g2"><div><label for="ov">القيمة (USDT)</label><input id="ov" inputmode="decimal"></div><div></div></div>
     <div class="c" id="orisk" style="margin-top:14px">
       <h3 class="plain">إدارة المخاطرة</h3>
-      <div class="rpx"><span class="chip" data-lvp="o">السعر الآن <b class="n" id="orpxv"></b></span></div>
-      <div id="orrc" class="rrc"></div>
+      <div class="lb2">العائد : المخاطرة</div><div class="rrc2"><div id="orrc" class="rrc"></div><div class="rpx"><span class="chip" data-lvp="o">السعر الآن <b class="n" id="orpxv"></b></span></div></div>
       <div class="g2 g3">
         <div><label for="ox" class="lbs"><b id="oxlb">وقف الخسارة</b><span class="shh" id="oxsh"></span><span id="oxp"></span><span class="exsp" id="oxxs"></span></label><div class="stw"><button type="button" data-rst="ox|-0.5" aria-label="أنقص">−</button><input id="ox" inputmode="decimal" data-ghost="1"><button type="button" data-rst="ox|0.5" aria-label="زِد">+</button></div><div class="exc" id="oxex"></div></div>
         <div class="lkw"><button type="button" class="lkb" data-lk="o" aria-pressed="true" aria-label="ربط الوقف بالهدف حسب نسبة العائد إلى المخاطرة"></button></div>
@@ -274,8 +274,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
       </div>
       <div id="lrisk" hidden>
         <h3 class="plain" style="margin-top:16px">إدارة المخاطرة</h3>
-        <div class="rpx"><span class="chip" data-lvp="l">السعر الآن <b class="n" id="lrpxv"></b></span></div>
-        <div id="lrrc" class="rrc"></div>
+        <div class="lb2">العائد : المخاطرة</div><div class="rrc2"><div id="lrrc" class="rrc"></div><div class="rpx"><span class="chip" data-lvp="l">السعر الآن <b class="n" id="lrpxv"></b></span></div></div>
         <div class="g2 g3">
           <div><label for="lx" class="lbs"><b id="lxlb">وقف الخسارة</b><span class="shh" id="lxsh"></span><span id="lxp"></span><span class="exsp" id="lxxs"></span></label><div class="stw"><button type="button" data-rst="lx|-0.5" aria-label="أنقص">−</button><input id="lx" inputmode="decimal" data-ghost="1"><button type="button" data-rst="lx|0.5" aria-label="زِد">+</button></div><div class="exc" id="lxex"></div></div>
           <div class="lkw"><button type="button" class="lkb" data-lk="l" aria-pressed="true" aria-label="ربط الوقف بالهدف حسب نسبة العائد إلى المخاطرة"></button></div>
@@ -342,7 +341,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 113</div>
+<div class="note" style="text-align:center" id="foot">النسخة 114</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1269,7 +1268,7 @@ function ladPreview(){
     var F={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed),oto:!!r[0].symbols[0].otoAllowed},last=+r[1].price;
     var w=[],sw=0,i;
     if(cus){cus.forEach(function(c){w.push(c.w);sw+=c.w})}else for(i=0;i<n;i++){var x=L.dist==="inc"?1+i*0.5:1;w.push(x);sw+=x}
-    var rows=[],errs=[],warns=[],sv=0,sq=0;
+    var rows=[],errs=[],warns=[],sv=0,sq=0,imm=[];
     for(i=0;i<n;i++){
       var p=cus?cus[i].p:n===1?p1:p1+(p2-p1)*i/(n-1),ps=flo(p,F.tick),q,qs;
       if(L.side==="BUY"){q=(tot*w[i]/sw)/+ps;qs=flo(q,F.step)}else{qs=flo(tot*w[i]/sw,F.step)}
@@ -1279,10 +1278,10 @@ function ladPreview(){
       var dev=(+ps/last-1)*100;
       if(L.side==="SELL"&&F.up&&+ps>last*F.up*0.97)errs.push("الأمر "+(i+1)+": السعر "+ps+" فوق الحد الذي تقبله بايننس لهذه العملة (حوالي "+px(last*F.up*0.97)+" حاليًا)");
       if(L.side==="BUY"&&F.dn&&+ps<last*F.dn*1.03)errs.push("الأمر "+(i+1)+": السعر "+ps+" تحت الحد الذي تقبله بايننس (حوالي "+px(last*F.dn*1.03)+" حاليًا)");
-      if(L.side==="BUY"&&+ps>last*1.001)warns.push("سعر الأمر "+(i+1)+" فوق السعر الحالي فسيُنفَّذ فورًا");
-      if(L.side==="SELL"&&+ps<last*0.999)warns.push("سعر الأمر "+(i+1)+" تحت السعر الحالي فسيُنفَّذ فورًا");
+      if((L.side==="BUY"&&+ps>last*1.001)||(L.side==="SELL"&&+ps<last*0.999))imm.push(i+1);
       rows.push({p:ps,q:qs,v:val,d:dev});sv+=val;sq+=+qs;
     }
+    if(imm.length){var allI=imm.length===rows.length;warns.push((allI?"كل الأوامر":(imm.length===1?"الأمر "+imm[0]:"الأوامر "+imm.join("، ")))+(L.side==="BUY"?" فوق السعر الحالي":" تحت السعر الحالي")+" فستُنفَّذ فورًا")}
     if(L.side==="BUY"&&snap&&sv>freeUsdt())errs.push("المجموع "+usd(sv,0)+" أكبر من سيولتك المتاحة ("+usd(freeUsdt(),0)+")");
     if(L.side==="SELL"){var h=snap&&snap.assets.filter(function(a){return a.sym===sy})[0];if(!h||sq>freeQ(h)+1e-9)errs.push("الكمية أكبر من المتاح للبيع ("+qt(freeQ(h))+(lockQ(h)>0?"، المحجوز في أوامر أخرى "+qt(lockQ(h)):"")+")")}
     var pe=null,xg=null;L.pe=null;

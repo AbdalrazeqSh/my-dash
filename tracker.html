@@ -162,7 +162,7 @@ button{color:var(--onacc);min-height:44px;border-radius:12px}
 button.ghost{color:var(--fg-dim)}
 form.entry button{flex:1 1 100%}
 .field input{min-height:44px;border-radius:12px}
-#historyTable{min-width:470px}#historyTable th{white-space:nowrap;padding:9px 8px;font-size:.76rem}#historyTable td{padding:9px 8px;white-space:nowrap;font-size:.84rem}
+#historyTable{min-width:0}#historyTable th{padding:8px 3px;font-size:.7rem;line-height:1.25;vertical-align:bottom}#historyTable td{padding:9px 2px;white-space:nowrap;font-size:.76rem}#historyTable th{padding-inline:2px}.road-legend{direction:ltr}.trend-row{flex-wrap:wrap;gap:4px 8px}.pill{white-space:normal}
 .scrollbox{max-height:340px}
 .settings-toggle{color:var(--fg-dim);min-height:44px;color:var(--fg-dim)}
 .del-btn{min-width:36px;min-height:36px}
@@ -531,7 +531,7 @@ form.entry button{flex:1 1 100%}
       var avg = window7.reduce(function(s,r){return s+r.dailyPct;},0)/window7.length;
       var diff = latest.dailyPct - avg;
       var cls = diff>0?"up":(diff<0?"down":"flat");
-      avgEl.innerHTML = '<span class="pill '+cls+'">متوسط7أ: '+fmtPct(avg)+' ('+(diff>0?"+":"")+diff.toFixed(2)+'ن)</span>';
+      avgEl.innerHTML = '<span class="pill '+cls+'">'+(diff>0?"أعلى":diff<0?"أقل":"مطابق")+(diff!==0?' بـ <span class="num">'+Math.abs(diff).toFixed(2)+'</span> نقطة':'')+' · المتوسط <span class="num">'+fmtPct(avg)+'</span></span>';
     } else {
       avgEl.innerHTML = '<span class="pill flat">لا يوجد تاريخ كافٍ بعد</span>';
     }
