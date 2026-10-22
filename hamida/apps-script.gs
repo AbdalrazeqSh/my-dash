@@ -54,6 +54,52 @@ function doPost(e) {
     ]]);
 
     result.ok = true;
+    result.row = newRow;
+    return respond(result);
+  } catch (err) {
+    result.error = String(err);
+    return respond(result);
+  }
+}
+
+// يُستخدم لسحب كل الحركات المسجّلة في الشيت، ليستطيع أي جهاز (حاسوب أو جوال) عرض نفس
+// البيانات الموحّدة، لا فقط الجهاز اللي أضافها. البيانات تبدأ من الصف 5 (بعد صفوف الترويسة).
+function doGet(e) {
+  var result = { ok: false };
+  try {
+    var secret = e.parameter.secret;
+    if (!secret || secret !== SECRET) {
+      result.error = 'unauthorized';
+      return respond(result);
+    }
+
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet) {
+      result.error = 'sheet_not_found';
+      return respond(result);
+    }
+
+    var lastRow = sheet.getLastRow();
+    var entries = [];
+    if (lastRow >= 5) {
+      var data = sheet.getRange(5, 2, lastRow - 4, 4).getValues(); // B:E من الصف 5
+      for (var i = 0; i < data.length; i++) {
+        var row = data[i];
+        var inAmt = row[0], outAmt = row[1], desc = row[2], date = row[3];
+        if (!inAmt && !outAmt && !desc) continue; // صف فاضي
+        entries.push({
+          row: 5 + i,
+          type: inAmt ? 'in' : 'out',
+          amount: Number(inAmt || outAmt || 0),
+          desc: String(desc || ''),
+          date: String(date || '')
+        });
+      }
+    }
+
+    result.ok = true;
+    result.entries = entries;
     return respond(result);
   } catch (err) {
     result.error = String(err);

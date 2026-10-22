@@ -172,11 +172,13 @@ body{ background:var(--bg); color:var(--fg); margin:0; font-family:var(--font-bo
   var CACHE_KEY = 'hamida_entries_v1';
   var QUEUE_KEY = 'hamida_pending_queue_v1';
   var SYNC_KEY  = 'hamida_last_sync_v1';
+  var PULL_INTERVAL_MS = 5 * 60 * 1000; // سحب دوري من الشيت كل 5 دقائق أثناء فتح الصفحة
 
-  var allEntries   = []; // كل الحركات المحفوظة محليًا: [{id,type,amount,desc,date,cancelled,createdAt,syncedToSheet}]
+  var allEntries   = []; // كل الحركات المحفوظة محليًا: [{id,type,amount,desc,date,cancelled,createdAt,syncedToSheet,sheetRow}]
   var pendingQueue = []; // معرفات حركات لم تُرسَل للشيت بعد: [id,...]
   var lastSyncAt   = null;
   var syncing      = false;
+  var pulling      = false;
 
   function safeGet(key){
     try{ var v = localStorage.getItem(key); return v ? JSON.parse(v) : null; }catch(e){ return null; }
@@ -303,6 +305,7 @@ body{ background:var(--bg); color:var(--fg); margin:0; font-family:var(--font-bo
           var data = await res.json().catch(function(){ return {}; });
           if(data && data.ok === false) throw new Error(data.error || 'rejected');
           entry.syncedToSheet = true;
+          if(data && data.row) entry.sheetRow = data.row; // يمنع ظهورها كتكرار لاحقًا عند السحب من الشيت
           pendingQueue.shift();
           persist();
         }catch(err){
@@ -314,6 +317,52 @@ body{ background:var(--bg); color:var(--fg); margin:0; font-family:var(--font-bo
       renderAll();
     } finally {
       syncing = false;
+    }
+  }
+
+  // يسحب كل حركات الشيت (المضافة من أي جهاز، بما فيه هذا الجهاز نفسه)، ويدمجها مع
+  // ما هو محفوظ محليًا، فيعرض كل الأجهزة نفس البيانات الموحّدة بعد كل سحب
+  async function pullFromSheet(){
+    if(pulling || !APPS_SCRIPT_URL || !navigator.onLine) return;
+    pulling = true;
+    try{
+      var url = APPS_SCRIPT_URL + (APPS_SCRIPT_URL.indexOf('?')===-1 ? '?' : '&') + 'secret=' + encodeURIComponent(SYNC_SECRET);
+      var res = await fetch(url, { method: 'GET' });
+      if(!res.ok) return;
+      var data = await res.json().catch(function(){ return {}; });
+      if(!data || data.ok === false || !Array.isArray(data.entries)) return;
+
+      var knownRows = {};
+      allEntries.forEach(function(e){ if(e.sheetRow) knownRows[e.sheetRow] = e; });
+
+      var changed = false;
+      data.entries.forEach(function(re){
+        if(knownRows[re.row]) return; // موجودة محليًا بالفعل (أُرسلت من هذا الجهاز أو سُحبت سابقًا)
+        allEntries.push({
+          id: 'sheetRow_' + re.row,
+          type: re.type === 'in' ? 'in' : 'out',
+          amount: Number(re.amount) || 0,
+          desc: re.desc || '',
+          date: re.date || '',
+          cancelled: false,
+          createdAt: re.row, // ترتيب تقريبي يطابق ترتيب الصفوف في الشيت
+          syncedToSheet: true,
+          sheetRow: re.row
+        });
+        changed = true;
+      });
+
+      if(changed){
+        persist();
+        renderAll();
+      }
+      lastSyncAt = Date.now();
+      safeSet(SYNC_KEY, lastSyncAt);
+      renderSyncLabel();
+    } catch(err){
+      // فشل الشبكة أو غيره: نتجاهل بصمت، ستُعاد المحاولة بالجولة القادمة
+    } finally {
+      pulling = false;
     }
   }
 
@@ -469,7 +518,7 @@ body{ background:var(--bg); color:var(--fg); margin:0; font-family:var(--font-bo
 
   document.getElementById('printBtn').addEventListener('click', openPrintStatement);
 
-  window.addEventListener('online', function(){ trySync(); });
+  window.addEventListener('online', function(){ trySync().then(pullFromSheet); });
 
   function init(){
     setType('out');
@@ -480,7 +529,10 @@ body{ background:var(--bg); color:var(--fg); margin:0; font-family:var(--font-bo
     lastSyncAt   = safeGet(SYNC_KEY) || null;
     renderAll();
 
-    if(APPS_SCRIPT_URL) trySync();
+    if(APPS_SCRIPT_URL){
+      trySync().then(pullFromSheet);
+      setInterval(function(){ trySync().then(pullFromSheet); }, PULL_INTERVAL_MS);
+    }
   }
   init();
 
