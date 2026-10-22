@@ -327,7 +327,7 @@ h3.plain{margin-bottom:6px}
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 107</div>
+<div class="note" style="text-align:center" id="foot">النسخة 108</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -2470,6 +2470,7 @@ function evRender(){
   var R=EV.res;
   if(R&&!EV.busy){
     var ltr=function(x){return '<bdi dir="ltr">'+x+'</bdi>'},d$=function(x){return ltr(N((x>=0?"+":"−")+"$"+Math.abs(x*100).toFixed(2)))},pcn=function(x){return N(Math.round(x*100))+"%"};
+    h+='<div data-nocopy="1" style="display:flex;justify-content:flex-end;align-items:center;gap:8px;margin:4px 0"><span class="sub" id="ev_cpm" style="margin:0"></span><button class="sm" id="ev_cp">نسخ النتائج</button></div>';
     h+='<div class="sub" style="margin:6px 0">وجدت '+N(R.events)+' حدث تصحيح بعد ارتفاع كبير في '+N(R.used)+' عملة · '+N(R.cfg.tf)+' · نحو '+N(Math.round(R.days))+' يومًا'+(R.skipped?' · تخطّيت '+N(R.skipped):'')+(R.nofill?' · '+N(R.nofill)+' منها لم يصل السعر لأي أمر متدرج':'')+'.<br><b>الارتداد المتوقع:</b> الوسيط الذي قسته من أول العملات: يرتد السعر بعد الدخول نحو '+N(Math.round(R.kk*100))+'% من مسافة الهبوط عن القمة. فالهدف (نصف المتوقع) = '+N(Math.round(R.kk*50))+'% من المسافة بين سعر الدخول والقمة.<br>الدخول العشوائي داخل التصحيح (المقياس المرجعي): وصل للهدف في '+pcn(R.bs[0].hit)+' من الأحداث، ومتوسط الصفقة '+d$(R.bs[0].net)+'.</div>';
     if(R.events<50)h+='<div class="warn">أقل من 50 حدثًا: العيّنة صغيرة، لا تحكم بها. زد العملات أو العمق.</div>';
     var rows=R.V.map(function(o){var m=o.n?o.m[0]/o.n:0,dm=o.dn?o.ds/o.dn:0,sd=o.dn>1?Math.sqrt(Math.max(0,(o.ds2-o.dn*dm*dm)/(o.dn-1))):0,t=sd>0?dm/(sd/Math.sqrt(o.dn)):0,dl=o.dln?o.dl/o.dln:0,vd;
@@ -2534,8 +2535,25 @@ function evRender(){
   }
   e.innerHTML=h;
 }
+function evText(){
+  var root=document.getElementById("ev_out"),L=[],m=(document.body.textContent||"").match(/النسخة \d+/),R=EV.res;
+  L.push("نتائج دراسة التصحيح"+(m?" · "+m[0]:"")+(R&&R.t?" · "+new Date(R.t).toLocaleString("en-GB"):""));
+  var clean=function(x){return (x||"").replace(/\s+/g," ").trim()},tx=function(el){var d=document.createElement("div");d.innerHTML=el.innerHTML.replace(/<\/(div|p|small)>|<br\s*\/?>/gi," ");return clean(d.textContent)};
+  Array.prototype.forEach.call(root.children,function(c){
+    if(c.getAttribute&&c.getAttribute("data-nocopy"))return;
+    if(c.tagName==="TABLE"){Array.prototype.forEach.call(c.rows,function(r){var cells=Array.prototype.map.call(r.cells,function(x){return tx(x)}).filter(function(x){return x});if(cells.length)L.push(cells.join(" | "))});L.push("")}
+    else{var t=tx(c);if(t){L.push("");L.push(t)}}
+  });
+  return L.join("\n").replace(/\n{3,}/g,"\n\n").trim();
+}
+function evCopy(){
+  var t=evText(),m=document.getElementById("ev_cpm"),ok=function(){if(m){m.textContent="تم النسخ ✓";setTimeout(function(){var e=document.getElementById("ev_cpm");if(e)e.textContent=""},3000)}},
+    fb=function(){try{var a=document.createElement("textarea");a.value=t;a.setAttribute("readonly","");a.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(a);a.select();var r=document.execCommand("copy");document.body.removeChild(a);if(r)ok();else if(m)m.textContent="تعذّر النسخ"}catch(e){if(m)m.textContent="تعذّر النسخ"}};
+  try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,fb);else fb()}catch(e){fb()}
+}
 document.addEventListener("click",function(ev){
-  var t=ev.target,el=t.closest&&t.closest("#ev_go,[data-evx]");if(!el)return;
+  var t=ev.target,el=t.closest&&t.closest("#ev_go,[data-evx],#ev_cp");if(!el)return;
+  if(el.id==="ev_cp")return evCopy();
   if(el.id==="ev_go"){if(EV.busy){EV.stop=true;EV.msg="جارٍ الإيقاف…";return evRender()}return evRun()}
   var k=el.getAttribute("data-evx");EV.open[k]=!EV.open[k];evRender();
 });
