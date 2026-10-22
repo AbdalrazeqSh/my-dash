@@ -535,6 +535,11 @@ body{ background:var(--bg); color:var(--fg); margin:0; font-family:var(--font-bo
   document.getElementById('printBtn').addEventListener('click', openPrintStatement);
 
   window.addEventListener('online', function(){ trySync().then(pullFromSheet); });
+  // طبقة حماية إضافية: أي رجوع للتطبيق (فتح الجوال، تبديل تطبيقات) يحاول يزامن أيضًا،
+  // تحسبًا لأي حالة ما يُطلق فيها حدث "online" بشكل موثوق على بعض الأجهزة
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible') trySync().then(pullFromSheet);
+  });
 
   function init(){
     setType('out');
