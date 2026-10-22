@@ -108,9 +108,25 @@ body{ background:var(--bg); color:var(--fg); margin:0; font-family:var(--font-bo
 .statusMsg.error{ background:var(--bad-soft); color:var(--bad); }
 .statusMsg.info{ background:var(--surface-2); color:var(--fg-muted); }
 .statusMsg[hidden]{ display:none; }
+
+.lockOverlay{ position:fixed; inset:0; background:var(--bg); z-index:999; display:flex; align-items:center; justify-content:center; padding:20px; }
+.lockBox{ width:100%; max-width:320px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:30px 24px; display:flex; flex-direction:column; gap:14px; text-align:center; }
+.lockTitle{ font-family:var(--font-display); font-weight:800; font-size:1.15rem; }
+.lockBox input{ width:100%; font-family:var(--font-body); font-size:1.1rem; text-align:center; color:var(--fg); background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:13px 12px; letter-spacing:2px; }
+.lockBox input:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+.lockMsg{ color:var(--bad); font-size:.82rem; }
+.lockMsg[hidden]{ display:none; }
 </style>
 </head>
 <body>
+<div class="lockOverlay" id="lockOverlay" hidden>
+  <div class="lockBox">
+    <div class="lockTitle">🔒 الرصيد - حميدا</div>
+    <input type="password" id="lockInput" placeholder="كلمة السر" inputmode="numeric" autocomplete="off">
+    <button class="btn primary" id="lockBtn" type="button">دخول</button>
+    <div class="lockMsg" id="lockMsg" hidden>كلمة السر غير صحيحة</div>
+  </div>
+</div>
 <div class="wrap">
   <div class="title">الرصيد - حميدا</div>
 
@@ -535,6 +551,34 @@ body{ background:var(--bg); color:var(--fg); margin:0; font-family:var(--font-bo
     }
   }
   init();
+
+  // شاشة دخول بسيطة بكلمة سر: تمنع أي حدا غير حميدا من فتح السجل لو وصل للرابط أو الجهاز.
+  // تعمل محليًا بالكامل (بدون نت)، وتتذكر هذا الجهاز بعد أول دخول صحيح فلا تُطلب كل مرة.
+  var LOCK_KEY = 'hamida_unlocked_v1';
+  function tryUnlock(){
+    var val = document.getElementById('lockInput').value.trim();
+    if(SYNC_SECRET && val === SYNC_SECRET){
+      try{ localStorage.setItem(LOCK_KEY, '1'); }catch(e){}
+      document.getElementById('lockOverlay').hidden = true;
+    } else {
+      document.getElementById('lockMsg').hidden = false;
+      document.getElementById('lockInput').value = '';
+      document.getElementById('lockInput').focus();
+    }
+  }
+  document.getElementById('lockBtn').addEventListener('click', tryUnlock);
+  document.getElementById('lockInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') tryUnlock();
+  });
+  (function checkLock(){
+    if(!SYNC_SECRET) return; // ما في كلمة سر معرّفة بعد: التطبيق يفتح مباشرة
+    var alreadyUnlocked = false;
+    try{ alreadyUnlocked = localStorage.getItem(LOCK_KEY) === '1'; }catch(e){}
+    if(alreadyUnlocked) return; // فُتح على هذا الجهاز من قبل: لا نطلب كلمة السر مجددًا
+    var overlay = document.getElementById('lockOverlay');
+    overlay.hidden = false;
+    document.getElementById('lockInput').focus();
+  })();
 
   // تسجيل Service Worker حقيقي (يعمل هنا لأن الصفحة مستضافة خارج بيئة Claude):
   // يخزّن هيكل الصفحة بالكامل، فيفتح التطبيق ويعمل حتى بدون أي اتصال بالإنترنت من الأساس.
