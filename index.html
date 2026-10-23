@@ -349,7 +349,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 119</div>
+<div class="note" style="text-align:center" id="foot">النسخة 120</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -3265,6 +3265,25 @@ function chEvHit(st,w,cx,cy){
     pts.forEach(function(q){var dd=Math.hypot(q[0]-cx,q[1]-cy);if(dd<bd){bd=dd;best=d}})});
   return best;
 }
+function chMvCheck(st,o,P){
+  var cx=st.ctx(),last=(cx&&cx.last)||(snap&&snap.px[o.symbol])||0,k=chSelKind(o),buy=o.side==="BUY",trig=isTrig(o),u=function(v){return px(v)};
+  if(!(P>0))return "سعر غير صالح";
+  if(k==="plain"){
+    if(trig&&!buy)return P<last?"":"سعر تفعيل الوقف يجب أن يكون تحت السعر الحالي ("+u(last)+")";
+    if(!trig&&!buy)return P>last?"":"سعر البيع تحت السعر الحالي ("+u(last)+"): سيُباع فورًا بسعر السوق";
+    if(!trig&&buy)return P<last?"":"سعر الشراء فوق السعر الحالي ("+u(last)+"): سيشتري فورًا";
+    return "";
+  }
+  var lg=snap.orders.filter(function(x){return x.lid===o.lid}),wk=lg.filter(function(z){return !z.ps&&z.side==="BUY"})[0]||null;
+  if(wk){
+    if(k==="lstop")return P<wk.price?"":"الوقف يجب أن يكون تحت سعر الدخول ("+u(wk.price)+")";
+    if(k==="ltgt")return P>wk.price?"":"الهدف يجب أن يكون فوق سعر الدخول ("+u(wk.price)+")";
+    return "";
+  }
+  if(k==="lstop"||k==="ostop")return P<last?"":"الوقف يجب أن يكون تحت السعر الحالي ("+u(last)+")";
+  if(k==="ltgt"||k==="otgt")return P>last?"":"الهدف يجب أن يكون فوق السعر الحالي ("+u(last)+")";
+  return "";
+}
 function chSelInfo(st){
   var so=chSelGet(st);if(st.sel&&!so)st.sel=null;
   if(!so){
@@ -3272,9 +3291,10 @@ function chSelInfo(st){
     return null;
   }
   var k=chSelKind(so),lab=chSelLab(so,k),cur=opx(so),c=st.cr,bt='style="pointer-events:auto;flex:1;min-height:34px"';
-  if(!c||!c.keep)return '<div style="display:flex;gap:8px;align-items:center;pointer-events:auto"><div class="sub" style="flex:1;margin:0">تعديل '+lab+' (الآن '+px(cur)+'): اسحب الخط أو المس السعر الجديد</div><button class="sm" data-chmc="'+st.id+'" style="flex:0 0 auto;pointer-events:auto">إلغاء</button></div>';
-  var d=(c.p/cur-1)*100;
-  return '<div style="display:flex;gap:8px"><button class="sm go" data-chmv="'+st.id+'|'+so.id+'" style="flex:1;pointer-events:auto">'+(c.drag?'ثبّت ':'انقل ')+lab+' · '+px(c.p)+' <bdi dir="ltr">('+(d>=0?"+":"−")+Math.abs(d).toFixed(1)+'%)</bdi></button><button class="sm" data-chmc="'+st.id+'" style="flex:0 0 auto;pointer-events:auto">إلغاء</button></div>';
+  if(!c||!c.keep)return (st.msg?'<div class="err" style="margin:0 0 6px">'+st.msg+'</div>':'')+'<div style="display:flex;gap:8px;align-items:center;pointer-events:auto"><div class="sub" style="flex:1;margin:0">تعديل '+lab+' (الآن '+px(cur)+'): اسحب الخط أو المس السعر الجديد</div><button class="sm" data-chmc="'+st.id+'" style="flex:0 0 auto;pointer-events:auto">إلغاء</button></div>';
+  var d=(c.p/cur-1)*100,er=chMvCheck(st,so,c.p);
+  if(er)return '<div class="err" style="margin:0 0 6px;pointer-events:auto">'+er+'</div><div style="display:flex;gap:8px"><button class="sm" disabled style="flex:1;opacity:.55">'+(c.drag?'ثبّت ':'انقل ')+lab+' · '+px(c.p)+'</button><button class="sm" data-chmc="'+st.id+'" style="flex:0 0 auto;pointer-events:auto">إلغاء</button></div>';
+  return (st.msg?'<div class="err" style="margin:0 0 6px;pointer-events:auto">'+st.msg+'</div>':'')+'<div style="display:flex;gap:8px"><button class="sm go" data-chmv="'+st.id+'|'+so.id+'" style="flex:1;pointer-events:auto">'+(c.drag?'ثبّت ':'انقل ')+lab+' · '+px(c.p)+' <bdi dir="ltr">('+(d>=0?"+":"−")+Math.abs(d).toFixed(1)+'%)</bdi></button><button class="sm" data-chmc="'+st.id+'" style="flex:0 0 auto;pointer-events:auto">إلغاء</button></div>';
 }
 function chMvDone(st,ok,msg){
   MKB=false;st.sel=null;st.cr=null;st.msg=(ok?'<b class="up">✓</b> ':'<b class="down">✗</b> ')+msg;chDraw(st);
