@@ -653,8 +653,10 @@ form.entry button{flex:1 1 100%}
     if (rows) balRows = rows; rows = balRows;
     var svg = document.getElementById("balanceSvg"), wrap = document.getElementById("balWrap");
     if (!svg || !wrap) return;
+    if (rows.length < 2){ svg.innerHTML = ""; wrap.style.display = "none"; return; }
+    wrap.style.display = "";
     var w = wrap.clientWidth, h = wrap.clientHeight;
-    if (rows.length < 2 || w < 10){ svg.innerHTML = ""; return; }
+    if (w < 10){ svg.innerHTML = ""; return; }
     svg.setAttribute("viewBox","0 0 "+w+" "+h);
     var pT=10,pB=6,pX=4;
     var vals = rows.map(function(r){return r.balance;});
