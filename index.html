@@ -150,6 +150,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
 .scm{display:inline-flex;gap:3px;vertical-align:middle;margin-inline-start:6px}.scm i{display:block;width:7px;height:14px;border-radius:2px;background:var(--bd);opacity:.9}.scm.up i.f{background:var(--up)}.scm.wn i.f{background:var(--gold)}.scm.dn i.f{background:var(--down)}
 .chbar{margin:6px 0 2px}.chbar:empty{display:none}.chbar button.sm{min-height:40px!important;padding:6px 12px;font-size:.84rem;line-height:1.25;white-space:nowrap}.chbar .sub{font-size:.8rem;line-height:1.35}
 .chsel{min-height:40px}.chc .chsel{min-height:34px}
+#sheetpn,#sheetin{overscroll-behavior:contain}
 </style></head><body>
 <div id="fatal" hidden style="position:fixed;inset-inline:12px;top:12px;z-index:99;background:#B03A48;color:#fff;border-radius:12px;padding:12px 14px;font-size:.86rem;direction:ltr;text-align:left;word-break:break-word"></div>
 <script>window.addEventListener("error",function(e){if(window.__ok)return;var f=document.getElementById("fatal");if(f){f.hidden=false;f.textContent="Startup error: "+(e.message||"")+" @ line "+(e.lineno||"?")}})</script>
@@ -348,7 +349,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 118</div>
+<div class="note" style="text-align:center" id="foot">النسخة 119</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1954,6 +1955,7 @@ function chHtml(st){
 }
 function chDraw(st){
   var g=function(x){return document.getElementById(st.id+x)};if(!g("_ms"))return;
+  var cs_=g("_s");if(cs_)cs_.style.touchAction=(st.sel||st.drag)?"none":"";
   g("_ms").innerHTML=chSvg(st);g("_p").innerHTML=chPane(st);var ty=g("_ty");if(ty)ty.textContent=CHTY==="c"?"شموع":"خط";var ps=document.querySelector('[data-chpn="'+st.id+'"]');if(ps&&ps.value!==CHPN)ps.value=CHPN;
   g("_i").innerHTML=chInfo(st);g("_cap").innerHTML=chCap(st);sgDraw(st);var mg=g("_mg");if(mg)mg.classList.toggle("on",MAG);var ec=g("_ev");if(ec){ec.classList.toggle("on",EVM);ec.style.display=evOk(st)?"":"none"}
   g("_rf").textContent=st.busy?"…":"↻";g("_t").innerHTML=st.t?'آخر تحديث '+N(hm(st.t)):'';
