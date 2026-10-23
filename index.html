@@ -350,7 +350,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 122</div>
+<div class="note" style="text-align:center" id="foot">النسخة 123</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -2996,6 +2996,8 @@ function chSvg(st){
   var ov=[];if(cx.avg)ov.push(cx.avg);cx.orders.forEach(function(r){ov.push(opx(r))});if(cx.zone){ov.push(cx.zone.lo);ov.push(cx.zone.hi)}if(cx.draft)ov.push(cx.draft);if(cx.rk&&cx.draft){ov.push(cx.rk.x);if(cx.rk.t)ov.push(cx.rk.t)}if(cx.levels)cx.levels.forEach(function(p){ov.push(p)});
   ov.forEach(function(p){if(p>=cmn-rg*1.2&&p<=cmx+rg*1.2)P.push(p)});
   var mn=Math.min.apply(null,P),mx=Math.max.apply(null,P),pad=(mx-mn||mx*0.01)*0.08,lo=mn-pad,hi=mx+pad,yb=H-bot;
+  if(st.ys&&st.ys!==1){var mid=(lo+hi)/2,hf=(hi-lo)/2/st.ys;lo=mid-hf;hi=mid+hf}
+  if(st.frz){lo=st.frz.lo;hi=st.frz.hi}
   st.rg={lo:lo,hi:hi,top:top,bot:bot,x0:x0,pw:pw,W:W,H:H};
   function y(p){return top+(1-(p-lo)/(hi-lo))*(yb-top)}
   function x(i){return x0+pw*(i-v0)/sp}
@@ -3142,9 +3144,10 @@ var MAG=LS.g("mag")!=="0";
 function chOf(el){var w=el.closest&&el.closest("[data-chs]");return w?{w:w,st:CHS[w.getAttribute("data-chs")]}:null}
 function chFrac(st,w,cx){var sv=w.querySelector&&w.querySelector("svg"),r=(sv||w).getBoundingClientRect(),g=st.rg;if(!g||!r.width)return null;var vx=(cx-r.left)/r.width*g.W;return {f:(vx-g.x0)/g.pw,vx:vx,r:r}}
 function chZoom(st,fac,frac){var sp=st.v1-st.v0,ns=sp*fac,c=st.v0+sp*frac,e=st.v1>=st.k.length-1.01,v1=st.v1;st.v0=c-ns*frac;st.v1=st.v0+ns;if(e){st.v1=v1;st.v0=v1-ns}chClamp(st);chEdge(st)}
+function chInRuler(st,w,cx){var sv=w.querySelector&&w.querySelector("svg"),r=(sv||w).getBoundingClientRect();return r.width>0&&(cx-r.left)/r.width>0.84}
 function chDrawRaf(st){if(st.raf)return;st.raf=requestAnimationFrame(function(){st.raf=0;chDraw(st)})}
 function chEdge(st){var key=st.sym+"|"+st.tf;if(st.k&&st.v0<25&&!st.xbusy&&!(KCO[key]&&KCO[key].done))chExt(st,st.k.length+1000)}
-function chReset(st){var n=st.k.length;st.v1=n-1+7;st.v0=Math.max(2-99,n-1-99);chClamp(st);st.cr=null;chDraw(st)}
+function chReset(st){var n=st.k.length;st.ys=1;st.frz=null;st.v1=n-1+7;st.v0=Math.max(2-99,n-1-99);chClamp(st);st.cr=null;chDraw(st)}
 function chGlide(st,p){
   var vs=p.vs;if(!vs||vs.length<2)return;var a=vs[0],b=vs[vs.length-1],dt=b.t-a.t;if(dt<=0||performance.now()-b.t>90)return;
   var v=(b.x-a.x)/dt;if(Math.abs(v)<0.25)return;var tok=st.glide={},last=performance.now();
@@ -3169,7 +3172,7 @@ function chDragPrice(st,w,cy,sel){
   var cand=[],i0=Math.max(3,Math.floor(st.v0)),i1=Math.min(k.length-4,Math.ceil(st.v1)),i,j;
   for(i=i0;i<=i1;i++){var hh=true,ll=true;for(j=i-3;j<=i+3;j++){if(j===i)continue;if(k[j][3]>k[i][3])hh=false;if(k[j][4]<k[i][4])ll=false}if(hh)cand.push(k[i][3]);if(ll)cand.push(k[i][4])}
   var cx=st.ctx();(cx.orders||[]).forEach(function(o){if(!sel||String(o.id)!==String(sel.id))cand.push(opx(o))});if(cx.avg)cand.push(cx.avg);if(cx.last)cand.push(cx.last);
-  var best=0,bd=9*per;cand.forEach(function(c){var d=Math.abs(c-pr);if(d<bd){bd=d;best=c}});
+  var best=0,bd=9*per;cand.forEach(function(c){if(sel&&chMvCheck(st,sel,c))return;var d=Math.abs(c-pr);if(d<bd){bd=d;best=c}});
   if(best){res.p=best;res.snap=1}return res;
 }
 document.addEventListener("pointerdown",function(ev){
@@ -3178,11 +3181,13 @@ document.addEventListener("pointerdown",function(ev){
   try{c.w.setPointerCapture(ev.pointerId)}catch(e){}
   var ids=Object.keys(CP).filter(function(i){return CP[i].st===c.st});
   if(ids.length>=2){var a=CP[ids[0]],b=CP[ids[1]];c.st.glide=null;c.st.pz={d:Math.max(8,Math.abs(a.x-b.x)),v0:c.st.v0,v1:c.st.v1,cx:(a.x+b.x)/2,e:c.st.v1>=c.st.k.length-1.01};c.st.pinched=true;ids.forEach(function(i){clearTimeout(CP[i].tm);CP[i].holding=false});if(c.st.cr&&!c.st.cr.keep){c.st.cr=null}return}
-  if(c.st.sel&&CAN){var so0=chSelGet(c.st);if(so0&&chNearLine(c.st,c.w,ev.clientY,so0,22)){p.drag=true;p.dy0=ev.clientY;p.ly=chPxY(c.st,c.w,opx(so0));return}}
+  if(c.st.sel&&CAN){var so0=chSelGet(c.st);if(so0&&chNearLine(c.st,c.w,ev.clientY,so0,22)){p.drag=true;p.dy0=ev.clientY;p.ly=chPxY(c.st,c.w,opx(so0));if(c.st.rg)c.st.frz={lo:c.st.rg.lo,hi:c.st.rg.hi};return}}
+  if(chInRuler(c.st,c.w,ev.clientX)){p.ruler=true;p.y0=ev.clientY;p.ys0=c.st.ys||1;return}
   p.tm=setTimeout(function(){if(CP[ev.pointerId]===p&&!p.moved&&!c.st.pinched){p.holding=true;try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}chCross(c.st,c.w,p.sx,p.sy,false)}},260);
 });
 document.addEventListener("pointermove",function(ev){
   var p=CP[ev.pointerId];if(!p)return;var st=p.st,ids=Object.keys(CP).filter(function(i){return CP[i].st===st});
+  if(p.ruler){if(Math.abs(ev.clientY-p.y0)>4)p.moved=true;if(p.moved){st.ys=Math.max(0.15,Math.min(15,p.ys0*Math.exp((p.y0-ev.clientY)/130)));st.cr=null;chDrawRaf(st)}return}
   if(p.drag){if(Math.abs(ev.clientY-p.dy0)>4||st.drag){var so1=chSelGet(st),dr=so1&&chDragPrice(st,p.w,(p.ly!=null?p.ly+(ev.clientY-p.dy0):ev.clientY),so1);if(dr){st.drag={p:dr.p,snap:dr.snap,y:ev.clientY};st.cr=null;chDrawRaf(st)}}return}
   if(p.holding){chCross(st,p.w,ev.clientX,ev.clientY,false);return}
   if(ids.length>=2&&st.pz){
@@ -3195,11 +3200,12 @@ document.addEventListener("pointermove",function(ev){
     p.x=ev.clientX;(p.vs=p.vs||[]).push({t:performance.now(),x:ev.clientX});if(p.vs.length>6)p.vs.shift();st.v0-=di;st.v1-=di;chClamp(st);chEdge(st);if(st.cr)st.cr=null;chDrawRaf(st);
   }
 });
-document.addEventListener("touchmove",function(ev){for(var i in CP)if(CP[i].holding||CP[i].drag){ev.preventDefault();return}},{passive:false});
+document.addEventListener("touchmove",function(ev){for(var i in CP)if(CP[i].holding||CP[i].drag||CP[i].ruler){ev.preventDefault();return}},{passive:false});
 function chEnd(ev){
   var p=CP[ev.pointerId];if(!p)return;clearTimeout(p.tm);delete CP[ev.pointerId];var st=p.st;
   var left=Object.keys(CP).filter(function(i){return CP[i].st===st}).length;
-  if(p.drag){if(st.drag){var dd=st.drag;st.drag=null;st.cr={i:st.k.length-1,p:dd.p,keep:true,x:p.sx,y:ev.clientY,drag:true};chDraw(st)}else if(ev.type==="pointerup"){chTap(st,p.w,p.sx,p.sy)}return}
+  if(p.ruler){if(!p.moved&&ev.type==="pointerup"){var nw2=Date.now();if(st.rlt&&nw2-st.rlt<320){st.rlt=0;st.ys=1;st.frz=null;chDraw(st)}else st.rlt=nw2}return}
+  if(p.drag){st.frz=null;if(st.drag){var dd=st.drag;st.drag=null;st.cr={i:st.k.length-1,p:dd.p,keep:true,x:p.sx,y:ev.clientY,drag:true};chDraw(st)}else if(ev.type==="pointerup"){chTap(st,p.w,p.sx,p.sy)}return}
   if(left===0){var pinched=st.pinched;st.pinched=false;st.pz=null;
     if(p.holding){if(st.cr&&!st.cr.keep){st.cr=null;chDraw(st)}}
     else if(ev.type==="pointerup"&&p.moved&&!pinched)chGlide(st,p)
@@ -3218,7 +3224,7 @@ function chTap(st,w,cx,cy){
 }
 document.addEventListener("wheel",function(ev){
   var c=chOf(ev.target);if(!c||!c.st||!c.st.k)return;var fr=chFrac(c.st,c.w,ev.clientX);if(!fr)return;
-  ev.preventDefault();chZoom(c.st,ev.deltaY>0?1.15:1/1.15,Math.max(0,Math.min(1,fr.f)));chDraw(c.st);
+  ev.preventDefault();if(chInRuler(c.st,c.w,ev.clientX)){c.st.ys=Math.max(0.15,Math.min(15,(c.st.ys||1)*(ev.deltaY>0?1/1.15:1.15)));return chDraw(c.st)}chZoom(c.st,ev.deltaY>0?1.15:1/1.15,Math.max(0,Math.min(1,fr.f)));chDraw(c.st);
 },{passive:false});
 document.addEventListener("change",function(ev){var pe=ev.target,pn=pe.getAttribute&&pe.getAttribute("data-chpn");if(pn){CHPN=pe.value;LS.s("chpn",CHPN);Object.keys(CHS).forEach(function(q){chDraw(CHS[q])});return}});
 document.addEventListener("click",function(ev){var te=ev.target.closest&&ev.target.closest("[data-chty]");if(!te)return;CHTY=CHTY==="c"?"l":"c";LS.s("chty",CHTY);Object.keys(CHS).forEach(function(q){chDraw(CHS[q])})});
