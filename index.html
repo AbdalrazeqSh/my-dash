@@ -314,7 +314,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
   </div>
   <div id="tr" hidden>
     <iframe id="trf" src="tracker.html" title="المتتبع"></iframe>
-    <div class="c closed" id="ctk"><h3 class="fold" data-f="ctk"><span>نسخ احتياطي للمتتبع</span><span class="chev">›</span></h3><div class="fb"><textarea id="tkjs"></textarea><div style="display:flex;gap:8px;margin-top:8px"><button id="tkexp">تصدير</button><button id="tkimp">استيراد (يستبدل الحالي)</button></div></div></div>
+    <div class="c closed" id="ctk"><h3 class="fold" data-f="ctk"><span>نسخ احتياطي للمتتبع</span><span class="chev">›</span></h3><div class="fb"><div class="sub" id="tkmsg" style="margin:0 0 8px">انقل بيانات المتتبع بين الأجهزة بضغطتين، بلا كتابة.</div><div style="display:flex;gap:8px"><button id="tkexp">نسخ البيانات</button><button id="tkimp">استيراد من النسخ</button></div><textarea id="tkjs" hidden placeholder="الصق النص هنا إن لم يسمح المتصفح بالقراءة التلقائية" style="margin-top:8px"></textarea><button id="tkimp2" hidden style="margin-top:8px;width:100%">استيراد النص أعلاه</button></div></div>
   </div>
   <div id="lab" hidden>
     <div class="c"><h3 class="plain">مختبر الاستراتيجيات</h3>
@@ -350,7 +350,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 128</div>
+<div class="note" style="text-align:center" id="foot">النسخة 129</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -866,11 +866,12 @@ var TKIMP=null;
 function tkHashImport(){
   var h=location.hash;if(h.indexOf("#trk=")!==0)return;
   try{var b=h.slice(5).replace(/-/g,"+").replace(/_/g,"/");var j=JSON.parse(decodeURIComponent(escape(atob(b))));
-    if(j&&typeof j==="object"&&(j.entries||j.cashflows)){TKIMP=j;
-      openSheet('<div class="sum"><b>استيراد بيانات المتتبع</b><br>'+N(Object.keys(j.entries||{}).length)+' رصيدًا و'+N(Object.keys(j.cashflows||{}).length)+' حركة رأس مال. سيستبدل بيانات المتتبع الحالية في هذا التطبيق.</div><div style="display:flex;gap:8px"><button class="go" id="tkok" style="flex:2">استيراد</button><button id="tclose" style="flex:1">إلغاء</button></div>')}
+    if(j&&typeof j==="object"&&(j.entries||j.cashflows)){tkOffer(j)}
   }catch(e){}
   try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
 }
+function tkOffer(j){TKIMP=j;
+      openSheet('<div class="sum"><b>استيراد بيانات المتتبع</b><br>'+N(Object.keys(j.entries||{}).length)+' رصيدًا و'+N(Object.keys(j.cashflows||{}).length)+' حركة رأس مال. سيستبدل بيانات المتتبع الحالية في هذا التطبيق.</div><div style="display:flex;gap:8px"><button class="go" id="tkok" style="flex:2">استيراد</button><button id="tclose" style="flex:1">إلغاء</button></div>')}
 var TKSKIP=false,TKASK=0;
 function snapUnpriced(){return snap?snap.assets.filter(function(a){return !STABLE[a.sym]&&!(a.price>0)}).map(function(a){return a.sym}):[]}
 function snapOk(m){
@@ -4409,11 +4410,15 @@ document.addEventListener("click",function(ev){
     render();return}
   if(t.id==="tkok"){if(TKIMP){LS.s("trk",JSON.stringify(TKIMP));TKIMP=null;try{$("trf").contentWindow.location.reload()}catch(e){}}closeSheet();render();return}
   if(t.id==="tksync"){tkSyncBtn();return}
-  if(t.id==="tkexp"){$("tkjs").value=LS.g("trk")||"{}";return}
-  if(t.id==="tkimp"){
-    if(!t.dataset.c){t.dataset.c="1";t.textContent="اضغط للتأكيد";setTimeout(function(){delete t.dataset.c;t.textContent="استيراد (يستبدل الحالي)"},4000);return}
-    try{var j=JSON.parse($("tkjs").value);if(!j||typeof j!=="object"||!(j.entries||j.cashflows||j.meta))throw 0;LS.s("trk",JSON.stringify(j));delete t.dataset.c;t.textContent="تم ✓";try{$("trf").contentWindow.location.reload()}catch(e){}render()}catch(e){t.textContent="نص غير صالح"}
-    return}
+  if(t.id==="tkexp"){var tx=LS.g("trk")||"{}",mg=$("tkmsg");
+    var okc=function(){mg.textContent="تم النسخ ✓ افتح التطبيق على الجهاز الآخر واضغط «استيراد من النسخ»"};
+    var fb=function(){$("tkjs").hidden=false;$("tkjs").value=tx;try{$("tkjs").select()}catch(e){}mg.textContent="تعذّر النسخ التلقائي. انسخ النص الظاهر يدويًا"};
+    try{navigator.clipboard.writeText(tx).then(okc,fb)}catch(e){fb()}return}
+  if(t.id==="tkimp"||t.id==="tkimp2"){var mg2=$("tkmsg");
+    var go=function(txt){try{var j=JSON.parse(txt);if(!j||typeof j!=="object"||!(j.entries||j.cashflows||j.meta))throw 0;mg2.textContent="";tkOffer(j)}catch(e){mg2.textContent="الحافظة لا تحتوي بيانات متتبع صالحة. اضغط «نسخ البيانات» على الجهاز الآخر أولاً"}};
+    if(t.id==="tkimp2"){go($("tkjs").value);return}
+    var man=function(){$("tkjs").hidden=false;$("tkimp2").hidden=false;mg2.textContent="لم يسمح المتصفح بقراءة الحافظة. الصق النص ثم اضغط استيراد"};
+    try{navigator.clipboard.readText().then(go,man)}catch(e){man()}return}
   if(t.id==="hexp"){$("hjs").value=JSON.stringify(HAL);return}
   if(t.id==="himp"){try{var j=JSON.parse($("hjs").value);if(j&&typeof j==="object"){Object.keys(j).forEach(function(k){if(j[k]&&HN[j[k].s])HAL[k]={s:j[k].s,n:String(j[k].n||"")}});halSave();renderHal();render();err("")}}catch(e){err("نص الاستيراد غير صالح")}return}
   if(t.id==="newbtn")return oOpen("","BUY");
