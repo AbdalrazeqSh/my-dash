@@ -350,7 +350,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 125</div>
+<div class="note" style="text-align:center" id="foot">النسخة 126</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1121,7 +1121,7 @@ function lLoad(force){
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false)]).then(function(r){
     if(L.cs!==sym)return;
     var f={};r[0].symbols[0].filters.forEach(function(x){f[x.filterType]=x});SST[sym]={s:r[0].symbols[0].status,t:Date.now()};
-    L.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5)};
+    L.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),alg:+((f.MAX_NUM_ALGO_ORDERS||{}).maxNumAlgoOrders||0)};
     L.last=+r[1].price;
     $("lpxl").innerHTML='السعر الحالي <span class="n">'+px(L.last)+'</span> · <span style="text-decoration:underline;cursor:pointer" data-lrf="1">تحديث</span>'+symFlagHtml(sym);
     if(force||L.auto||!(parseFloat($("lp1").value)>0))lFill();
@@ -1225,11 +1225,11 @@ function ladSync(){
 function ladLive(){
   var o=$("lsum"),sy=$("ls").value.trim().toUpperCase(),lv=ladLevels(),v=parseFloat($("lv").value),q=parseFloat($("lq").value);
   if(!lv||!(v>0)||!(q>0)){o.innerHTML='<div class="sub" style="margin:10px 0">أدخل المستويات والمبلغ أو الكمية لتظهر الحسابات.</div>';return}
-  var buy=L.side==="BUY",eq=equity(),avg=v/q,fee=0.001,hold=snap&&snap.assets.filter(function(a){return a.sym===sy})[0],h='<div class="sum">';
+  var x=parseFloat($("lx").value),buy=L.side==="BUY",eq=equity(),avg=v/q,fee=0.001,hold=snap&&snap.assets.filter(function(a){return a.sym===sy})[0],h='<div class="sum">';
   h+=oRow("قيمة الأوامر",usd(v)+" · "+(eq?(v/eq*100).toFixed(1):"-")+"% من الرصيد");
   h+=oRow("متوسط السعر",px(avg));
   if(buy){
-    var x=parseFloat($("lx").value),t=parseFloat($("lg").value);
+    var t=parseFloat($("lg").value);
     if(snap)h+=oRow("السيولة المتاحة بعد الشراء",usd(Math.max(0,freeUsdt()-v)),freeUsdt()-v<0?"down":"");
     var sh=eq?((hold?hold.val:0)+v)/eq*100:0;
     h+=oRow(esc(sy||"العملة")+" بعد الصفقة",sh.toFixed(0)+"% من محفظتك",sh>rcap()?"down":"");
@@ -1250,6 +1250,8 @@ function ladLive(){
   var mx=0,mn=1e18;lv.w.forEach(function(w,i){var vi=buy?v*w:q*w*lv.p[i];if(vi>mx)mx=vi;if(vi<mn)mn=vi});
   ck.push([mx<=capVal()?1:0,"كل أمر ضمن السقف ("+usd(capVal(),0)+") · الأكبر "+usd(mx,0)]);
   if(L.f)ck.push([mn>=L.f.minN?1:0,"أصغر أمر "+usd(mn)+(mn>=L.f.minN?"":" أقل من الحد الأدنى ("+L.f.minN+"$)")]);
+  if(buy&&snap&&L.f&&L.f.alg&&x>0){var used=snap.orders.filter(function(o){return o.symbol===sy+"USDT"&&isTrig(o)}).length,need=lv.p.length,left=L.f.alg-used;
+    ck.push([need<=left?1:0,"أوامر الوقف: تحتاج "+need+" · المتبقي "+Math.max(0,left)+" من "+L.f.alg+(used?" (مفتوح "+used+")":"")+(need>left?" — ألغِ أوامر وقف قديمة أو قلّل المستويات":"")])}
   if(L.last){var imm=lv.p.some(function(p){return buy?p>L.last*1.001:p<L.last*0.999});ck.push([imm?2:1,imm?"بعض المستويات تتجاوز السوق وستُنفَّذ فورًا":"كل المستويات خلف السوق"])}
   h+='<div style="margin:6px 0 4px">'+ck.map(function(c){return '<div style="font-size:.84rem;padding:2px 0"><span class="'+(c[0]===1?"up":c[0]===0?"down":"")+'" style="'+(c[0]===2?"color:var(--gold)":"")+'">'+(c[0]===1?"✓":c[0]===0?"✗":"!")+'</span> '+c[1]+'</div>'}).join("")+'</div>';
   o.innerHTML=h;
