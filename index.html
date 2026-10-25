@@ -350,7 +350,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 124</div>
+<div class="note" style="text-align:center" id="foot">النسخة 125</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -3100,7 +3100,7 @@ function chSvg(st){
     if(cxp>=x0&&cxp<=x0+pw&&inr(st.cr.p)){var cyp=y(st.cr.p),cyc=y(k[ci][1]),txt=px(st.cr.p)+"  "+pc((st.cr.p/last-1)*100),tw=txt.length*6.3+10;
       o+='<line x1="'+cxp+'" x2="'+cxp+'" y1="'+top+'" y2="'+yb+'" style="stroke:var(--dim);stroke-width:1;stroke-dasharray:3 3"/><line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+cyp+'" y2="'+cyp+'" style="stroke:var(--dim);stroke-width:1;stroke-dasharray:3 3"/>';
       o+='<circle cx="'+cxp+'" cy="'+cyc+'" r="3.5" style="fill:var(--fg)"/>';
-      var itx=chDate(k[ci][0])+" "+hm(k[ci][0])+(k[ci].length>=5?"  O "+px(k[ci][2])+"  H "+px(k[ci][3])+"  L "+px(k[ci][4])+"  C "+px(k[ci][1]):"");
+      var itx=chDate(k[ci][0])+" "+hm(k[ci][0])+(k[ci].length>=5?"  O "+px(k[ci][2])+"  H "+px(k[ci][3])+"  L "+px(k[ci][4])+"  C "+px(k[ci][1])+(k[ci][4]>0?"  R "+((k[ci][3]/k[ci][4]-1)*100).toFixed(2)+"%":""):"");
       o+='<text x="'+(x0+2)+'" y="10" style="fill:var(--fg);font-size:10px;font-weight:600;font-family:inherit;stroke:var(--s);stroke-width:3.5px;paint-order:stroke;stroke-linejoin:round">'+esc(itx)+'</text>';
       o+='<rect x="'+(x0+pw-tw)+'" y="'+(cyp-9)+'" width="'+tw+'" height="18" rx="4" style="fill:var(--fg)"/><text x="'+(x0+pw-tw/2)+'" y="'+(cyp+4)+'" text-anchor="middle" style="fill:var(--bg);font-size:11px;font-weight:700;font-family:inherit">'+esc(txt)+'</text>'}}
   return o+'</svg>';
