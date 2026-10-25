@@ -350,7 +350,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 126</div>
+<div class="note" style="text-align:center" id="foot">النسخة 127</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -3712,7 +3712,7 @@ function oLoad(){
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false),call("/api/v3/depth",{symbol:sym+"USDT",limit:50},false).catch(function(){return null})]).then(function(r){
     if(O.sym!==sym)return;
     var f={};r[0].symbols[0].filters.forEach(function(x){f[x.filterType]=x});SST[sym]={s:r[0].symbols[0].status,t:Date.now()};
-    O.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed),oto:!!r[0].symbols[0].otoAllowed};
+    O.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed),oto:!!r[0].symbols[0].otoAllowed,alg:+((f.MAX_NUM_ALGO_ORDERS||{}).maxNumAlgoOrders||0)};
     O.last=+r[1].price;
     var bk=r[2];O.book=bk&&bk.bids&&bk.asks&&bk.bids.length&&bk.asks.length?{bids:bk.bids,asks:bk.asks,bid:+bk.bids[0][0],ask:+bk.asks[0][0]}:null;
     $("opx").innerHTML='السعر الحالي <span class="n">'+px(O.last)+'</span> · <span style="text-decoration:underline;cursor:pointer" data-orf="1">تحديث</span>'+symFlagHtml(sym);
@@ -3763,6 +3763,8 @@ function oCalc(){
     }else if(x>0)h+='<div class="warn" style="margin-top:8px">الوقف يجب أن يكون أقل من سعر الشراء</div>';
     var hc=halCheck(sy,"BUY");ck.push([hc.block?0:(hc.msg?2:1),"الشرعية"+(hc.msg?": "+hc.msg:"")]);
     if(snap)ck.push([val<=freeUsdt()+1e-9?1:0,"السيولة المتاحة تكفي"]);
+    if(snap&&O.f&&O.f.alg&&x>0){var used=snap.orders.filter(function(z){return z.symbol===sy+"USDT"&&isTrig(z)}).length,left=O.f.alg-used;
+      ck.push([left>=1?1:0,"أوامر الوقف: المتبقي "+Math.max(0,left)+" من "+O.f.alg+(used?" (مفتوح "+used+")":"")+(left<1?" — ألغِ وقفاً قديماً أولاً":"")])}
   }else{
     if(hold&&AVG[sy]&&AVG[sy].a){var pl=(p-AVG[sy].a)*q;h+=oRow("الربح المتوقع عن متوسط تكلفتك",sg(pl)+" · "+pc((p/AVG[sy].a-1)*100),cl(pl))}
     if(hold)ck.push([q<=freeQ(hold)+1e-9?1:0,"الكمية ضمن المتاح للبيع ("+qt(freeQ(hold))+")"+(lockQ(hold)>0?" · محجوز "+qt(lockQ(hold))+" في أوامر":"")]);else ck.push([0,"لا تملك هذه العملة"]);
