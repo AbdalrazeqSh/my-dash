@@ -352,7 +352,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 142</div>
+<div class="note" style="text-align:center" id="foot">النسخة 143</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1048,7 +1048,7 @@ function renderHome(as,tot){
   sinceRender(tot);$("tkflow").innerHTML=tkFlowHtml();$("swbn").innerHTML=swBanner();mkRender();wlRender();defer(function(){mkLoad(false);stLoad(false);wlLoad(false)});
   var ts=+LS.g("tksync")||0;$("tksub").innerHTML=ts?'آخر مزامنة للمتتبع '+N(dayKey(ts).slice(5)+" "+hm(ts)):'لم تتم مزامنة بعد';
   var rc=rcap(),at=[],cash=snap.usdt+as.filter(function(a){return STABLE[a.sym]}).reduce(function(t,a){return t+a.val},0);
-  as.forEach(function(a){if(STABLE[a.sym])return;var sh=tot>0?a.val/tot*100:0;if(sh>rc)at.push(ICW+'<div>'+cdl(a.sym)+' وحدها <span class="n">'+sh.toFixed(0)+'%</span> من محفظتك، فوق أقصى وزن</div>')});
+  as.forEach(function(a){if(STABLE[a.sym])return;var sh=tot>0?a.val/tot*100:0;if(sh>rc){var xv=a.val-rc/100*tot,tp=a.free>0&&a.price>0?Math.min(100,Math.ceil(xv/(a.free*a.price)*100)):0;at.push(ICW+'<div style="flex:1;min-width:0">'+cdl(a.sym)+' وحدها <span class="n">'+sh.toFixed(0)+'%</span> من محفظتك، فوق أقصى وزن ('+rc.toFixed(0)+'%)</div>'+(CAN&&tp>0&&xv*1>=5?'<button class="sm dng" data-trim="'+esc(a.sym)+'|'+tp+'">بيع الزيادة</button>':''))}});
   var cp=tot>0?cash/tot*100:0;if(cp<10)at.push(ICW+'<div>السيولة <span class="n">'+cp.toFixed(0)+'%</span> فقط</div>');
   var near=[];snap.orders.forEach(function(o){var l=snap.px[o.symbol];if(!l)return;var d=(opx(o)/l-1)*100;if(Math.abs(d)<=3)near.push({s:o.symbol.replace(/USDT$/,""),d:d,b:o.side==="BUY"})});
   near.sort(function(x,y){return Math.abs(x.d)-Math.abs(y.d)}).slice(0,2).forEach(function(x){at.push(ICC+'<div>'+cdl(x.s)+': أمر '+(x.b?"شراء":"بيع")+' قريب من التنفيذ <span class="n">'+pc(x.d)+'</span></div>')});
@@ -4445,6 +4445,7 @@ document.addEventListener("click",function(ev){
   if((el=t.closest("[data-edpp]"))){if(ED){var tg=$("ed_s")||$("ed_p"),nv=flo(ED.last*(1+(+el.getAttribute("data-edpp"))/100),ED.f.tick);if($("ed_s")){$("ed_s").value=nv;$("ed_p").value=flo(+nv*0.995,ED.f.tick)}else $("ed_p").value=nv;edCalc()}return}
   if(t.id==="edgo")return edSend();
   if(t.id==="edrest")return edRestore();
+  if((el=t.closest("[data-trim]"))){var tq=el.getAttribute("data-trim").split("|");return oOpen(tq[0],"SELL",{type:"MARKET",pct:+tq[1]})}
   if((el=t.closest("[data-cmk]"))){closeSheet();return oOpen(el.getAttribute("data-cmk"),"SELL",{type:"MARKET",pct:100})}
   if((el=t.closest("[data-cxall]")))return cancelAllSheet(el.getAttribute("data-cxall"));
   if(t.id==="cxgo"){t.disabled=true;t.textContent="…";call("/api/v3/openOrders",{symbol:t.getAttribute("data-s")},true,0,"DELETE").then(function(){closeSheet();busy=false;refresh()},function(e){$("terr").innerHTML='<div class="err">'+esc(e.message)+'</div>';t.disabled=false;t.textContent="إعادة المحاولة"});return}
