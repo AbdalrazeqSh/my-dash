@@ -352,7 +352,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 140</div>
+<div class="note" style="text-align:center" id="foot">النسخة 141</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1341,7 +1341,7 @@ function ladPreview(){
   o.innerHTML='<div class="sub">جارٍ التحميل…</div>';
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sy+"USDT"},false),call("/api/v3/ticker/price",{symbol:sy+"USDT"},false)]).then(function(r){
     var f={};r[0].symbols[0].filters.forEach(function(x){f[x.filterType]=x});
-    var F={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed),oto:!!r[0].symbols[0].otoAllowed},last=+r[1].price;
+    var F={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),adn:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed),oto:!!r[0].symbols[0].otoAllowed},last=+r[1].price;
     var w=[],sw=0,i;
     if(cus){cus.forEach(function(c){w.push(c.w);sw+=c.w})}else for(i=0;i<n;i++){var x=L.dist==="inc"?1+i*0.5:1;w.push(x);sw+=x}
     var rows=[],errs=[],warns=[],sv=0,sq=0,imm=[];
@@ -1509,7 +1509,7 @@ var PR=null,ED=null;
 function exInfo(sym){
   return Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false)]).then(function(r){
     var f={};r[0].symbols[0].filters.forEach(function(x){f[x.filterType]=x});
-    return{f:{tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0)},last:+r[1].price};
+    return{f:{tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),adn:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierDown||0)},last:+r[1].price};
   });
 }
 function protectSheet(sym,opts){RRLK=true;
@@ -1543,7 +1543,7 @@ function prVal(){
   else if(q<f.minQ)e="الكمية أقل من الحد الأدنى";
   else if(x&&q*+xl<f.minN)e="قيمة أمر الوقف أقل من الحد الأدنى ("+f.minN+"$)";
   else if(t&&q*+ts<f.minN)e="قيمة أمر الهدف أقل من الحد الأدنى ("+f.minN+"$)";
-  else if(f.dn&&xl&&+xl<L*f.dn*1.03)e="سعر الوقف بعيد جدًا عن السوق وترفضه بايننس";
+  else if(f.adn&&xl&&+xl<L*f.adn*1.03)e="سعر الوقف بعيد جدًا: بايننس لا تقبل بيعًا تحت "+px(L*f.adn*1.03)+" لهذه العملة حاليًا";
   else if(f.up&&ts&&+ts>L*f.up*0.97)e="سعر الهدف بعيد جدًا عن السوق وترفضه بايننس";
   return{e:e,x:x,t:t,xs:xs,xl:xl,ts:ts,q:q,off:off};
 }
@@ -3799,7 +3799,7 @@ function oLoad(){
   Promise.all([call("/api/v3/exchangeInfo",{symbol:sym+"USDT"},false),call("/api/v3/ticker/price",{symbol:sym+"USDT"},false),call("/api/v3/depth",{symbol:sym+"USDT",limit:50},false).catch(function(){return null})]).then(function(r){
     if(O.sym!==sym)return;
     var f={};r[0].symbols[0].filters.forEach(function(x){f[x.filterType]=x});SST[sym]={s:r[0].symbols[0].status,t:Date.now()};
-    O.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed),oto:!!r[0].symbols[0].otoAllowed,alg:+((f.MAX_NUM_ALGO_ORDERS||{}).maxNumAlgoOrders||0)};
+    O.f={tick:+f.PRICE_FILTER.tickSize,step:+f.LOT_SIZE.stepSize,minQ:+f.LOT_SIZE.minQty,maxQ:+f.LOT_SIZE.maxQty||0,minN:+((f.NOTIONAL||f.MIN_NOTIONAL||{}).minNotional||5),up:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierUp||0),dn:+((f.PERCENT_PRICE_BY_SIDE||{}).bidMultiplierDown||0),adn:+((f.PERCENT_PRICE_BY_SIDE||{}).askMultiplierDown||0),opoco:!!(r[0].symbols[0].opoAllowed&&r[0].symbols[0].ocoAllowed),oto:!!r[0].symbols[0].otoAllowed,alg:+((f.MAX_NUM_ALGO_ORDERS||{}).maxNumAlgoOrders||0)};
     O.last=+r[1].price;
     var bk=r[2];O.book=bk&&bk.bids&&bk.asks&&bk.bids.length&&bk.asks.length?{bids:bk.bids,asks:bk.asks,bid:+bk.bids[0][0],ask:+bk.asks[0][0]}:null;
     $("opx").innerHTML='السعر الحالي <span class="n">'+px(O.last)+'</span> · <span style="text-decoration:underline;cursor:pointer" data-orf="1">تحديث</span>'+symFlagHtml(sym);
@@ -3866,6 +3866,7 @@ function oCalc(){
     if(mkt2)ck.push([O.mk?0:2,O.mk?"صانع فقط: سيُرفض لأنه سيُنفَّذ فورًا":"سعر الأمر يتجاوز السوق، فسيُنفَّذ فورًا كمنفِّذ (Taker)"]);
     else if(O.mk)ck.push([1,"صانع فقط: لن يُنفَّذ إلا إذا جاءك السعر"]);
     if(O.f&&buy&&O.f.dn&&p<O.last*O.f.dn*1.03)ck.push([0,"السعر تحت الحد الذي تقبله بايننس"]);
+    if(O.f&&buy&&x>0&&O.f.adn&&x*0.995<O.last*O.f.adn*1.03)ck.push([0,"الوقف بعيد جدًا: بايننس لا تقبل أمر بيع تحت "+px(O.last*O.f.adn*1.03)+" لهذه العملة. ارفع الوقف"]);
     if(O.f&&!buy&&O.f.up&&p>O.last*O.f.up*0.97)ck.push([0,"السعر فوق الحد الذي تقبله بايننس"])}
   $("osm").innerHTML='<b style="color:var(--'+(buy?"buy":"sell")+')">'+(buy?"شراء":"بيع")+'</b> <span class="n">'+qt(q)+'</span> '+esc(sy)+' · <b class="n">'+usd(val)+'</b>'+(smr!=null?' · خسارة الوقف <b class="n down">−'+usd(smr)+'</b>':(buy&&!(x>0)?' · <span style="color:var(--gold)">بلا وقف</span>':''));
   h+='</div><div style="margin:6px 0 4px">'+ck.map(function(c){return '<div style="font-size:.82rem;padding:2px 0"><span class="'+(c[0]===1?"up":c[0]===0?"down":"")+'" style="'+(c[0]===2?"color:var(--gold)":"")+'">'+(c[0]===1?"✓":c[0]===0?"✗":"!")+'</span> '+c[1]+'</div>'}).join("")+'</div>';
@@ -3878,7 +3879,7 @@ function protPrep(f,last,x,t,q){
   else if(!(t>last))e="الهدف يجب أن يكون أعلى من السعر الحالي";
   else if(qn*+xl<f.minN)e="قيمة أمر الوقف أقل من الحد الأدنى ("+f.minN+"$)";
   else if(qn*+ts<f.minN)e="قيمة أمر الهدف أقل من الحد الأدنى ("+f.minN+"$)";
-  else if(f.dn&&+xl<last*f.dn*1.03)e="سعر الوقف بعيد جدًا عن السوق وترفضه بايننس";
+  else if(f.adn&&+xl<last*f.adn*1.03)e="سعر الوقف بعيد جدًا: بايننس لا تقبل بيعًا تحت "+px(last*f.adn*1.03)+" لهذه العملة حاليًا";
   else if(f.up&&+ts>last*f.up*0.97)e="سعر الهدف بعيد جدًا عن السوق وترفضه بايننس";
   return{e:e,xs:xs,xl:xl,ts:ts};
 }
@@ -4044,7 +4045,7 @@ function peSpecs(sym,entries,x,F,last,wtype,ei0){ei0=ei0||0;
       if(tp&&!(tp>en.p))errs.push(tag+": الهدف "+px(tp)+" ليس فوق سعر الدخول "+px(en.p));
       if(tp&&qn*tp<F.minN)errs.push(tag+": قيمة أمر الهدف "+usd(qn*tp)+" أقل من الحد الأدنى ("+F.minN+"$)");
       if(sp&&qn*xl<F.minN)errs.push(tag+": قيمة أمر الوقف "+usd(qn*xl)+" أقل من الحد الأدنى ("+F.minN+"$)");
-      if(sp&&F.dn&&xl<last*F.dn*1.03)errs.push(tag+": سعر الوقف بعيد جدًا عن السوق وترفضه بايننس");
+      if(sp&&F.adn&&xl<last*F.adn*1.03)errs.push(tag+": سعر الوقف بعيد جدًا: بايننس لا تقبل بيعًا تحت "+px(last*F.adn*1.03));
       if(tp&&F.up&&tp>last*F.up*0.97)errs.push(tag+": سعر الهدف بعيد جدًا عن السوق وترفضه بايننس");
       var prm={symbol:sym+"USDT",workingType:wtype,workingSide:"BUY",workingPrice:en.ps,workingQuantity:pc.q.toFixed(dp),pendingSide:"SELL",newOrderRespType:"ACK"},path;
       if(wtype==="LIMIT")prm.workingTimeInForce="GTC";
