@@ -352,7 +352,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 145</div>
+<div class="note" style="text-align:center" id="foot">النسخة 146</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -806,8 +806,9 @@ function sp3Kick(){
 }
 function mkSpark(a){
   if(!a||a.length<2)return "";var w=74,h=24,mn=Math.min.apply(null,a),mx=Math.max.apply(null,a);if(mx===mn)mx=mn+1;
-  var pts=a.map(function(v,i){return (i/(a.length-1)*(w-4)+2).toFixed(1)+","+(2+(1-(v-mn)/(mx-mn))*(h-4)).toFixed(1)}).join(" ");
-  return '<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true"><polyline points="'+pts+'" fill="none" style="stroke:var('+(a[a.length-1]>=a[0]?"--up":"--down")+');stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round"/></svg>';
+  var X=function(i){return +(i/(a.length-1)*(w-4)+2).toFixed(1)},Y=function(v){return +(2+(1-(v-mn)/(mx-mn))*(h-4)).toFixed(1)},seg="";
+  for(var i=1;i<a.length;i++)seg+='<line x1="'+X(i-1)+'" y1="'+Y(a[i-1])+'" x2="'+X(i)+'" y2="'+Y(a[i])+'" style="stroke:var('+(a[i]>a[i-1]?"--up":a[i]<a[i-1]?"--down":"--dim")+')"/>';
+  return '<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true"><g fill="none" style="stroke-width:1.8;stroke-linecap:round">'+seg+'</g></svg>';
 }
 /* --- home list: coins now in a positive correction after a big surge (the pullback rule) --- */
 var SCN={t:0,rows:null,busy:false,done:0,total:0,err:""};
