@@ -105,7 +105,7 @@ h3.plain{margin-bottom:6px}
 .coin .vl{font-size:1.15rem}
 .coin .b{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:3px;font-size:.82rem;color:var(--dim)}
 .coin .t{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;align-items:center}
-.sh{color:var(--dimmer);font-weight:400;font-size:.82rem;margin-inline-start:6px}
+.sh{color:var(--dimmer);font-weight:400;font-size:.82rem;margin-inline-start:8px}
 .pl{font-weight:600}
 .sub2{padding-inline-start:12px;border-inline-start:2px solid var(--bd);margin:2px 0 6px}
 .sec{font-size:1rem;font-weight:600;margin:18px 0 4px}
@@ -352,7 +352,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 146</div>
+<div class="note" style="text-align:center" id="foot">النسخة 147</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -1050,7 +1050,7 @@ function renderHome(as,tot){
   var ts=+LS.g("tksync")||0;$("tksub").innerHTML=ts?'آخر مزامنة للمتتبع '+N(dayKey(ts).slice(5)+" "+hm(ts)):'لم تتم مزامنة بعد';
   var rc=rcap(),at=[],cash=snap.usdt+as.filter(function(a){return STABLE[a.sym]}).reduce(function(t,a){return t+a.val},0);
   as.forEach(function(a){if(STABLE[a.sym])return;var sh=tot>0?a.val/tot*100:0;if(sh>rc){var xv=a.val-rc/100*tot,tp=a.free>0&&a.price>0?Math.min(100,Math.ceil(xv/(a.free*a.price)*100)):0;at.push(ICW+'<div style="flex:1;min-width:0">'+cdl(a.sym)+' وحدها <span class="n">'+sh.toFixed(0)+'%</span> من محفظتك، فوق أقصى وزن ('+rc.toFixed(0)+'%)</div>'+(CAN&&tp>0&&xv*1>=5?'<button class="sm dng" data-trim="'+esc(a.sym)+'|'+tp+'">بيع الزيادة</button>':''))}});
-  var cp=tot>0?cash/tot*100:0;if(cp<10)at.push(ICW+'<div>السيولة <span class="n">'+cp.toFixed(0)+'%</span> فقط</div>');
+  var cp=tot>0?cash/tot*100:0;if(cp<10)at.push(ICW+'<div>السيولة <span class="n">'+cp.toFixed(cp<1?1:0)+'%</span> فقط</div>');
   var near=[];snap.orders.forEach(function(o){var l=snap.px[o.symbol];if(!l)return;var d=(opx(o)/l-1)*100;if(Math.abs(d)<=3)near.push({s:o.symbol.replace(/USDT$/,""),d:d,b:o.side==="BUY"})});
   near.sort(function(x,y){return Math.abs(x.d)-Math.abs(y.d)}).slice(0,2).forEach(function(x){at.push(ICC+'<div>'+cdl(x.s)+': أمر '+(x.b?"شراء":"بيع")+' قريب من التنفيذ <span class="n">'+pc(x.d)+'</span></div>')});
   var sfg={},sfo=[];as.forEach(function(a){var f=symFlag(a.sym,"SELL");if(f&&!STABLE[a.sym]&&a.val>=1){if(!sfg[f.m]){sfg[f.m]=[];sfo.push(f.m)}sfg[f.m].push(a.sym)}});
@@ -1073,7 +1073,7 @@ function renderRisk(as,tot){
   var big=cr.filter(function(a){return a.val>=DUST}),dv=cr.filter(function(a){return a.val<DUST}).reduce(function(t,a){return t+a.val},0);
   var ws=[];
   big.forEach(function(a){var sh=tot>0?a.val/tot*100:0;if(sh>rc)ws.push("<b>"+esc(a.sym)+"</b> "+sh.toFixed(0)+"% من محفظتك، فوق أقصى وزن "+rc+"%")});
-  var cp=tot>0?cash/tot*100:0;if(cp<10)ws.push("السيولة "+cp.toFixed(0)+"% فقط، لا مجال للتعزيز أو الفرص");
+  var cp=tot>0?cash/tot*100:0;if(cp<10)ws.push("السيولة "+cp.toFixed(cp<1?1:0)+"% فقط، لا مجال للتعزيز أو الفرص");
   $("rwarn").innerHTML=ws.map(function(w){return '<div class="warn">'+w+'</div>'}).join("");
   var rows=big.map(function(a){return{n:a.sym,v:a.val}});if(dv>0)rows.push({n:"أرصدة صغيرة",v:dv});rows.push({n:"سيولة (USDT)",v:cash,c:1});
   $("rconc").innerHTML=rows.map(function(r){
