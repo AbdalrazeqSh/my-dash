@@ -162,8 +162,8 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
 <div id="setup" class="c" hidden>
   <h3>ربط الحساب</h3>
   <div class="sub" style="margin:0 0 6px">مفتاح بايننس: <b>قراءة</b> + <b>تداول Spot</b>. <b>السحب مغلق</b>. يُحفظ في هذا الجوال فقط.</div>
-  <label for="k">API Key</label><input id="k" autocomplete="off" autocapitalize="off" spellcheck="false">
-  <label for="s">Secret</label><input id="s" type="password" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <label for="k">API Key</label><input id="k" type="password" name="bk-x" autocomplete="new-password" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore>
+  <label for="s">Secret</label><input id="s" type="password" name="bs-x" autocomplete="new-password" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore>
   <label for="cap">أقصى قيمة للأمر الواحد (USDT)</label><input id="cap" inputmode="decimal" value="300"><div class="brow" style="margin-top:12px"><button class="go full" id="save">حفظ وتحديث</button><button id="clr">حذف المفتاح</button><button id="diag">فحص الاتصال</button></div><div class="sum" id="diagout" hidden style="direction:ltr;text-align:left;font-size:.82rem;white-space:pre-wrap"></div>
 
   <div class="sum" style="margin-top:14px"><div class="row"><div class="l">عنوان IP الحالي</div><div class="r"><b class="n" id="ipv" dir="ltr">…</b></div></div>
@@ -352,7 +352,7 @@ details.more{margin:0 0 8px}details.more>summary{list-style:none;cursor:pointer;
     <div class="c"><h3 class="plain">حسب العملة</h3><div id="jcoin"></div></div>
     <div class="c"><h3 class="plain">الصفقات المغلقة <span class="sm2">اضغط لإضافة ملاحظة</span></h3><div id="jlist"></div></div>
   </div>
-<div class="note" style="text-align:center" id="foot">النسخة 149</div>
+<div class="note" style="text-align:center" id="foot">النسخة 150</div>
 <nav class="tabs" id="tabs" hidden><div><button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>الرئيسية</button><button data-tab="wal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6 6"/></svg>المحفظة</button><button data-tab="trd"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/></svg>تداول</button><button data-tab="ana"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>تحليل</button><button data-tab="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>إعدادات</button></div></nav>
 <div class="sheet" id="sheet" hidden><div id="sheetpn"><div class="grab" id="grab"></div><div id="sheetin"></div></div></div>
 
@@ -551,7 +551,7 @@ function render(){
     return '<div class="coin"><div class="a" data-cd="'+esc(a.sym)+'" style="cursor:pointer"><span class="nm"><span style="color:'+COL[Math.min(i,5)]+'">●</span> '+esc(a.sym)+'<span class="sh">'+share.toFixed(share<10?1:0)+'%</span> <span class="flat">›</span></span>'+(a.val>=DUST&&!STABLE[a.sym]&&a.price>0?sp3Html(a.sym):'')+'<span class="vl n">'+usd(a.val)+'</span></div>'+
       '<div class="b"><span data-cd="'+esc(a.sym)+'" style="cursor:pointer"><span class="n">'+qt(a.qty)+'</span> × '+(a.price?'<span class="n">'+px(a.price)+'</span>':'لا يوجد سوق USDT')+'</span>'+
       (a.avg?'<span class="pl n '+cl(pv)+'">'+sg(pv)+' ('+pc(p)+')</span>':'<span class="flat" data-g="'+esc(a.sym)+'" style="text-decoration:underline">احسب الربح</span>')+'</div>'+
-      (tg||CAN?'<div class="t">'+tg+(CAN?'<span style="margin-inline-start:auto;display:flex;gap:6px">'+trimBtn(a.sym)+'<button class="sm" data-t="'+esc(a.sym)+'">تداول</button></span>':'')+'</div>':'')+'</div>';
+      (tg||CAN?'<div class="t">'+tg+(CAN?'<span style="margin-inline-start:auto;display:flex;gap:6px">'+addBtn(a.sym,false)+trimBtn(a.sym)+'<button class="sm" data-t="'+esc(a.sym)+'">تداول</button></span>':'')+'</div>':'')+'</div>';
   }
   var ch=big.map(coinRow).join("");
   if(dust.length){
@@ -3537,7 +3537,7 @@ function coinHtml(sym){
   if(nt.length)h+='<div style="margin:6px 0">'+nt.map(function(x){return '<div class="warn">'+x+'</div>'}).join("")+'</div>';
   if(ords.length)h+='<div style="font-weight:600;margin:10px 0 2px">الأوامر المفتوحة</div>'+ords.map(function(r){return ordRow(r,last)}).join("");
   h+='<div style="display:flex;gap:8px;margin-top:12px">'+(CAN?'<button class="buy" data-cgo="'+esc(sym)+'|BUY" style="flex:1">شراء</button><button class="sell" data-cgo="'+esc(sym)+'|SELL" style="flex:1">بيع</button>':'')+'<button id="tclose" style="flex:1">إغلاق</button></div>';
-  if(addBtn(sym,true))h+='<div style="display:flex;margin-top:8px">'+addBtn(sym,true)+'</div><div class="sub" style="margin:2px 0 0">ربع قيمة مركزك، بحد أقصى ما يبقيها تحت أقصى وزن ('+rcap().toFixed(0)+'%). أمر محدد بسعر السوق'+(function(){var p=addPlan(sym);return p&&(p.sx||p.tg.length)?'، ومعه '+(p.sx?'نفس وقفك '+N(px(p.sx)):'')+(p.sx&&p.tg.length?' و':'')+(p.tg.length?(p.tg.length>1?'أهدافك '+p.tg.map(function(z){return N(px(z))}).join(" / "):'نفس هدفك '+N(px(p.tg[0]))):'')+' على الكمية المضافة':'، ولا وقف ولا هدف لديك على هذه العملة لنسخهما'})()+'. تراجعه قبل الإرسال.</div>';
+  if(addBtn(sym,true))h+='<div style="display:flex;margin-top:8px">'+addBtn(sym,true)+'</div>'+(addPlan(sym).no?'':'<div class="sub" style="margin:2px 0 0">ربع قيمة مركزك، بحد أقصى ما يبقيها تحت أقصى وزن ('+rcap().toFixed(0)+'%). أمر محدد بسعر السوق'+(function(){var p=addPlan(sym);return p&&!p.no&&(p.sx||p.tg.length)?'، ومعه '+(p.sx?'نفس وقفك '+N(px(p.sx)):'')+(p.sx&&p.tg.length?' و':'')+(p.tg.length?(p.tg.length>1?'أهدافك '+p.tg.map(function(z){return N(px(z))}).join(" / "):'نفس هدفك '+N(px(p.tg[0]))):'')+' على الكمية المضافة':'، ولا وقف ولا هدف لديك على هذه العملة لنسخهما'})()+'. تراجعه قبل الإرسال.</div>');
   if(CAN&&(fq*last>=5||ords.length))h+='<div style="display:flex;gap:8px;margin-top:8px">'+trimBtn(sym,1)+(ords.length?'<button class="sm" data-cxall="'+esc(sym)+'" style="flex:1">إلغاء كل الأوامر</button>':'')+'</div>';
   return h;
 }
@@ -4116,12 +4116,13 @@ function addPlan(sym){
   if(!snap||STABLE[sym]||symFlag(sym,"BUY")||halS(sym)==="no")return null;
   var a=snap.assets.filter(function(x){return x.sym===sym})[0];if(!a||!(a.val>=5))return null;
   var tot=snap.usdt+snap.assets.reduce(function(t,x){return t+x.val},0),room=tot*rcap()/100-a.val,v=Math.min(a.val*0.25,room,freeUsdt()*0.95);
-  if(!(v>=6))return null;v=Math.floor(v);
+  if(!(v>=6))return{no:room<6?"وزنها وصل أقصى حد ("+rcap().toFixed(0)+"%)":"السيولة الحرة لا تكفي"};v=Math.floor(v);
   var last=snap.px[sym+"USDT"]||a.price,so=snap.orders.filter(function(o){return o.symbol===sym+"USDT"&&o.side==="SELL"}),st=so.filter(function(o){return isStop(o)&&o.sp>0&&o.sp<last}).sort(function(x,y){return y.qty-x.qty})[0],
     tg=so.filter(function(o){return !isStop(o)&&opx(o)>last}).map(function(o){return opx(o)}).filter(function(p,i,ar){return ar.indexOf(p)===i}).sort(function(x,y){return x-y}).slice(0,4);
   return{v:v,after:(a.val+v)/tot*100,sh:a.val/tot*100,sx:st?st.sp:0,tg:tg};
 }
 function addBtn(sym,full){var p=CAN?addPlan(sym):null;if(!p)return '';
+  if(p.no)return full?'<button class="sm" disabled style="flex:1;opacity:.6">تعزيز غير متاح: '+p.no+'</button>':'';
   return '<button class="sm" data-add="'+esc(sym)+'|'+p.v+'|'+(p.sx||0)+'|'+p.tg.join(",")+'"'+(full?' style="flex:1"':'')+' aria-label="تعزيز '+esc(sym)+'">'+(full?'تعزيز +'+usd(p.v,0)+' · يرفع وزنها إلى '+p.after.toFixed(0)+'%':'تعزيز')+'</button>'}
 document.addEventListener("click",function(ev){var c=ev.target.closest&&ev.target.closest("[data-cd]");if(!c||!snap)return;ev.stopPropagation();ev.preventDefault();coinSheet(c.getAttribute("data-cd"))},true);
 function cdl(y){return '<b data-cd="'+esc(y)+'" style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:4px;padding:6px 0">'+esc(y)+'</b>'}
