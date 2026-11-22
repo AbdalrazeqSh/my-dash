@@ -2,14 +2,14 @@
 // Usage: node bot/scalp/hist.js   (env DAYS=180 TOP=30 SYNTH=1 for an offline smoke test)
 const fs=require('fs'),path=require('path');
 const {prep,detect,sim,IDS,NAMES,BAR}=require('./core');
-const DAYS=+process.env.DAYS||180,TOP=+process.env.TOP||30,SYNTH=!!process.env.SYNTH,HOST='https://data-api.binance.vision';
+const DAYS=+process.env.DAYS||180,TOP=+process.env.TOP||40,SYNTH=!!process.env.SYNTH,HOST='https://data-api.binance.vision';
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function jget(p){for(let a=0;a<6;a++){try{const r=await fetch(HOST+p);if(r.status===429||r.status===418){await sleep(20000);continue}if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}catch(e){if(a===5)throw e;await sleep(1500)}}}
 function halalBase(){const s=fs.readFileSync(path.join(__dirname,'..','..','index.html'),'utf8');const m=s.match(/var HALAL_BASE="([^"]+)"/);return new Set(m[1].split(','))}
 async function universe(){
   if(SYNTH)return['AAA','BBB','CCC','DDD','EEE'].map((s,i)=>({s,rank:i}));
   const hb=halalBase(),tk=await jget('/api/v3/ticker/24hr?type=MINI'),STB=new Set(['USDC','FDUSD','TUSD','USDP','DAI','EUR','USD1','XUSD','BFUSD','AEUR','PAXG']);
-  const L=tk.filter(x=>/USDT$/.test(x.symbol)).map(x=>({s:x.symbol.replace(/USDT$/,''),q:+x.quoteVolume})).filter(x=>hb.has(x.s)&&!STB.has(x.s)&&x.q>1e7).sort((a,b)=>b.q-a.q).slice(0,TOP);
+  const L=tk.filter(x=>/USDT$/.test(x.symbol)).map(x=>({s:x.symbol.replace(/USDT$/,''),q:+x.quoteVolume})).filter(x=>hb.has(x.s)&&!STB.has(x.s)&&x.q>(+process.env.MINQ||5e6)).sort((a,b)=>b.q-a.q).slice(0,TOP);
   return L.map((x,i)=>({s:x.s,rank:i}))}
 async function bars(sym,now){
   if(SYNTH){let seed=sym.charCodeAt(0),r=()=>(seed=(seed*1664525+1013904223)>>>0)/4294967296;const out=[];let p=100,t=now-(DAYS*288+700)*BAR;for(let i=0;i<DAYS*288+700;i++){const vol=0.0015*(1+(r()<0.02?6:0)),o=p,c=p*(1+(r()-0.5)*vol*3.4),h=Math.max(o,c)*(1+r()*vol),l=Math.min(o,c)*(1-r()*vol);out.push([t,o,h,l,c,(50+r()*100)*(r()<0.03?6:1)]);p=c;t+=BAR}return out}
@@ -33,7 +33,7 @@ function dayBoot(a,c,B=2000){ // a: rows of strategy, c: rows of control; return
     done++;console.log('coin',u.s,done,'trades so far',rows.length)}};
   await Promise.all([work(),work(),work()]);
   const ctrl=rows.filter(r=>r.sid==='R1'),cs=stats(ctrl);
-  let md=`# غربلة تاريخية للسكالبينج (شموع 5 دقائق)\nتاريخ: ${new Date().toISOString().slice(0,16)}Z · ${DAYS} يوماً · العملات: ${done} (الأعلى سيولة من قائمتك المباحة) · رسوم 0.1% لكل طرف + انزلاق · وقف أدنى 0.8%\n\n`;
+  let md=`# غربلة تاريخية للسكالبينج (شموع 5 دقائق)\nتاريخ: ${new Date().toISOString().slice(0,16)}Z · ${DAYS} يوماً · العملات: ${done} (الأعلى سيولة من قائمتك المباحة، حجم يومي ≥5 مليون) · رسوم 0.1% لكل طرف + انزلاق · وقف أدنى 0.8%\n\n`;
   md+=`> قواعد ثابتة مسجّلة مسبقاً، بلا ضبط. العتبة: الحد الأدنى لفاصل 99% (تجميع حسب اليوم) للفرق عن الضابط العشوائي > 0. انحياز البقاء قائم (عملات اليوم فقط).\n\n`;
   md+=`| الاستراتيجية | صفقات | متوسط R | ربح% | PF | R برسوم BNB | حد 99% (ذاتي) | الفرق عن الضابط | حد 99% للفرق | R النصف1/النصف2 | أكبر عملة | خروج وقف/هدف/مهلة |\n|---|---|---|---|---|---|---|---|---|---|---|---|\n`;
   const res={};

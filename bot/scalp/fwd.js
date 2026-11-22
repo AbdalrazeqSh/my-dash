@@ -2,7 +2,7 @@
 // detect NEW signals (signal bar closed after the first run), and update outcomes of earlier ones. State: data/scalp.json
 const fs=require('fs'),path=require('path');
 const {prep,detect,sim,IDS,BAR}=require('./core');
-const HOST='https://data-api.binance.vision',SF=path.join(__dirname,'..','..','data','scalp.json'),TOP=30;
+const HOST='https://data-api.binance.vision',SF=path.join(__dirname,'..','..','data','scalp.json'),TOP=40;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function jget(p){for(let a=0;a<5;a++){try{const r=await fetch(HOST+p);if(r.status===429||r.status===418){await sleep(20000);continue}if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}catch(e){if(a===4)throw e;await sleep(1500)}}}
 (async()=>{
@@ -10,7 +10,7 @@ async function jget(p){for(let a=0;a<5;a++){try{const r=await fetch(HOST+p);if(r
   const s=fs.readFileSync(path.join(__dirname,'..','..','index.html'),'utf8'),hb=new Set(s.match(/var HALAL_BASE="([^"]+)"/)[1].split(','));
   const STB=new Set(['USDC','FDUSD','TUSD','USDP','DAI','EUR','USD1','XUSD','BFUSD','AEUR','PAXG']);
   const tk=await jget('/api/v3/ticker/24hr?type=MINI');
-  const U=tk.filter(x=>/USDT$/.test(x.symbol)).map(x=>({s:x.symbol.replace(/USDT$/,''),q:+x.quoteVolume})).filter(x=>hb.has(x.s)&&!STB.has(x.s)&&x.q>1e7).sort((a,b)=>b.q-a.q).slice(0,TOP);
+  const U=tk.filter(x=>/USDT$/.test(x.symbol)).map(x=>({s:x.symbol.replace(/USDT$/,''),q:+x.quoteVolume})).filter(x=>hb.has(x.s)&&!STB.has(x.s)&&x.q>(+process.env.MINQ||5e6)).sort((a,b)=>b.q-a.q).slice(0,TOP);
   // also refresh coins that still have unresolved trades
   const openSyms=new Set(Object.values(state.trades).filter(t=>!t.res||t.res.st==='open'||t.res.st==='pending').map(t=>t.sym));
   const list=[...U.map((x,i)=>({s:x.s,rank:i}))];openSyms.forEach(sy=>{if(!list.some(x=>x.s===sy))list.push({s:sy,rank:TOP})});
