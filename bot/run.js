@@ -10,7 +10,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  const state=fs.existsSync(SF)?JSON.parse(fs.readFileSync(SF,'utf8')):{pmw:{},kcal:null,events:{}};
  const now=Date.now(),recent=Object.values(state.events||{}).filter(e=>now-e.t<14*864e5).sort((a,b)=>a.t-b.t);
  await new Promise(r=>srv.listen(PORT,r));
- const b=await chromium.launch(),ctx=await b.newContext({viewport:{width:430,height:900}}),p=await ctx.newPage();
+ const b=await chromium.launch(),ctx=await b.newContext({viewport:{width:430,height:900},bypassCSP:true}),p=await ctx.newPage();
  const errs=[];p.on('pageerror',e=>errs.push(e.message));
  await ctx.route('**/*',r=>{const u=new URL(r.request().url());
   if(u.hostname==='localhost')return r.continue();
