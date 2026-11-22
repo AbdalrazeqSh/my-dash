@@ -1,0 +1,21 @@
+name: scalp-hist
+on:
+  workflow_dispatch:
+    inputs:
+      days: { description: 'history days', default: '180' }
+permissions: { contents: write }
+jobs:
+  hist:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: DAYS=${{ github.event.inputs.days }} node bot/scalp/hist.js
+      - run: |
+          git config user.name "forward-logger"; git config user.email "forward-logger@users.noreply.github.com"
+          git add data/scalp-hist.md data/scalp-hist.json
+          git diff --cached --quiet && exit 0
+          git commit -m "scalp: historical screen"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break || sleep 5; done
