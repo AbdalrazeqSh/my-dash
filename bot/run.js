@@ -1,0 +1,42 @@
+// Headless forward logger: runs the real app (index.html#bot) with fake credentials against public Binance data,
+// restores/saves its state in data/state.json. Run by .github/workflows/forward-logger.yml every 30 min.
+const http=require('http'),fs=require('fs'),path=require('path');
+const {chromium}=require('playwright');
+const ROOT=path.join(__dirname,'..'),SF=path.join(ROOT,'data','state.json'),PORT=8300+Math.floor(Math.random()*500);
+const MIME={'.html':'text/html','.js':'text/javascript','.png':'image/png','.webmanifest':'application/manifest+json'};
+const srv=http.createServer((q,s)=>{let n=q.url.split('?')[0];if(n==='/')n='/index.html';try{s.setHeader('content-type',MIME[path.extname(n)]||'text/plain');s.end(fs.readFileSync(path.join(ROOT,n)))}catch(e){s.statusCode=404;s.end()}});
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{
+ const state=fs.existsSync(SF)?JSON.parse(fs.readFileSync(SF,'utf8')):{pmw:{},kcal:null,events:{}};
+ const now=Date.now(),recent=Object.values(state.events||{}).filter(e=>now-e.t<14*864e5).sort((a,b)=>a.t-b.t);
+ await new Promise(r=>srv.listen(PORT,r));
+ const b=await chromium.launch(),ctx=await b.newContext({viewport:{width:430,height:900}}),p=await ctx.newPage();
+ const errs=[];p.on('pageerror',e=>errs.push(e.message));
+ await ctx.route('**/*',r=>{const u=new URL(r.request().url());
+  if(u.hostname==='localhost')return r.continue();
+  if(/^api[0-9]?\.binance\.com$/.test(u.hostname))return r.continue({url:'https://data-api.binance.vision'+u.pathname+u.search});
+  if(u.hostname==='data-api.binance.vision')return r.continue();
+  return r.abort()});
+ await p.routeWebSocket(/.*/,ws=>ws.close());
+ await p.addInitScript(([fwl,pmw,kcal])=>{localStorage.clear();localStorage.setItem('bk','x'.repeat(64));localStorage.setItem('bs','y'.repeat(64));localStorage.setItem('fwon','0');
+  localStorage.setItem('fwl',JSON.stringify(fwl));localStorage.setItem('pmw',JSON.stringify(pmw||{}));if(kcal)localStorage.setItem('kcal',JSON.stringify(kcal))},[recent,state.pmw,state.kcal]);
+ await p.goto(`http://localhost:${PORT}/#bot`);
+ await p.waitForFunction(()=>window.__ok===1&&window.__bot,null,{timeout:20000});
+ await p.evaluate(()=>window.__bot.go());
+ await p.waitForFunction(()=>window.__bot.st().mk,null,{timeout:90000}).catch(()=>{throw new Error('market data failed to load')});
+ await p.evaluate(()=>window.__bot.scan());
+ await p.waitForFunction(()=>!window.__bot.st().scn,null,{timeout:300000,polling:1000});
+ const s1=await p.evaluate(()=>window.__bot.st());
+ await sleep(6000);
+ await p.evaluate(()=>window.__bot.res());await sleep(1500);
+ await p.waitForFunction(()=>!window.__bot.st().fw,null,{timeout:180000,polling:1000});
+ const d=await p.evaluate(()=>window.__bot.dump());
+ const before=Object.keys(state.events||{}).length;
+ state.events=state.events||{};for(const e of d.fwl)state.events[e.k]=e;
+ state.pmw=d.pmw;state.kcal=d.kcal;
+ fs.mkdirSync(path.dirname(SF),{recursive:true});fs.writeFileSync(SF,JSON.stringify(state));
+ const cnt={};for(const e of Object.values(state.events))cnt[e.st]=(cnt[e.st]||0)+1;
+ const line=`${new Date().toISOString()} scanned=${s1.total} rows=${s1.rows} err=${s1.err} events=${Object.keys(state.events).length}(+${Object.keys(state.events).length-before}) ${JSON.stringify(cnt)} pageerrors=${errs.length}`;
+ console.log(line);fs.writeFileSync(path.join(ROOT,'data','last-run.txt'),line+'\n');
+ await b.close();srv.close();process.exit(0);
+})().catch(e=>{console.error('BOT FAIL',e.message);process.exit(1)});

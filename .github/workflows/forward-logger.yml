@@ -1,0 +1,24 @@
+name: forward-logger
+on:
+  schedule: [{ cron: '*/30 * * * *' }]
+  workflow_dispatch:
+concurrency: { group: forward-logger, cancel-in-progress: false }
+permissions: { contents: write }
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm i --no-save playwright@1.49.1
+      - run: npx playwright install --with-deps chromium
+      - run: node bot/run.js
+      - name: save state
+        run: |
+          git config user.name "forward-logger"; git config user.email "forward-logger@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet && exit 0
+          git commit -m "log: $(date -u +%F\ %H:%M)Z"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break || sleep 5; done
