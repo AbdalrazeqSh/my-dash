@@ -23,7 +23,7 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  await p.goto(`http://localhost:${PORT}/#bot`);
  await p.waitForFunction(()=>window.__ok===1&&window.__bot,null,{timeout:20000});
  await p.evaluate(()=>window.__bot.go());
- await p.waitForFunction(()=>window.__bot.st().mk,null,{timeout:90000}).catch(()=>{throw new Error('market data failed to load')});
+ await p.waitForFunction(()=>window.__bot.st().mk,null,{timeout:90000}).catch(async e=>{throw new Error('market data failed to load: '+e.message.slice(0,200)+' st='+JSON.stringify(await p.evaluate(()=>window.__bot.st()).catch(x=>String(x)))+' errs='+errs.slice(0,3).join('|'))});
  await p.evaluate(()=>window.__bot.scan());
  await p.waitForFunction(()=>!window.__bot.st().scn,null,{timeout:300000,polling:1000});
  const s1=await p.evaluate(()=>window.__bot.st());
