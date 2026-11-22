@@ -1,0 +1,10 @@
+name: binance-probe
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          for h in data-api.binance.vision api.binance.com api1.binance.com; do
+            echo "$h -> $(curl -s -m 15 -o /tmp/o -w '%{http_code}' "https://$h/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=2") $(head -c 120 /tmp/o)"
+          done
