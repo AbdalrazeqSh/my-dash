@@ -1,0 +1,19 @@
+name: weekly-review
+on:
+  schedule: [{ cron: '0 5 * * 0' }]
+  workflow_dispatch:
+permissions: { contents: write }
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node bot/review.js
+      - run: |
+          git config user.name "forward-logger"; git config user.email "forward-logger@users.noreply.github.com"
+          git add data/review.md
+          git diff --cached --quiet && exit 0
+          git commit -m "review: weekly"
+          for i in 1 2 3; do git pull --rebase -q && git push -q && break || sleep 5; done
