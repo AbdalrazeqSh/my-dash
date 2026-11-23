@@ -74,6 +74,17 @@ function sim(P,sg,slip,fee){
     let fill=-1;for(let k=sg.i+1;k<=sg.i+sg.expire&&k<n;k++){if(h[k]>sg.cancelHigh||c[k]<sg.cancelLow)return{st:'nofill'};if(l[k]<=sg.lim*(1-0.0005)){fill=k;break}}
     if(fill<0)return{st:(sg.i+sg.expire<n)?'nofill':'pending'};
     j=fill;entry=Math.min(sg.lim,o[j]);
+  }else if(sg.ev&&sg.ev!=='M'){
+    if(sg.ev==='CF'){
+      if(sg.i+2>=n)return{st:'pending'};if(!(c[sg.i+1]>h[sg.i]))return{st:'nofill'};
+      j=sg.i+2;entry=o[j]*(1+slip);
+    }else{
+      const L=sg.ev==='L5'?c[sg.i]-0.5*P.atr[sg.i]:l[sg.i];let fill=-1;
+      for(let k=sg.i+1;k<=sg.i+6&&k<n;k++){if(l[k]<=L*(1-0.0005)){fill=k;break}}
+      if(fill<0)return{st:(sg.i+6<n)?'nofill':'pending'};
+      j=fill;entry=Math.min(L,o[j]);
+    }
+    if(sg.nat!=null)stop=entry-sg.nat;
   }else{
     j=sg.i+1;if(j>=n)return{st:'pending'};entry=o[j]*(1+slip);
     if(sg.nat!=null)stop=entry-sg.nat;
