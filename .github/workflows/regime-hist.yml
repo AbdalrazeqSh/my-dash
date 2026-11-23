@@ -15,7 +15,7 @@ jobs:
       - run: DAYS=${{ github.event.inputs.days }} node bot/smc/regime.js
       - run: |
           git config user.name "forward-logger"; git config user.email "forward-logger@users.noreply.github.com"
-          git add data/regime-hist.md data/smc-regime.json
+          git add data/regime-hist.md data/regime-hist.json
           git diff --cached --quiet && exit 0
           git commit -m "regime: historical test"
           for i in 1 2 3; do git pull --rebase -q && git push -q && break || sleep 5; done
