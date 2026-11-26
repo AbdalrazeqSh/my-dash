@@ -1,1 +1,1 @@
-2026-11-26T12:17:49.421Z scanned=23 rows=10 err= events=25(+3) {"nofill":9,"open":6,"closed":7,"waiting":3} pageerrors=0
+2026-11-26T21:50:11.385Z scanned=21 rows=10 err= events=27(+2) {"nofill":10,"closed":9,"open":6,"waiting":2} pageerrors=0
